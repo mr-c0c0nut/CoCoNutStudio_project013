@@ -47,7 +47,6 @@
     ::-webkit-scrollbar-thumb{background:linear-gradient(var(--gold-deep),var(--ember-dim));border-radius:10px;}
     :focus-visible{outline:2px solid var(--celestial);outline-offset:3px;border-radius:4px;}
 
-    /* film grain + vignette, cinematic feel */
     body::before{
         content:"";
         position:fixed;inset:0;
@@ -71,13 +70,13 @@
     .container{width:90%;max-width:1140px;margin:0 auto;position:relative;z-index:2;}
 
     /* ===================================================== */
-    /*  ICON ORB — khung trang trí che viền ảnh icon Mode (tròn) */
+    /*  ICON ORB — khung trang trí icon Mode (tròn)           */
     /* ===================================================== */
     .icon-orb{position:relative;flex-shrink:0;width:56px;height:56px;}
     .icon-orb.xl{width:96px;height:96px;}
     .icon-orb.lg{width:72px;height:72px;}
     .icon-orb.md{width:52px;height:52px;}
-    .icon-orb.sm{width:26px;height:26px;}
+    .icon-orb.sm{width:28px;height:28px;}
     .icon-ring{
         position:absolute;inset:0;border-radius:50%;padding:3px;
         background:conic-gradient(from 0deg,var(--ember-hot),var(--ember),var(--ember-dim),var(--gold),var(--ember-hot));
@@ -108,10 +107,24 @@
     }
     .mode-card:hover .icon-ring{animation-duration:1.8s;}
 
+    /* Icon float animation cho mode cards */
+    .mode-card .icon-orb{animation:iconFloat 3.2s ease-in-out infinite;}
+    .mode-card:nth-child(2) .icon-orb{animation-delay:-0.4s;}
+    .mode-card:nth-child(3) .icon-orb{animation-delay:-0.8s;}
+    .mode-card:nth-child(4) .icon-orb{animation-delay:-1.2s;}
+    .mode-card:nth-child(5) .icon-orb{animation-delay:-1.6s;}
+    .mode-card:nth-child(6) .icon-orb{animation-delay:-2.0s;}
+    .mode-card:nth-child(7) .icon-orb{animation-delay:-2.4s;}
+    .mode-card:nth-child(8) .icon-orb{animation-delay:-2.8s;}
+    @keyframes iconFloat{
+        0%,100%{transform:translateY(0);}
+        50%{transform:translateY(-6px);}
+    }
+    .mode-card:hover .icon-orb{animation-play-state:paused;transform:translateY(-8px) scale(1.08);}
+    .mode-card:hover .icon-ring{filter:drop-shadow(0 0 14px rgba(255,106,31,0.85));}
+
     /* ===================================================== */
     /*  BRAND EMBLEM — logo hình chữ nhật bo góc + đôi cánh   */
-    /*  (dùng riêng cho logo thương hiệu AngelTier, không     */
-    /*  dùng cho icon Mode tròn ở trên)                        */
     /* ===================================================== */
     .brand-emblem{position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
     .brand-emblem.lg{width:180px;height:58px;}
@@ -150,7 +163,7 @@
     .brand-emblem:hover .emblem-wing.right{transform:translateY(-50%) scaleX(-1) rotate(-16deg) scale(1.1);filter:drop-shadow(0 0 10px rgba(255,106,31,0.85));}
     .brand-emblem:hover .emblem-frame{border-color:rgba(255,138,61,0.55);box-shadow:0 0 28px rgba(255,106,31,0.5), inset 0 0 10px rgba(0,0,0,0.6);}
 
-    /* Cinematic curtain intro (nâng cấp: có logo + progress bar, chỉ chạy 1 lần / phiên) */
+    /* Cinematic curtain intro */
     .letterbox{position:fixed;left:0;right:0;height:14vh;background:#000;z-index:2000;pointer-events:none;}
     .letterbox.top{top:0;}
     .letterbox.bottom{bottom:0;}
@@ -245,7 +258,6 @@
     }
     @keyframes pageBreathe{0%{opacity:0.6;}100%{opacity:1;}}
 
-    /* ember field lan tỏa toàn trang */
     .ember-field{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
     .ember-p{
         position:absolute;bottom:-10px;border-radius:50%;
@@ -332,7 +344,6 @@
     }
     .btn-secondary:hover{border-color:var(--ember-dim);transform:translateY(-3px);}
 
-    /* Card chung — dùng cho mọi khối panel (tier, leaderboard, mode, timeline, faq, ranking) */
     .card-box{
         background:linear-gradient(165deg,var(--bg-panel),var(--bg-panel-2));
         border:1px solid var(--border);border-radius:18px;padding:26px;
@@ -344,6 +355,13 @@
         background:linear-gradient(90deg,transparent,rgba(255,138,61,0.05),transparent);
         transform:rotate(20deg);pointer-events:none;
     }
+    /* Shimmer sweep khi scroll vào */
+    .card-box::after{
+        content:"";position:absolute;top:0;left:-100%;width:60%;height:100%;
+        background:linear-gradient(90deg,transparent,rgba(255,207,92,0.04),transparent);
+        transform:skewX(-15deg);pointer-events:none;transition:left 0.8s ease;
+    }
+    .card-box.shimmer-active::after{left:150%;}
     .tilt-card{will-change:transform;transition:transform 0.15s ease-out;}
     .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;}
     .card-title{font-family:'Be Vietnam Pro',sans-serif;font-size:1.05rem;font-weight:800;color:#fff;}
@@ -364,9 +382,10 @@
         width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;
         border:1px solid var(--border);flex-shrink:0;
     }
-    .r1{color:var(--ember-white);border-color:var(--ember-hot);box-shadow:0 0 12px rgba(255,207,92,0.35);}
+    .r1{color:var(--ember-white);border-color:var(--ember-hot);box-shadow:0 0 12px rgba(255,207,92,0.35);animation:medalPulse 2s ease-in-out infinite;}
     .r2{color:var(--steel);border-color:rgba(147,162,172,0.5);}
     .r3{color:#d98a4f;border-color:rgba(217,138,79,0.5);}
+    @keyframes medalPulse{0%,100%{box-shadow:0 0 12px rgba(255,207,92,0.35);}50%{box-shadow:0 0 22px rgba(255,207,92,0.7);}}
     .avatar{
         width:34px;height:34px;border-radius:8px;object-fit:cover;
         background:linear-gradient(135deg,#2a2118,#1a140e);
@@ -378,8 +397,17 @@
         font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:700;
         padding:4px 9px;border-radius:5px;letter-spacing:0.5px;white-space:nowrap;
     }
-    .tier-ht1{background:rgba(255,244,222,0.1);color:var(--ember-white);border:1px solid rgba(255,244,222,0.3);}
-    .tier-ht2{background:rgba(255,207,92,0.1);color:var(--ember-hot);border:1px solid rgba(255,207,92,0.3);}
+    /* 10 cấp tier */
+    .tier-ht1{background:rgba(255,244,222,0.12);color:var(--ember-white);border:1px solid rgba(255,244,222,0.35);text-shadow:0 0 8px rgba(255,244,222,0.3);}
+    .tier-lt1{background:rgba(255,207,92,0.1);color:var(--ember-hot);border:1px solid rgba(255,207,92,0.3);}
+    .tier-ht2{background:rgba(249,200,115,0.1);color:var(--gold);border:1px solid rgba(249,200,115,0.3);}
+    .tier-lt2{background:rgba(201,143,62,0.1);color:var(--gold-deep);border:1px solid rgba(201,143,62,0.3);}
+    .tier-ht3{background:rgba(142,201,255,0.1);color:var(--celestial);border:1px solid rgba(142,201,255,0.3);}
+    .tier-lt3{background:rgba(63,111,168,0.1);color:var(--celestial-deep);border:1px solid rgba(63,111,168,0.3);}
+    .tier-ht4{background:rgba(147,162,172,0.08);color:var(--steel);border:1px solid rgba(147,162,172,0.3);}
+    .tier-lt4{background:rgba(111,106,96,0.1);color:var(--iron-cold);border:1px solid rgba(111,106,96,0.3);}
+    .tier-ht5{background:rgba(193,39,45,0.1);color:#e85555;border:1px solid rgba(193,39,45,0.3);}
+    .tier-lt5{background:rgba(120,30,34,0.08);color:#a04040;border:1px solid rgba(120,30,34,0.3);}
     .tier-other{background:rgba(142,201,255,0.08);color:var(--celestial);border:1px solid rgba(142,201,255,0.3);}
 
     .heat-bar{height:5px;border-radius:3px;background:rgba(255,255,255,0.05);overflow:hidden;position:relative;}
@@ -403,7 +431,6 @@
     .divider-wrap{width:100%;overflow:hidden;line-height:0;margin-top:10px;}
     .divider-wrap svg{width:100%;height:44px;display:block;}
 
-    /* ===== Section chung ===== */
     .section-block{margin-top:52px;}
     .section-eyebrow{font-family:'JetBrains Mono',monospace;color:var(--ember-hot);font-size:0.74rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px;}
     .section-heading{font-family:'Be Vietnam Pro',sans-serif;font-size:1.7rem;font-weight:800;color:#fff;margin-bottom:22px;}
@@ -411,7 +438,7 @@
     .reveal{opacity:0;transform:translateY(26px);transition:opacity 0.7s ease, transform 0.7s cubic-bezier(.2,.8,.2,1);}
     .reveal.in{opacity:1;transform:translateY(0);}
 
-    /* ===== Tier flame ladder ===== */
+    /* ===== Tier flame ladder (10 cấp) ===== */
     .tier-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;gap:16px;flex-wrap:wrap;}
     .tier-eyebrow{font-size:0.7rem;font-weight:700;letter-spacing:2px;color:var(--ember);text-transform:uppercase;font-family:'JetBrains Mono',monospace;}
     .tier-title-main{font-family:'Cinzel',serif;font-size:1.3rem;font-weight:700;color:#fff;margin-top:6px;}
@@ -420,27 +447,32 @@
         padding:6px 14px;border-radius:20px;font-size:0.72rem;font-weight:700;font-family:'JetBrains Mono',monospace;white-space:nowrap;
     }
     .flame-ladder{
-        display:flex;align-items:flex-end;justify-content:space-between;gap:6px;
-        height:170px;padding:0 4px;border-bottom:1px solid var(--border);margin-bottom:14px;
+        display:flex;align-items:flex-end;justify-content:space-between;gap:3px;
+        height:170px;padding:0 2px;border-bottom:1px solid var(--border);margin-bottom:14px;
     }
-    .flame-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:8px;}
+    .flame-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px;}
     .flame-bar{
-        width:100%;max-width:38px;border-radius:9px 9px 4px 4px;
+        width:100%;max-width:32px;border-radius:7px 7px 3px 3px;
         transform-origin:bottom;transform:scaleY(0);transition:transform 1s cubic-bezier(.2,.8,.2,1);
         position:relative;
     }
     .reveal.in .flame-bar{transform:scaleY(1);}
-    .flame-bar.t5{background:linear-gradient(180deg,#bfe9ff,#5eb8dd);box-shadow:0 0 10px rgba(94,184,221,.4);}
-    .flame-bar.t4{background:linear-gradient(180deg,#ffe9ad,#e8b95a);box-shadow:0 0 10px rgba(232,185,90,.4);}
-    .flame-bar.t3{background:linear-gradient(180deg,#ffcf7a,var(--ember));box-shadow:0 0 12px rgba(255,106,31,.45);}
-    .flame-bar.t2{background:linear-gradient(180deg,#ffb15e,var(--ember));box-shadow:0 0 14px rgba(255,106,31,.5);}
-    .flame-bar.t1{background:linear-gradient(180deg,var(--ember-hot),var(--blood));box-shadow:0 0 22px rgba(193,39,45,.65);animation:tierFlicker 2.4s ease-in-out infinite;}
+    .flame-bar.t-ht1{background:linear-gradient(180deg,var(--ember-white),var(--ember-hot),var(--blood));box-shadow:0 0 22px rgba(193,39,45,.65);animation:tierFlicker 2.4s ease-in-out infinite;}
+    .flame-bar.t-lt1{background:linear-gradient(180deg,var(--ember-hot),var(--ember));box-shadow:0 0 16px rgba(255,106,31,.55);}
+    .flame-bar.t-ht2{background:linear-gradient(180deg,var(--gold),var(--gold-deep));box-shadow:0 0 14px rgba(249,200,115,.45);}
+    .flame-bar.t-lt2{background:linear-gradient(180deg,var(--gold-deep),var(--ember-dim));box-shadow:0 0 12px rgba(201,143,62,.4);}
+    .flame-bar.t-ht3{background:linear-gradient(180deg,var(--celestial),var(--celestial-deep));box-shadow:0 0 12px rgba(142,201,255,.45);}
+    .flame-bar.t-lt3{background:linear-gradient(180deg,var(--celestial-deep),#2a4a6e);box-shadow:0 0 10px rgba(63,111,168,.4);}
+    .flame-bar.t-ht4{background:linear-gradient(180deg,#b8c4cc,#7a8a94);box-shadow:0 0 8px rgba(147,162,172,.35);}
+    .flame-bar.t-lt4{background:linear-gradient(180deg,#8a857c,#5a5650);box-shadow:0 0 8px rgba(111,106,96,.3);}
+    .flame-bar.t-ht5{background:linear-gradient(180deg,#e85555,#8a2020);box-shadow:0 0 10px rgba(193,39,45,.5);}
+    .flame-bar.t-lt5{background:linear-gradient(180deg,#a04040,#5a1a1a);box-shadow:0 0 8px rgba(120,30,34,.4);}
     @keyframes tierFlicker{0%,100%{filter:brightness(1);}50%{filter:brightness(1.2);}}
-    .flame-label{font-family:'JetBrains Mono',monospace;font-size:0.62rem;font-weight:700;color:var(--text-faint);letter-spacing:.5px;}
+    .flame-label{font-family:'JetBrains Mono',monospace;font-size:0.48rem;font-weight:700;color:var(--text-faint);letter-spacing:.3px;}
     .flame-col.hi .flame-label{color:var(--ember-hot);}
     .tier-desc-text{font-size:0.82rem;color:var(--text-dim);line-height:1.6;}
 
-    /* ===== Leaderboard đầy đủ (home) ===== */
+    /* ===== Leaderboard ===== */
     .lb-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;}
     .lb-live{display:flex;align-items:center;gap:6px;font-size:0.68rem;font-weight:700;letter-spacing:1px;color:#ff5555;text-transform:uppercase;font-family:'JetBrains Mono',monospace;}
     .lb-dot{width:6px;height:6px;border-radius:50%;background:#ff3d3d;box-shadow:0 0 8px #ff3d3d;}
@@ -455,26 +487,56 @@
     .lb-row{
         background:rgba(255,255,255,0.015);border:1px solid var(--border);border-radius:11px;
         padding:12px 16px;display:flex;align-items:center;justify-content:space-between;
-        margin-bottom:9px;transition:.25s;position:relative;overflow:hidden;
+        margin-bottom:9px;transition:.3s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden;
+        opacity:0;transform:translateX(-20px);
     }
-    .lb-row:hover{border-color:rgba(255,138,61,0.35);transform:translateX(3px);background:rgba(255,255,255,0.03);}
+    .lb-row.slide-in{opacity:1;transform:translateX(0);}
+    .lb-row::before{
+        content:"";position:absolute;top:0;left:-100%;width:40%;height:100%;
+        background:linear-gradient(90deg,transparent,rgba(255,207,92,0.06),transparent);
+        transform:skewX(-20deg);pointer-events:none;transition:left 0.6s ease;
+    }
+    .lb-row:hover::before{left:150%;}
+    .lb-row:hover{border-color:rgba(255,138,61,0.35);transform:translateX(4px);background:rgba(255,255,255,0.03);}
     .lb-row.top1{border-color:rgba(255,106,31,0.4);background:linear-gradient(90deg,rgba(255,106,31,0.08),rgba(255,255,255,0.015) 55%);}
+    .lb-row.top1:hover{border-color:rgba(255,106,31,0.6);box-shadow:0 0 20px rgba(255,106,31,0.15);}
     .lb-left{display:flex;align-items:center;gap:14px;}
     .rank-chip{font-family:'JetBrains Mono',monospace;font-size:0.95rem;font-weight:700;color:var(--text-faint);min-width:28px;text-align:center;}
-    .rank-chip.medal{color:var(--ember-hot);}
+    .rank-chip.medal{color:var(--ember-hot);animation:medalPulse 2s ease-in-out infinite;}
     .lb-name{font-size:0.9rem;font-weight:700;color:#fff;}
     .lb-points{font-size:0.8rem;color:var(--ember-hot);font-weight:700;font-family:'JetBrains Mono',monospace;}
 
-    /* ===== Modes grid (icon ảnh thật) ===== */
-    .modes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;}
+    /* ===== Modes grid ===== */
+    .modes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;perspective:800px;}
     .mode-card{
         padding:22px 12px;display:flex;flex-direction:column;align-items:center;gap:12px;
-        cursor:pointer;transition:.28s;text-align:center;
+        cursor:pointer;transition:.35s cubic-bezier(.2,.8,.2,1);text-align:center;
+        opacity:0;transform:translateY(30px) scale(0.92) rotateX(8deg);
+        position:relative;overflow:hidden;
     }
-    .mode-card:hover{transform:translateY(-4px);border-color:rgba(255,138,61,0.4);}
-    .mode-name{font-size:0.72rem;font-weight:800;color:var(--text);letter-spacing:1px;}
+    .mode-card.entered{opacity:1;transform:translateY(0) scale(1) rotateX(0deg);}
+    .mode-card::before{
+        content:"";position:absolute;inset:0;border-radius:17px;
+        background:radial-gradient(circle at 50% 30%,rgba(255,106,31,0.08),transparent 70%);
+        opacity:0;transition:opacity 0.4s ease;pointer-events:none;
+    }
+    .mode-card:hover::before{opacity:1;}
+    .mode-card:hover{
+        transform:translateY(-6px) scale(1.04) rotateX(-2deg);
+        border-color:rgba(255,138,61,0.45);
+        box-shadow:0 12px 36px rgba(255,106,31,0.18),0 0 40px rgba(255,106,31,0.08);
+    }
+    .mode-card:active{transform:translateY(-2px) scale(0.98);transition-duration:0.1s;}
+    .mode-name{font-size:0.72rem;font-weight:800;color:var(--text);letter-spacing:1px;transition:color 0.3s;text-shadow:0 0 0 transparent;}
+    .mode-card:hover .mode-name{color:var(--ember-hot);text-shadow:0 0 12px rgba(255,207,92,0.4);}
+    .mode-ripple{
+        position:absolute;border-radius:50%;
+        background:radial-gradient(circle,rgba(255,207,92,0.35),transparent 70%);
+        transform:scale(0);animation:rippleOut 0.6s ease-out forwards;pointer-events:none;
+    }
+    @keyframes rippleOut{to{transform:scale(4);opacity:0;}}
 
-    /* Stats / forge ledger */
+    /* Stats */
     .stats-section{margin-top:52px;text-align:center;padding-bottom:30px;position:relative;overflow:hidden;}
     .stats-inner{position:relative;z-index:1;}
     .ignite-flash{
@@ -535,12 +597,7 @@
     }
     @keyframes ringGrow{0%,100%{transform:scale(1);opacity:0.5;box-shadow:0 0 0 rgba(255,106,31,0);}50%{transform:scale(1.3);opacity:1;box-shadow:0 0 46px rgba(255,106,31,0.85);}}
     .stat-icon{font-size:1.5rem;color:var(--ember-hot);position:relative;z-index:1;filter:drop-shadow(0 0 18px rgba(255,207,92,0.85));}
-    .spark-particle{
-        position:absolute;top:50%;left:50%;width:4px;height:4px;border-radius:50%;
-        background:var(--ember-hot);box-shadow:0 0 10px var(--ember-hot), 0 0 18px var(--ember);
-        pointer-events:none;z-index:2;
-    }
-    .stat-number{font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:700;color:#fff;text-shadow:0 0 20px rgba(255,138,61,0.25);}
+    .stat-number{font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:700;color:#fff;text-shadow:0 0 20px rgba(255,106,31,0.25);}
     .stat-label{color:var(--text-faint);font-size:0.78rem;font-weight:700;margin-top:8px;text-transform:uppercase;letter-spacing:1px;}
     .stat-progress{height:4px;border-radius:2px;background:rgba(255,255,255,0.06);margin-top:20px;overflow:hidden;}
     .stat-progress-fill{
@@ -551,7 +608,7 @@
     }
     .stat-card.struck .stat-progress-fill{width:100%;}
 
-    /* ===== Process timeline ===== */
+    /* ===== Timeline ===== */
     .timeline{max-width:640px;margin:26px auto 0;text-align:left;position:relative;}
     .timeline::before{
         content:"";position:absolute;left:19px;top:6px;bottom:6px;width:2px;
@@ -594,9 +651,9 @@
     .footer-bottom{margin-top:30px;padding-top:20px;border-top:1px solid var(--border);font-size:0.72rem;color:var(--text-faint);text-align:center;grid-column:1/-1;}
     @media(max-width:860px){footer{grid-template-columns:1fr;gap:26px;}}
 
-    /* ===== SPA view toggle ===== */
     .view-section{display:none;}
-    .view-section.active{display:block;}
+    .view-section.active{display:block;animation:viewEnter 0.5s cubic-bezier(.2,.8,.2,1) forwards;}
+    @keyframes viewEnter{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 
     /* ===== Ranking view ===== */
     .rk-back{
@@ -610,9 +667,10 @@
     .rk-tabs{display:flex;gap:9px;overflow-x:auto;padding-bottom:14px;border-bottom:1px solid var(--border);margin-bottom:20px;scrollbar-width:thin;}
     .rk-tab{
         display:flex;align-items:center;gap:8px;background:var(--bg-panel-2);border:1px solid var(--border);
-        padding:8px 14px 8px 8px;border-radius:10px;cursor:pointer;opacity:.65;transition:.2s;white-space:nowrap;font-size:0.72rem;font-weight:700;color:#fff;
+        padding:8px 14px 8px 8px;border-radius:10px;cursor:pointer;opacity:.65;transition:.3s cubic-bezier(.2,.8,.2,1);
+        white-space:nowrap;font-size:0.72rem;font-weight:700;color:#fff;
     }
-    .rk-tab.active,.rk-tab:hover{opacity:1;border-color:var(--ember);background:rgba(255,106,31,0.08);}
+    .rk-tab.active,.rk-tab:hover{opacity:1;border-color:var(--ember);background:rgba(255,106,31,0.08);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,106,31,0.15);}
     .rk-tab .fa-fire{color:var(--ember-hot);}
     .rk-table-wrap{width:100%;overflow-x:auto;}
     .rk-table{width:100%;border-collapse:collapse;min-width:680px;}
@@ -621,7 +679,7 @@
     .rk-table tr{opacity:0;animation:rowFade .4s ease forwards;}
     @keyframes rowFade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
     .rk-table tr:hover td{background:rgba(255,106,31,0.03);}
-    .tiers-wrap{display:flex;flex-wrap:wrap;gap:6px;max-width:420px;}
+    .tiers-wrap{display:flex;flex-wrap:wrap;gap:6px;max-width:520px;}
     .mode-tier-chip{
         display:flex;align-items:center;gap:5px;background:var(--bg-panel-2);border:1px solid var(--border);
         border-radius:7px;padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:0.65rem;font-weight:700;color:var(--celestial);
@@ -631,7 +689,7 @@
 
     @keyframes reveal{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 
-    /* ===== Modal chung (đăng nhập bảng điều khiển) ===== */
+    /* ===== Modal — xác thực 2 lớp ===== */
     .modal-overlay{
         position:fixed;inset:0;background:rgba(4,3,2,0.8);backdrop-filter:blur(6px);
         display:none;justify-content:center;align-items:center;z-index:1500;padding:16px;
@@ -639,17 +697,20 @@
     .modal-overlay.open{display:flex;}
     .modal-card{
         background:linear-gradient(165deg,#191309,#100c07);
-        border:1px solid var(--border);border-radius:18px;padding:34px;max-width:420px;width:100%;text-align:center;
+        border:1px solid var(--border);border-radius:18px;padding:34px;max-width:440px;width:100%;text-align:center;
         box-shadow:0 24px 60px rgba(0,0,0,0.6);
         animation:modalIn 0.3s cubic-bezier(.2,.9,.2,1);
     }
     @keyframes modalIn{0%{opacity:0;transform:scale(0.9) translateY(10px);}60%{transform:scale(1.02);}100%{opacity:1;transform:scale(1) translateY(0);}}
     .modal-icon{font-size:2.2rem;color:var(--ember-hot);margin-bottom:14px;text-shadow:0 0 20px rgba(255,207,92,0.4);}
     .modal-text{font-size:0.94rem;font-weight:700;color:#fff;margin-bottom:16px;line-height:1.55;}
+    .modal-step-label{font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--ember-hot);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
     .btn-modal-close{
         background:linear-gradient(135deg,var(--ember-hot),var(--ember));color:#1a0e04;border:none;
         padding:11px 26px;border-radius:10px;font-weight:800;cursor:pointer;font-size:0.9rem;
+        transition:.2s;
     }
+    .btn-modal-close:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(255,106,31,0.4);}
     .btn-modal-cancel{
         background:transparent;border:1px solid var(--border);color:var(--text-dim);
         padding:11px 22px;border-radius:10px;font-weight:700;cursor:pointer;font-size:0.88rem;transition:.2s;
@@ -699,7 +760,7 @@
     }
 
     /* ===================================================== */
-    /*  RESPONSIVE — điện thoại                                */
+    /*  RESPONSIVE                                             */
     /* ===================================================== */
     @media (max-width:600px){
         .container{width:92%;}
@@ -726,8 +787,9 @@
         .card-title{font-size:0.94rem;}
         .tier-title-main{font-size:1.08rem;}
         .tier-badge-count{font-size:0.66rem;padding:5px 11px;}
-        .flame-ladder{height:130px;gap:4px;}
-        .flame-label{font-size:0.52rem;}
+        .flame-ladder{height:130px;gap:2px;}
+        .flame-label{font-size:0.4rem;}
+        .flame-bar{max-width:24px;}
 
         .section-heading{font-size:1.36rem;}
         .section-title{font-size:1.7rem;}
@@ -776,7 +838,6 @@
         .rk-table{min-width:560px;}
     }
 
-    /* ---------- Custom cinematic cursor ---------- */
     @media (pointer:fine){
         body.custom-cursor, body.custom-cursor a, body.custom-cursor button, body.custom-cursor .tilt-card,
         body.custom-cursor .mode-card, body.custom-cursor .lb-row, body.custom-cursor .faq-item, body.custom-cursor .rk-tab{
@@ -843,1011 +904,1017 @@
     <div class="nav-container">
         <button class="logo-box interactive-btn" onclick="switchView('home')">
             <div class="brand-emblem md">
-                <svg class="emblem-wing left" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path d="M60,24 C40,26 22,20 4,4 C18,10 34,14 48,20 C56,22 60,24 60,24 Z"/><path d="M60,26 C40,30 20,28 2,16 C18,20 36,24 50,26 C56,27 60,26 60,26 Z"/><path d="M60,28 C42,33 22,34 6,28 C20,30 38,32 52,31 C57,30 60,28 60,28 Z"/></svg>
                 <div class="emblem-frame" data-fallback="AT">
                     <img src="https://i.ibb.co/MDM2jGCX/1785672737209-6292537109541337385428-8470405b249247be4b15602be05cd5ef.jpg" alt="AngelTier" onerror="handleIconError(this)">
                 </div>
-                <svg class="emblem-wing right" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path d="M60,24 C40,26 22,20 4,4 C18,10 34,14 48,20 C56,22 60,24 60,24 Z"/><path d="M60,26 C40,30 20,28 2,16 C18,20 36,24 50,26 C56,27 60,26 60,26 Z"/><path d="M60,28 C42,33 22,34 6,28 C20,30 38,32 52,31 C57,30 60,28 60,28 Z"/></svg>
             </div>
-            <div style="text-align:left;">
-                <div class="brand-name">AngelTier</div>
-                <span class="brand-sub">Forge Ranking System</span>
+            <div>
+                <span class="brand-name">AngelTier</span>
+                <span class="brand-sub">PvP Ranking Vietnam</span>
             </div>
         </button>
         <ul class="nav-links">
-            <li><a class="interactive-btn" onclick="switchView('home')">Trang chủ</a></li>
-            <li><a class="interactive-btn" onclick="openRanking('Overall')">Bảng Xếp Hạng</a></li>
-            <li><a class="interactive-btn" onclick="goToSection('timelineSection')">Quy Trình Test</a></li>
-            <li><a class="interactive-btn" onclick="goToSection('faqSection')">FAQ</a></li>
+            <li><a onclick="switchView('home')">Trang chủ</a></li>
+            <li><a onclick="switchView('ranking')">Xếp hạng</a></li>
+            <li><a href="#faq-section">FAQ</a></li>
         </ul>
         <div class="nav-actions">
-            <a class="btn-discord interactive-btn nav-cta" href="https://discord.gg/vnlist" target="_blank" rel="noopener">
+            <button class="btn-discord interactive-btn" onclick="window.open('https://discord.gg/angelTier','_blank')">
                 <i class="fa-brands fa-discord"></i> Discord
-            </a>
-            <button class="btn-admin-trigger interactive-btn" onclick="openAdminModal()" title="Bảng điều khiển nhân viên kỹ thuật">
-                <i class="fa-solid fa-gear"></i>
+            </button>
+            <button class="btn-admin-trigger interactive-btn" onclick="openAdminModal()" aria-label="Đăng nhập quản trị">
+                <i class="fa-solid fa-lock"></i>
             </button>
         </div>
     </div>
 </header>
 
-<div id="home-view" class="view-section active">
-
-    <div class="container hero-wrap">
+<!-- ==================== HOME VIEW ==================== -->
+<main id="view-home" class="view-section active">
+    <div class="hero-wrap">
         <div class="ambient-glow glow-hero"></div>
         <canvas id="emberCanvas"></canvas>
-
-        <div class="hero-emblem-wrap">
-            <div class="brand-emblem lg">
-                <svg class="emblem-wing left" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path d="M60,24 C40,26 22,20 4,4 C18,10 34,14 48,20 C56,22 60,24 60,24 Z"/><path d="M60,26 C40,30 20,28 2,16 C18,20 36,24 50,26 C56,27 60,26 60,26 Z"/><path d="M60,28 C42,33 22,34 6,28 C20,30 38,32 52,31 C57,30 60,28 60,28 Z"/></svg>
-                <div class="emblem-frame" data-fallback="ANGELTIER">
-                    <img src="https://i.ibb.co/MDM2jGCX/1785672737209-6292537109541337385428-8470405b249247be4b15602be05cd5ef.jpg" alt="AngelTier logo" onerror="handleIconError(this)">
-                </div>
-                <svg class="emblem-wing right" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path d="M60,24 C40,26 22,20 4,4 C18,10 34,14 48,20 C56,22 60,24 60,24 Z"/><path d="M60,26 C40,30 20,28 2,16 C18,20 36,24 50,26 C56,27 60,26 60,26 Z"/><path d="M60,28 C42,33 22,34 6,28 C20,30 38,32 52,31 C57,30 60,28 60,28 Z"/></svg>
-            </div>
-        </div>
-
-        <div class="hero-grid">
-            <div class="hero-left">
-                <div class="tag-badge"><span class="dot"></span> Cộng Đồng Minecraft PvP Việt Nam</div>
-                <h1 class="hero-title" id="heroTitle">Bảng Xếp Hạng <span class="accent">PvP Việt Nam</span></h1>
-                <p class="hero-desc">Gặp gỡ các người chơi Minecraft PvP hàng đầu tại Việt Nam, khám phá BXH Tier ở nhiều Mode khác nhau và tham gia Test để đánh giá trình độ của bạn.</p>
-                <div class="hero-btns">
-                    <button class="btn-primary interactive-btn" onclick="openRanking('Overall')"><i class="fa-solid fa-fire"></i> Bảng Xếp Hạng</button>
-                    <a class="btn-secondary interactive-btn" href="https://discord.gg/vnlist" target="_blank" rel="noopener"><i class="fa-solid fa-khanda"></i> Tham gia ngay!</a>
+        <div class="container">
+            <div class="hero-emblem-wrap">
+                <div class="brand-emblem lg">
+                    <svg class="emblem-wing left" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path d="M60,24 C40,26 22,20 4,4 C18,10 34,14 48,20 C56,22 60,24 60,24 Z"/><path d="M60,26 C40,30 20,28 2,16 C18,20 36,24 50,26 C56,27 60,26 60,26 Z"/><path d="M60,28 C42,33 22,34 6,28 C20,30 38,32 52,31 C57,30 60,28 60,28 Z"/></svg>
+                    <div class="emblem-frame" data-fallback="ANGELTIER">
+                        <img src="https://i.ibb.co/MDM2jGCX/1785672737209-6292537109541337385428-8470405b249247be4b15602be05cd5ef.jpg" alt="AngelTier" onerror="handleIconError(this)">
+                    </div>
+                    <svg class="emblem-wing right" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path d="M60,24 C40,26 22,20 4,4 C18,10 34,14 48,20 C56,22 60,24 60,24 Z"/><path d="M60,26 C40,30 20,28 2,16 C18,20 36,24 50,26 C56,27 60,26 60,26 Z"/><path d="M60,28 C42,33 22,34 6,28 C20,30 38,32 52,31 C57,30 60,28 60,28 Z"/></svg>
                 </div>
             </div>
-
-            <div class="card-box tilt-card" id="leaderboard">
-                <div class="card-header">
-                    <div class="card-title">Lò Rèn Hạng Nhất</div>
-                    <span class="card-sub"><span class="live-dot"></span>LIVE</span>
+            <div class="hero-grid">
+                <div class="hero-left">
+                    <div class="tag-badge"><span class="dot"></span> Phiên bản 2.0 — Live</div>
+                    <h1 class="hero-title" id="heroTitle"></h1>
+                    <p class="hero-desc">Hệ thống xếp hạng PvP Minecraft công tâm nhất Việt Nam. Mỗi đấu trường, một tier — kỹ năng thực sự được tôn vinh qua lửa.</p>
+                    <div class="hero-btns">
+                        <button class="btn-primary interactive-btn" onclick="switchView('ranking')"><i class="fa-solid fa-fire"></i> Xem Xếp Hạng</button>
+                        <button class="btn-secondary interactive-btn" onclick="document.getElementById('modes-section').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-gamepad"></i> Đấu Trường</button>
+                    </div>
                 </div>
-                <div class="player-list" id="heroPlayerList">
-                    <div class="skeleton-row"></div>
-                    <div class="skeleton-row"></div>
-                    <div class="skeleton-row"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="divider-wrap">
-        <svg viewBox="0 0 1200 40" preserveAspectRatio="none">
-            <polygon points="0,40 0,20 40,32 80,10 120,28 160,6 200,24 240,14 280,30 320,8 360,26 400,12 440,32 480,16 520,28 560,6 600,24 640,14 680,30 720,10 760,26 800,16 840,32 880,8 920,24 960,14 1000,30 1040,10 1080,26 1120,16 1160,32 1200,14 1200,40" fill="#14100c"/>
-        </svg>
-    </div>
-
-    <div class="container">
-        <div class="card-box tier-card reveal">
-            <div class="tier-top">
                 <div>
-                    <div class="tier-eyebrow">Hệ Thống Tier</div>
-                    <div class="tier-title-main">Ngọn lửa càng cao, đẳng cấp càng lớn</div>
+                    <div class="card-box tilt-card in-view" id="heroTierCard">
+                        <div class="card-header">
+                            <span class="card-title">Top Nhiệt Độ</span>
+                            <span class="card-sub"><span class="live-dot"></span> LIVE</span>
+                        </div>
+                        <div class="player-list" id="heroPlayerList">
+                            <div class="skeleton-row"></div>
+                            <div class="skeleton-row"></div>
+                            <div class="skeleton-row"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="tier-badge-count">10 CẤP BẬC</div>
             </div>
-            <div class="flame-ladder" id="flameLadder">
-                <div class="flame-col"><div class="flame-bar t5" style="height:22px"></div><span class="flame-label">LT5</span></div>
-                <div class="flame-col"><div class="flame-bar t5" style="height:30px"></div><span class="flame-label">HT5</span></div>
-                <div class="flame-col"><div class="flame-bar t4" style="height:44px"></div><span class="flame-label">LT4</span></div>
-                <div class="flame-col"><div class="flame-bar t4" style="height:52px"></div><span class="flame-label">HT4</span></div>
-                <div class="flame-col"><div class="flame-bar t3" style="height:66px"></div><span class="flame-label">LT3</span></div>
-                <div class="flame-col"><div class="flame-bar t3" style="height:84px"></div><span class="flame-label">HT3</span></div>
-                <div class="flame-col"><div class="flame-bar t2" style="height:106px"></div><span class="flame-label">LT2</span></div>
-                <div class="flame-col"><div class="flame-bar t2" style="height:124px"></div><span class="flame-label">HT2</span></div>
-                <div class="flame-col hi"><div class="flame-bar t1" style="height:146px"></div><span class="flame-label">LT1</span></div>
-                <div class="flame-col hi"><div class="flame-bar t1" style="height:164px"></div><span class="flame-label">HT1</span></div>
-            </div>
-            <div class="tier-desc-text">Mỗi Mode có Tier riêng biệt — điểm số cộng dồn vào tổng điểm Overall. Tier càng cao, ngọn lửa trên biểu đồ càng bùng cháy dữ dội.</div>
         </div>
+    </div>
+
+    <div class="container"><div class="divider-wrap"><svg viewBox="0 0 1200 44" preserveAspectRatio="none"><path d="M0,22 Q300,0 600,22 Q900,44 1200,22" stroke="rgba(255,138,61,0.2)" stroke-width="1" fill="none"/></svg></div></div>
+
+    <div class="container section-block" id="modes-section">
+        <div class="reveal">
+            <div class="section-eyebrow">Chọn Đấu Trường</div>
+            <div class="section-heading">8 Mode PvP Đỉnh Cao</div>
+        </div>
+        <div class="modes-grid card-box" id="modesGrid" style="padding:20px;"></div>
     </div>
 
     <div class="container section-block">
-        <div class="card-box reveal">
-            <div class="lb-header">
-                <div>
-                    <div class="lb-live"><span class="lb-dot"></span>LIVE LEADERBOARD</div>
-                    <div class="lb-title-text">Top Players</div>
+        <div class="reveal">
+            <div class="card-box tilt-card">
+                <div class="tier-top">
+                    <div>
+                        <div class="tier-eyebrow">Hệ thống tier</div>
+                        <div class="tier-title-main">Thang Đo Nhiệt Độ</div>
+                    </div>
+                    <div class="tier-badge-count" id="tierBadgeCount">0 chiến binh</div>
                 </div>
-                <button class="lb-view-all interactive-btn" onclick="openRanking('Overall')">Xem toàn bộ <i class="fa-solid fa-arrow-right"></i></button>
-            </div>
-            <div id="homeTopPlayers">
-                <div class="skeleton-row"></div>
-                <div class="skeleton-row"></div>
+                <div class="flame-ladder" id="flameLadder"></div>
+                <p class="tier-desc-text">Tier không phải danh hiệu — nó là nhiệt độ thực sự của lò rèn. Hệ thống tính điểm dựa trên tỷ lệ thắng, đối thủ đã đánh bại và độ ổn định qua từng mùa.</p>
             </div>
         </div>
     </div>
 
     <div class="container section-block">
-        <div class="section-eyebrow reveal">Xếp Hạng Theo Mode</div>
-        <div class="section-heading reveal">Modes Leaderboard</div>
-        <div class="modes-grid reveal" id="modesGrid"></div>
+        <div class="reveal">
+            <div class="card-box tilt-card">
+                <div class="lb-header">
+                    <div>
+                        <div class="lb-live"><span class="lb-dot"></span> LIVE RANKING</div>
+                        <div class="lb-title-text">Bảng Xếp Hạng Tổng Hợp</div>
+                    </div>
+                    <button class="lb-view-all interactive-btn" onclick="switchView('ranking')"><i class="fa-solid fa-arrow-right"></i> Xem tất cả</button>
+                </div>
+                <div id="homeLeaderboard">
+                    <div class="skeleton-row"></div>
+                    <div class="skeleton-row"></div>
+                    <div class="skeleton-row"></div>
+                    <div class="skeleton-row"></div>
+                    <div class="skeleton-row"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="container stats-section" id="statsSection">
         <div class="ambient-glow glow-stats"></div>
         <div class="ignite-flash"></div>
         <div class="stats-inner">
-            <p class="eyebrow">Nhật Ký Lò Rèn</p>
-            <h2 class="section-title">Thống kê hệ thống</h2>
+            <div class="eyebrow">SỐ LIỆU LÒ RÈN</div>
+            <div class="section-title">Những Con Số Nói Lên Tất Cả</div>
             <div class="molten-underline"></div>
             <div class="stats-grid" id="statsGrid">
                 <div class="stat-card">
-                    <div class="stat-icon-wrap"><div class="stat-icon"><i class="fa-solid fa-fire-flame-curved"></i></div></div>
-                    <div class="stat-number" data-target="45">0</div>
-                    <div class="stat-label">Tester Hoạt Động</div>
+                    <div class="stat-icon-wrap"><i class="fa-solid fa-users stat-icon"></i></div>
+                    <div class="stat-number" id="statPlayers">0</div>
+                    <div class="stat-label">Chiến binh đã xếp hạng</div>
                     <div class="stat-progress"><div class="stat-progress-fill"></div></div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon-wrap"><div class="stat-icon"><i class="fa-solid fa-users"></i></div></div>
-                    <div class="stat-number" data-target="1800">0</div>
-                    <div class="stat-label">Người Chơi Đã Được Test</div>
+                    <div class="stat-icon-wrap"><i class="fa-solid fa-crosshairs stat-icon"></i></div>
+                    <div class="stat-number" id="statTiers">0</div>
+                    <div class="stat-label">Tier đã phân bổ</div>
                     <div class="stat-progress"><div class="stat-progress-fill"></div></div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon-wrap"><div class="stat-icon"><i class="fa-solid fa-hammer"></i></div></div>
-                    <div class="stat-number" data-target="5200">0</div>
-                    <div class="stat-label">Bài Test Đã Hoàn Thành</div>
+                    <div class="stat-icon-wrap"><i class="fa-solid fa-fire-flame-curved stat-icon"></i></div>
+                    <div class="stat-number" id="statModes">8</div>
+                    <div class="stat-label">Đấu trường PvP</div>
                     <div class="stat-progress"><div class="stat-progress-fill"></div></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container section-block" id="timelineSection">
-        <div class="card-box reveal">
-            <div class="tier-eyebrow">Quy Trình Test</div>
-            <div class="section-heading" style="margin-top:6px;margin-bottom:0;">Từ tân binh đến huyền thoại</div>
-            <div class="timeline" id="timeline">
-                <div class="tl-step active">
-                    <div class="tl-num">1</div>
-                    <div><div class="tl-name">Tham gia Discord</div><div class="tl-desc">Tham gia Discord để nhận hỗ trợ hệ thống, cập nhật thông báo và giao lưu cùng cộng đồng AngelTier.</div></div>
-                </div>
-                <div class="tl-step">
-                    <div class="tl-num">2</div>
-                    <div><div class="tl-name">Đăng ký lịch Test</div><div class="tl-desc">Chọn Mode bạn muốn Test và đăng ký lịch phù hợp với thời gian rảnh của bạn.</div></div>
-                </div>
-                <div class="tl-step">
-                    <div class="tl-num">3</div>
-                    <div><div class="tl-name">Chờ đến lượt</div><div class="tl-desc">Hàng đợi được xử lý theo thứ tự đăng ký — Tester sẽ liên hệ khi đến lượt bạn.</div></div>
-                </div>
-                <div class="tl-step">
-                    <div class="tl-num">4</div>
-                    <div><div class="tl-name">Thi đấu trực tiếp</div><div class="tl-desc">Đối đầu trực tiếp với Tester trong các trận đấu thực tế để thể hiện trình độ thật sự.</div></div>
-                </div>
-                <div class="tl-step">
-                    <div class="tl-num">5</div>
-                    <div><div class="tl-name">Nhận kết quả &amp; Tier</div><div class="tl-desc">Tester đánh giá và trao Tier chính xác dựa trên kỹ năng thể hiện trong trận đấu.</div></div>
-                </div>
-                <div class="tl-step">
-                    <div class="tl-num">6</div>
-                    <div><div class="tl-name">Leo hạng</div><div class="tl-desc">Tier của bạn được cộng điểm và xuất hiện ngay trên Bảng Xếp Hạng AngelTier.</div></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container section-block reveal" id="faqSection">
-        <div class="section-heading" style="text-align:center;">Những điều cần biết về AngelTier</div>
-        <div class="faq-item active" onclick="toggleFaq(this)">
-            <div class="faq-q">AngelTier hoạt động như thế nào? <span class="arrow">+</span></div>
-            <div class="faq-a">AngelTier sử dụng hệ thống Tester chuyên nghiệp dành cho Minecraft PvP. Người chơi đăng ký, được Tester đánh giá trực tiếp qua các trận đấu thực tế và nhận Tier chính xác dựa trên kỹ năng.</div>
-        </div>
-        <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-q">Làm sao để đăng ký Test? <span class="arrow">+</span></div>
-            <div class="faq-a">Tham gia Discord của cộng đồng, vào kênh đăng ký Test, chọn Mode và khung giờ phù hợp. Tester sẽ nhắn tin xác nhận khi đến lượt bạn.</div>
-        </div>
-        <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-q">Tier được đánh giá dựa trên tiêu chí gì? <span class="arrow">+</span></div>
-            <div class="faq-a">Tester đánh giá dựa trên kỹ năng combat, khả năng ra quyết định, phản xạ và tư duy chiến thuật trong từng Mode cụ thể — không chỉ dựa vào thắng thua.</div>
-        </div>
-        <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-q">Bao lâu thì có thể Test lại để lên Tier? <span class="arrow">+</span></div>
-            <div class="faq-a">Thời gian chờ giữa hai lần Test cùng một Mode do quy định của cộng đồng đặt ra — thường được thông báo cụ thể trong Discord.</div>
-        </div>
-    </div>
-
-    <div class="container">
-        <footer>
-            <div>
-                <div class="footer-brand">
-                    <div class="brand-emblem md">
-                        <svg class="emblem-wing left" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path d="M60,24 C40,26 22,20 4,4 C18,10 34,14 48,20 C56,22 60,24 60,24 Z"/><path d="M60,26 C40,30 20,28 2,16 C18,20 36,24 50,26 C56,27 60,26 60,26 Z"/><path d="M60,28 C42,33 22,34 6,28 C20,30 38,32 52,31 C57,30 60,28 60,28 Z"/></svg>
-                        <div class="emblem-frame" data-fallback="AT">
-                            <img src="https://i.ibb.co/MDM2jGCX/1785672737209-6292537109541337385428-8470405b249247be4b15602be05cd5ef.jpg" alt="AngelTier" onerror="handleIconError(this)">
-                        </div>
-                        <svg class="emblem-wing right" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path d="M60,24 C40,26 22,20 4,4 C18,10 34,14 48,20 C56,22 60,24 60,24 Z"/><path d="M60,26 C40,30 20,28 2,16 C18,20 36,24 50,26 C56,27 60,26 60,26 Z"/><path d="M60,28 C42,33 22,34 6,28 C20,30 38,32 52,31 C57,30 60,28 60,28 Z"/></svg>
-                    </div>
-                    <div class="brand-name">AngelTier</div>
-                </div>
-                <p>AngelTier là nền tảng đánh giá và xếp hạng Minecraft PvP hàng đầu tại Việt Nam — nơi kỹ năng được tôi luyện qua lửa.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Điều hướng</h4>
-                <ul>
-                    <li><a class="interactive-btn" onclick="switchView('home')">Trang chủ</a></li>
-                    <li><a class="interactive-btn" onclick="openRanking('Overall')">Bảng Xếp Hạng</a></li>
-                    <li><a class="interactive-btn" onclick="goToSection('faqSection')">FAQ</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Liên kết nhanh</h4>
-                <ul><li><a href="https://discord.gg/vnlist" target="_blank" rel="noopener">Discord AngelTier</a></li></ul>
-            </div>
-            <div class="footer-bottom">© AngelTier · Cộng đồng Minecraft PvP Việt Nam</div>
-        </footer>
-    </div>
-</div>
-
-<div id="ranking-view" class="view-section">
     <div class="container section-block">
-        <div class="card-box">
-            <span class="rk-back interactive-btn" onclick="switchView('home')"><i class="fa-solid fa-arrow-left"></i> Về Trang Chủ</span>
-            <div class="rk-header">
-                <div class="rk-title">Bảng Xếp Hạng</div>
-                <div class="rk-sub">Dữ liệu trực tiếp từ hệ thống Angel Bot.</div>
-            </div>
-            <div class="rk-tabs" id="rankingTabs"></div>
-            <div class="rk-table-wrap">
-                <table class="rk-table">
-                    <thead>
-                        <tr><th style="width:60px;">#</th><th style="width:220px;">Player</th><th style="width:100px;">Điểm</th><th>Tiers chi tiết</th></tr>
-                    </thead>
-                    <tbody id="rankingTableBody"></tbody>
-                </table>
-            </div>
+        <div class="reveal" style="text-align:center;">
+            <div class="section-eyebrow">Quy trình</div>
+            <div class="section-heading">Từ Lửa Đến Tier</div>
+        </div>
+        <div class="timeline" id="timeline">
+            <div class="tl-step active"><div class="tl-num">1</div><div><div class="tl-name">Ghi nhận trận đấu</div><div class="tl-desc">Mỗi trận PvP được hệ thống tự động thu thập từ plugin Discord bot.</div></div></div>
+            <div class="tl-step"><div class="tl-num">2</div><div><div class="tl-name">Tính điểm Elo</div><div class="tl-desc">Thuật toán Elo điều chỉnh dựa trên chênh lệch tier giữa hai đấu thủ.</div></div></div>
+            <div class="tl-step"><div class="tl-num">3</div><div><div class="tl-name">Cập nhật Tier</div><div class="tl-desc">Điểm tích lũy qua mùa quyết định tier mới — lên hay xuống phụ thuộc vào bạn.</div></div></div>
+            <div class="tl-step"><div class="tl-num">4</div><div><div class="tl-name">Phân phối danh hiệu</div><div class="tl-desc">Tier cao nhất nhận danh hiệu đặc biệt trên Discord và trang web.</div></div></div>
         </div>
     </div>
-</div>
 
-<div id="admin-view" class="view-section">
-    <div class="container section-block">
-        <div class="card-box">
-            <span class="rk-back interactive-btn" onclick="switchView('home')"><i class="fa-solid fa-arrow-left"></i> Về Trang Chủ</span>
-            <div class="rk-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
-                <div>
-                    <div class="rk-title">Bảng Điều Khiển Nhân Viên Kỹ Thuật</div>
-                    <div class="rk-sub">Chỉnh sửa Top Players, Lò Rèn Hạng Nhất và Bảng Xếp Hạng — lưu lại sẽ cập nhật trực tiếp cho toàn bộ người xem.</div>
-                </div>
-                <button class="btn-secondary interactive-btn" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
-            </div>
-            <div class="admin-savebar">
-                <button class="btn-primary interactive-btn" onclick="saveAdminPlayers()"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>
-                <button class="btn-secondary interactive-btn" onclick="addAdminPlayer()"><i class="fa-solid fa-plus"></i> Thêm người chơi</button>
-                <span class="admin-status" id="adminStatus"></span>
-            </div>
-            <div id="adminPlayersList" class="admin-players-list"></div>
+    <div class="container section-block" id="faq-section">
+        <div class="reveal" style="text-align:center;">
+            <div class="section-eyebrow">Câu hỏi thường gặp</div>
+            <div class="section-heading">FAQ</div>
+        </div>
+        <div class="reveal" style="max-width:680px;margin:0 auto;">
+            <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Tier được tính như thế nào?<span class="arrow"><i class="fa-solid fa-plus"></i></span></div><div class="faq-a">Tier dựa trên điểm Elo tích lũy. Mỗi chiến thắng tăng điểm, mỗi thất bại giảm điểm — mức tăng/giảm phụ thuộc vào tier đối thủ.</div></div>
+            <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Tôi có thể thách đấu ai đó không?<span class="arrow"><i class="fa-solid fa-plus"></i></span></div><div class="faq-a">Hiện tại, trận đấu được ghi nhận thông qua plugin bot trên Discord server. Bạn chỉ cần thi đấu bình thường — hệ thống tự động xử lý.</div></div>
+            <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Tier có bị reset mỗi mùa không?<span class="arrow"><i class="fa-solid fa-plus"></i></span></div><div class="faq-a">Có. Mỗi mùa kéo dài 3 tháng, sau đó điểm được soft-reset: tier cao bị kéo xuống một mức, tier thấp được giữ nguyên.</div></div>
+            <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Làm sao để báo lỗi kết quả?<span class="arrow"><i class="fa-solid fa-plus"></i></span></div><div class="faq-a">Liên hệ trực tiếp với admin qua Discord hoặc nút báo lỗi trong kênh #support. Mỗi báo cáo được xử lý trong vòng 24h.</div></div>
         </div>
     </div>
-</div>
+</main>
 
-<div class="modal-overlay" id="adminAuthModal">
-    <div class="modal-card admin-auth-card">
-        <div class="modal-icon"><i class="fa-solid fa-lock"></i></div>
-        <div class="admin-step" id="adminStep1">
-            <div class="modal-text">Lớp mật khẩu 1 — Bảng Điều Khiển Nhân Viên</div>
-            <input type="password" inputmode="numeric" id="adminPass1" class="admin-input" placeholder="Nhập mật khẩu số">
+<!-- ==================== RANKING VIEW ==================== -->
+<main id="view-ranking" class="view-section">
+    <div class="container" style="padding-top:30px;padding-bottom:60px;">
+        <div class="rk-back interactive-btn" onclick="switchView('home')"><i class="fa-solid fa-arrow-left"></i> Quay lại trang chủ</div>
+        <div class="rk-header">
+            <div class="rk-title">Bảng Xếp Hạng Chi Tiết</div>
+            <div class="rk-sub">Chọn mode để xem xếp hạng theo từng đấu trường</div>
+        </div>
+        <div class="rk-tabs" id="rkTabs"></div>
+        <div class="rk-table-wrap">
+            <table class="rk-table">
+                <thead><tr><th>#</th><th>Người chơi</th><th>Điểm</th><th>Các Tier theo mode</th></tr></thead>
+                <tbody id="rkBody"></tbody>
+            </table>
+        </div>
+        <div class="empty-state" id="rkEmpty" style="display:none;">Chưa có dữ liệu xếp hạng cho mode này.</div>
+    </div>
+</main>
+
+<!-- ==================== ADMIN VIEW ==================== -->
+<main id="view-admin" class="view-section">
+    <div class="container" style="padding-top:30px;padding-bottom:60px;">
+        <div class="rk-back interactive-btn" onclick="switchView('home')"><i class="fa-solid fa-arrow-left"></i> Quay lại trang chủ</div>
+        <div class="rk-header">
+            <div class="rk-title">Bảng Điều Khiển Quản Trị</div>
+            <div class="rk-sub">Quản lý người chơi, tier và điểm số</div>
+        </div>
+        <div class="admin-savebar">
+            <button class="btn-primary interactive-btn" onclick="adminSave()" style="padding:10px 22px;font-size:0.85rem;"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>
+            <button class="btn-secondary interactive-btn" onclick="adminAddPlayer()" style="padding:10px 18px;font-size:0.85rem;"><i class="fa-solid fa-plus"></i> Thêm người chơi</button>
+            <span class="admin-status" id="adminStatus"></span>
+        </div>
+        <div class="admin-players-list" id="adminPlayersList"></div>
+    </div>
+</main>
+
+<!-- Admin Login Modal — 2 lớp xác thực -->
+<div class="modal-overlay" id="adminModal">
+    <div class="modal-card" id="adminModalCard">
+        <div class="modal-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="modal-text" id="adminModalTitle">Xác Thực Quản Trị</div>
+        <!-- Bước 1: Mật khẩu -->
+        <div id="adminStep1">
+            <div class="modal-step-label">Lớp 1 / 2 — Mật khẩu</div>
+            <input type="password" class="admin-input" id="adminPassInput" placeholder="Nhập mật khẩu..." onkeydown="if(event.key==='Enter')adminStep1Submit()">
             <div class="admin-error" id="adminError1"></div>
             <div class="admin-modal-actions">
-                <button class="btn-modal-cancel interactive-btn" onclick="closeAdminModal()">Hủy</button>
-                <button class="btn-modal-close interactive-btn" onclick="submitStep1()">Tiếp theo</button>
+                <button class="btn-modal-cancel" onclick="closeAdminModal()">Hủy</button>
+                <button class="btn-modal-close" onclick="adminStep1Submit()">Tiếp tục</button>
             </div>
         </div>
-        <div class="admin-step" id="adminStep2" style="display:none;">
-            <div class="modal-text">Lớp mật khẩu 2 — Webhook xác thực nội bộ</div>
-            <input type="text" id="adminPass2" class="admin-input mono" placeholder="https://discord.com/api/webhooks/...">
+        <!-- Bước 2: Webhook -->
+        <div id="adminStep2" style="display:none;">
+            <div class="modal-step-label">Lớp 2 / 2 — Xác nhận Webhook</div>
+            <input type="text" class="admin-input mono" id="adminWebhookInput" placeholder="Nhập Discord Webhook URL..." onkeydown="if(event.key==='Enter')adminStep2Submit()">
             <div class="admin-error" id="adminError2"></div>
             <div class="admin-modal-actions">
-                <button class="btn-modal-cancel interactive-btn" onclick="closeAdminModal()">Hủy</button>
-                <button class="btn-modal-close interactive-btn" onclick="submitStep2()">Tiếp theo</button>
+                <button class="btn-modal-cancel" onclick="closeAdminModal()">Hủy</button>
+                <button class="btn-modal-close" onclick="adminStep2Submit()">Xác nhận</button>
             </div>
         </div>
     </div>
 </div>
 
+<footer>
+    <div>
+        <div class="footer-brand">
+            <div class="brand-emblem sm">
+                <div class="emblem-frame" data-fallback="AT">
+                    <img src="https://i.ibb.co/MDM2jGCX/1785672737209-6292537109541337385428-8470405b249247be4b15602be05cd5ef.jpg" alt="AngelTier" onerror="handleIconError(this)">
+                </div>
+            </div>
+            <span class="brand-name">AngelTier</span>
+        </div>
+        <p>Hệ thống xếp hạng PvP Minecraft công tâm nhất Việt Nam. Xây dựng bởi cộng đồng, vì cộng đồng.</p>
+    </div>
+    <div class="footer-col">
+        <h4>Điều hướng</h4>
+        <ul>
+            <li><a onclick="switchView('home')">Trang chủ</a></li>
+            <li><a onclick="switchView('ranking')">Xếp hạng</a></li>
+            <li><a href="#faq-section">FAQ</a></li>
+        </ul>
+    </div>
+    <div class="footer-col">
+        <h4>Kết nối</h4>
+        <ul>
+            <li><a href="#"><i class="fa-brands fa-discord" style="margin-right:6px;"></i> Discord</a></li>
+            <li><a href="#"><i class="fa-brands fa-youtube" style="margin-right:6px;"></i> YouTube</a></li>
+            <li><a href="#"><i class="fa-brands fa-github" style="margin-right:6px;"></i> GitHub</a></li>
+        </ul>
+    </div>
+    <div class="footer-bottom">2025 AngelTier — made by MCO (mr.coco own web). Không thuộc Mojang AB hay Microsoft.</div>
+</footer>
+
 <script>
-let allPlayersData = [];
-let adminPlayersData = [];
-const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* =========================================================
+   CONFIG — KHÔNG SỬA ĐỔI, GIỮ NGUYÊN TỪ BACKEND
+   ========================================================= */
 
-/* ====================================================================
-   ẢNH LOGO & ICON MODE
-   Link bạn gửi có dấu "…" ở giữa nên nhiều khả năng đã bị RÚT GỌN khi copy,
-   dẫn tới link ảnh không load được (404). Nếu icon dưới đây không hiện lên
-   trên web, hãy lấy link ảnh trực tiếp (direct link, đuôi .jpg/.png đầy đủ,
-   không có "…") rồi dán đè vào đúng vị trí tương ứng bên dưới là xong.
-   ==================================================================== */
-const LOGO_URL = "https://i.ibb.co/MDM2jGCX/1785672737209-6292537109541337385428-8470405b249247be4b15602be05cd5ef.jpg";
-
-const TIER_POINTS = {LT5:10,HT5:15,LT4:20,HT4:25,LT3:30,HT3:40,LT2:50,HT2:60,LT1:70,HT1:80};
-function tierPoints(tier){ return TIER_POINTS[String(tier||'').trim().toUpperCase()] || 0; }
-function tierChipClass(tier){
-    let t = String(tier||'').trim().toUpperCase();
-    if(t==='HT1') return 'tier-ht1';
-    if(t==='HT2') return 'tier-ht2';
-    return 'tier-other';
-}
-function bestTier(tiers){
-    if(!tiers) return '—';
-    let best = null, bestPts = -1;
-    for(const [m,t] of Object.entries(tiers)){
-        const pts = tierPoints(t);
-        if(pts > bestPts){ bestPts = pts; best = t; }
-    }
-    return best || '—';
-}
-
-const modeList = [
-    { id:"Overall", name:"OVERALL", short:"OA", icon:null },
-    { id:"Sword", name:"SWORD", short:"SW", icon:"https://i.ibb.co/4g8VWz2G/1785676396054-6292537109541337385428-558f2d20e2d87f121c349fc3fa97cb93.jpg" },
-    { id:"Nethpot", name:"NETHPOT", short:"NP", icon:"https://i.ibb.co/Qv36TnfB/1785676416877-6292537109541337385428-2a5cf3b297af746a1eef72b94db478a0.jpg" },
-    { id:"Pot", name:"POT", short:"PT", icon:"https://i.ibb.co/cKMnLRYf/1785676428134-6292537109541337385428-f7cf8794b8709b6afb8d4557a4777011.jpg" },
-    { id:"Smp", name:"SMP", short:"SM", icon:"https://i.ibb.co/Df8xh6fB/1785676449117-6292537109541337385428-d7d09cb8d0c2cc998142caf49ff7de82.jpg" },
-    { id:"Uhc", name:"UHC", short:"UH", icon:"https://i.ibb.co/wZmTpDPC/1785676456197-6292537109541337385428-268b35c584bf3df543923c49569938a8.jpg" },
-    { id:"Axe", name:"AXE", short:"AX", icon:"https://i.ibb.co/k64WTvs3/1785676469237-6292537109541337385428-ad37b39b4b2c1e5e860db94effb9a128.jpg" },
-    { id:"Vanilla", name:"VANILLA", short:"VN", icon:"https://i.ibb.co/d0FM7v1x/1785676523013-6292537109541337385428-2385c3abc47baf3c515f244dd73045a8.jpg" },
-    { id:"Mace", name:"MACE", short:"MC", icon:"https://i.ibb.co/k6D0dbB0/1785676545693-6292537109541337385428-bd9b4a7046cbdc10ef758bbeb2b3309e.jpg" }
+/* 8 modes với icon đúng — key = tên mode backend dùng */
+const MODES = [
+    { id:'Sword',   name:'SWORD',   img:'https://i.ibb.co/4g8VWz2G/1785676396054-6292537109%E2%80%A6541337385428-558f2d20e2d87f121c349fc3fa97cb93.jpg',   fallback:'SW' },
+    { id:'Nethpot', name:'NETHOP',  img:'https://i.ibb.co/Qv36TnfB/1785676416877-6292537109%E2%80%A6541337385428-2a5cf3b297af746a1eef72b94db478a0.jpg',   fallback:'NH' },
+    { id:'Pot',     name:'POT',     img:'https://i.ibb.co/cKMnLRYf/1785676428134-6292537109%E2%80%A6541337385428-f7cf8794b8709b6afb8d4557a4777011.jpg',   fallback:'PT' },
+    { id:'UHC',     name:'UHC',     img:'https://i.ibb.co/Df8xh6fB/1785676449117-6292537109%E2%80%A6541337385428-d7d09cb8d0c2cc998142caf49ff7de82.jpg',   fallback:'UH' },
+    { id:'Axe',     name:'AXE',     img:'https://i.ibb.co/wZmTpDPC/1785676456197-6292537109%E2%80%A6541337385428-268b35c584bf3df543923c49569938a8.jpg',   fallback:'AX' },
+    { id:'Mace',    name:'MACE',    img:'https://i.ibb.co/k64WTvs3/1785676469237-6292537109%E2%80%A6541337385428-ad37b39b4b2c1e5e860db94effb9a128.jpg',   fallback:'MC' },
+    { id:'Smp',     name:'SMP',     img:'https://i.ibb.co/d0FM7v1x/1785676523013-6292537109%E2%80%A6541337385428-2385c3abc47baf3c515f244dd73045a8.jpg',   fallback:'SM' },
+    { id:'Vanilla', name:'VANILLA', img:'https://i.ibb.co/k6D0dbB0/1785676545693-6292537109%E2%80%A6541337385428-bd9b4a7046cbdc10ef758bbeb2b3309e.jpg',   fallback:'VN' },
 ];
 
-function handleIconError(img){
-    const frame = img.closest('.icon-frame, .emblem-frame');
-    if(frame) frame.classList.add('broken');
-}
+/* 10 cấp tier đúng backend */
+const ALL_TIERS = ['HT1','LT1','HT2','LT2','HT3','LT3','HT4','LT4','HT5','LT5'];
+const TIER_ORDER = {};
+ALL_TIERS.forEach((t,i) => TIER_ORDER[t] = i);
 
-function iconOrbHTML(url, fallback, sizeClass){
-    if(!url){
-        return `<div class="icon-orb ${sizeClass}"><span class="icon-ring"></span><div class="icon-frame broken" data-fallback="${fallback}"></div></div>`;
-    }
-    return `<div class="icon-orb ${sizeClass}"><span class="icon-ring"></span><div class="icon-frame" data-fallback="${fallback}"><img src="${url}" alt="${fallback}" loading="lazy" onerror="handleIconError(this)"></div></div>`;
-}
-
-async function fetchBotData(){
-    try{
-        const response = await fetch('/api/leaderboard');
-        allPlayersData = await response.json();
-        renderHeroPreview();
-        renderHomeTopPlayers();
-    }catch(error){
-        console.error("Lỗi tải dữ liệu từ Angel Bot:", error);
-        document.getElementById('heroPlayerList').innerHTML = '<div class="empty-state">Không thể tải dữ liệu lúc này.</div>';
-        document.getElementById('homeTopPlayers').innerHTML = '<div class="empty-state">Không thể tải dữ liệu từ Angel Bot lúc này.</div>';
-    }
-}
-
-function renderHeroPreview(){
-    const list = document.getElementById('heroPlayerList');
-    list.innerHTML = '';
-    if(!allPlayersData.length){ list.innerHTML = '<div class="empty-state">Chưa có người chơi nào được xếp hạng.</div>'; return; }
-    const top3 = allPlayersData.slice(0,3);
-    const maxPts = Math.max(...top3.map(p=>p.points), 1);
-    const rankClasses = ['r1','r2','r3'];
-    const fillClasses = ['fill-1','fill-2','fill-3'];
-    top3.forEach((p, i) => {
-        const fillPct = Math.max(15, Math.round((p.points / maxPts) * 100));
-        const chipClass = tierChipClass(bestTier(p.tiers));
-        const item = document.createElement('div');
-        item.className = 'player-item';
-        item.innerHTML = `
-            <div class="player-row">
-                <div class="player-info">
-                    <div class="rank-mark ${rankClasses[i]}">0${i+1}</div>
-                    <img class="avatar" src="${p.avatar}" alt="" onerror="this.style.visibility='hidden'">
-                    <div>
-                        <div class="p-name">${p.name}</div>
-                        <div class="p-points">${p.points} điểm tôi luyện</div>
-                    </div>
-                </div>
-                <span class="tier-chip ${chipClass}">${bestTier(p.tiers)}</span>
-            </div>
-            <div class="heat-bar"><div class="heat-fill ${fillClasses[i]}" style="--fill:${fillPct}%"></div></div>`;
-        list.appendChild(item);
-    });
-}
-
-function renderHomeTopPlayers(){
-    const container = document.getElementById('homeTopPlayers');
-    container.innerHTML = '';
-    if(!allPlayersData.length){ container.innerHTML = '<div class="empty-state">Chưa có người chơi nào được xếp hạng.</div>'; return; }
-    const top5 = allPlayersData.slice(0,5);
-    top5.forEach((p, index) => {
-        const medal = index===0 ? "🥇" : (index===1 ? "🥈" : (index===2 ? "🥉" : ""));
-        const row = document.createElement('div');
-        row.className = 'lb-row' + (index===0 ? ' top1' : '');
-        row.innerHTML = `
-            <div class="lb-left">
-                <span class="rank-chip ${index<3?'medal':''}">#${index+1} ${medal}</span>
-                <img src="${p.avatar}" class="avatar" alt="" onerror="this.style.visibility='hidden'">
-                <span class="lb-name">${p.name}</span>
-            </div>
-            <span class="lb-points">${p.points} pts</span>`;
-        container.appendChild(row);
-    });
-}
-
-function renderModesGrid(){
-    const grid = document.getElementById('modesGrid');
-    grid.innerHTML = '';
-    modeList.filter(m => m.id !== 'Overall').forEach(m => {
-        const card = document.createElement('div');
-        card.className = 'card-box mode-card';
-        card.onclick = () => openRanking(m.id);
-        card.innerHTML = `${iconOrbHTML(m.icon, m.short, 'md')}<span class="mode-name">${m.name}</span>`;
-        grid.appendChild(card);
-    });
-}
-
-function switchView(viewName){
-    document.getElementById('home-view').classList.remove('active');
-    document.getElementById('ranking-view').classList.remove('active');
-    document.getElementById('admin-view').classList.remove('active');
-    if(viewName==='home') document.getElementById('home-view').classList.add('active');
-    else if(viewName==='ranking') document.getElementById('ranking-view').classList.add('active');
-    else if(viewName==='admin') document.getElementById('admin-view').classList.add('active');
-    window.scrollTo(0,0);
-}
-
-function goToSection(sectionId){
-    switchView('home');
-    setTimeout(() => {
-        const el = document.getElementById(sectionId);
-        if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
-    }, 60);
-}
-
-function openRanking(selectedMode){
-    switchView('ranking');
-    const bar = document.getElementById('rankingTabs');
-    bar.innerHTML = '';
-    modeList.forEach(m => {
-        const isActive = m.id===selectedMode ? 'active' : '';
-        const tab = document.createElement('div');
-        tab.className = `rk-tab ${isActive}`;
-        tab.onclick = () => openRanking(m.id);
-        if(m.id === 'Overall'){
-            tab.innerHTML = `<i class="fa-solid fa-fire"></i><span>${m.name}</span>`;
-        } else {
-            tab.innerHTML = `${iconOrbHTML(m.icon, m.short, 'sm')}<span>${m.name}</span>`;
-        }
-        bar.appendChild(tab);
-    });
-
-    const tbody = document.getElementById('rankingTableBody');
-    tbody.innerHTML = '';
-
-    let rows;
-    if(selectedMode === 'Overall'){
-        rows = allPlayersData.map(p => ({...p, displayPoints: p.points, focusMode: null}));
-    } else {
-        rows = allPlayersData
-            .filter(p => p.tiers && p.tiers[selectedMode])
-            .map(p => ({...p, displayPoints: tierPoints(p.tiers[selectedMode]), focusMode: selectedMode}))
-            .sort((a,b) => b.displayPoints - a.displayPoints);
-    }
-
-    if(!rows.length){
-        tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state">Chưa có người chơi nào có Tier ở Mode này.</div></td></tr>`;
-        return;
-    }
-
-    rows.forEach((p, index) => {
-        let rankDisplay = String(index+1);
-        if(index===0) rankDisplay = "1 🥇"; else if(index===1) rankDisplay = "2 🥈"; else if(index===2) rankDisplay = "3 🥉";
-
-        let tiersHTML = '';
-        if(p.tiers){
-            for(const [m,t] of Object.entries(p.tiers)){
-                const match = p.focusMode && m === p.focusMode ? 'match' : '';
-                tiersHTML += `<div class="mode-tier-chip ${match}">${m}: ${t}</div>`;
-            }
-        }
-
-        const tr = document.createElement('tr');
-        tr.style.animationDelay = (index * 0.035) + 's';
-        tr.innerHTML = `
-            <td style="font-weight:700;color:var(--text-dim);">${rankDisplay}</td>
-            <td>
-                <div class="lb-left">
-                    <img src="${p.avatar}" class="avatar" alt="" onerror="this.style.visibility='hidden'">
-                    <span class="lb-name">${p.name}</span>
-                </div>
-            </td>
-            <td style="font-weight:700;color:var(--ember-hot);font-family:'JetBrains Mono',monospace;">${p.displayPoints}</td>
-            <td><div class="tiers-wrap">${tiersHTML}</div></td>`;
-        tbody.appendChild(tr);
-    });
-}
-
-function toggleFaq(element){
-    document.querySelectorAll('.faq-item').forEach(el => { if(el!==element) el.classList.remove('active'); });
-    element.classList.toggle('active');
-}
-
-/* ====================================================================
-   Bảng điều khiển nhân viên kỹ thuật — xác thực 2 lớp mật khẩu.
-   Mọi kiểm tra mật khẩu và việc gửi thông báo Discord đều được xử lý
-   ở phía server (Flask) — mật khẩu/webhook thật KHÔNG được nhúng ở
-   client, tránh bị lộ khi xem mã nguồn trang.
-   ==================================================================== */
-function openAdminModal(){
-    document.getElementById('adminStep1').style.display = 'block';
-    document.getElementById('adminStep2').style.display = 'none';
-    document.getElementById('adminPass1').value = '';
-    document.getElementById('adminPass2').value = '';
-    document.getElementById('adminError1').textContent = '';
-    document.getElementById('adminError2').textContent = '';
-    document.getElementById('adminAuthModal').classList.add('open');
-    setTimeout(() => document.getElementById('adminPass1').focus(), 80);
-}
-function closeAdminModal(){
-    document.getElementById('adminAuthModal').classList.remove('open');
-}
-function shakeAuthCard(){
-    const card = document.querySelector('.admin-auth-card');
-    card.classList.add('shake-anim');
-    setTimeout(() => card.classList.remove('shake-anim'), 450);
-}
-async function submitStep1(){
-    const pass = document.getElementById('adminPass1').value.trim();
-    const errEl = document.getElementById('adminError1');
-    errEl.textContent = '';
-    try{
-        const res = await fetch('/api/admin/step1', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({password: pass})});
-        const data = await res.json();
-        if(data.ok){
-            document.getElementById('adminStep1').style.display = 'none';
-            document.getElementById('adminStep2').style.display = 'block';
-            document.getElementById('adminPass2').focus();
-        } else {
-            errEl.textContent = 'Sai mật khẩu lớp 1.';
-            shakeAuthCard();
-        }
-    }catch(e){ errEl.textContent = 'Lỗi kết nối máy chủ.'; }
-}
-async function submitStep2(){
-    const webhook = document.getElementById('adminPass2').value.trim();
-    const errEl = document.getElementById('adminError2');
-    errEl.textContent = '';
-    try{
-        const res = await fetch('/api/admin/step2', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({webhook})});
-        const data = await res.json();
-        if(data.ok){
-            closeAdminModal();
-            await enterAdminPanel();
-        } else {
-            errEl.textContent = 'Sai mật khẩu lớp 2. Hệ thống đã ghi nhận sự việc.';
-            shakeAuthCard();
-            document.getElementById('adminStep2').style.display = 'none';
-            document.getElementById('adminStep1').style.display = 'block';
-            document.getElementById('adminPass1').value = '';
-        }
-    }catch(e){ errEl.textContent = 'Lỗi kết nối máy chủ.'; }
-}
-async function enterAdminPanel(){
-    try{
-        const res = await fetch('/api/admin/players');
-        const data = await res.json();
-        if(data.ok){
-            adminPlayersData = data.players.map(p => ({
-                name: p.name || '',
-                avatar: p.avatar || '',
-                tiers: {...(p.tiers || {})},
-                points_override: (typeof p.points_override === 'number' ? p.points_override : null)
-            }));
-            renderAdminPlayers();
-            switchView('admin');
-        }
-    }catch(e){ alert('Không thể tải dữ liệu bảng điều khiển.'); }
-}
-async function adminLogout(){
-    try{ await fetch('/api/admin/logout', {method:'POST'}); }catch(e){}
-    switchView('home');
-}
-
-function renderAdminPlayers(){
-    const list = document.getElementById('adminPlayersList');
-    list.innerHTML = '';
-    if(!adminPlayersData.length){
-        list.innerHTML = '<div class="empty-state">Chưa có người chơi nào. Bấm "Thêm người chơi" để bắt đầu.</div>';
-        return;
-    }
-    adminPlayersData.forEach((p, idx) => {
-        const card = document.createElement('div');
-        card.className = 'admin-player-card';
-        const tierChips = Object.entries(p.tiers || {}).map(([m,t]) => `
-            <div class="admin-tier-chip">${m}: ${t}<button type="button" onclick="removeAdminTier(${idx}, '${m.replace(/'/g,"\\'")}')">&times;</button></div>
-        `).join('');
-        const modeOptions = modeList.filter(m => m.id !== 'Overall').map(m => `<option value="${m.id}">${m.name}</option>`).join('');
-        const tierOptions = Object.keys(TIER_POINTS).map(t => `<option value="${t}">${t}</option>`).join('');
-        const safeAvatar = (p.avatar || '').replace(/"/g,'&quot;');
-        const safeName = (p.name || '').replace(/"/g,'&quot;');
-        card.innerHTML = `
-            <div class="admin-player-top">
-                <img class="admin-avatar-preview" src="${p.avatar || ''}" alt="" onerror="this.src='https://mc-heads.net/avatar/Steve/100.png'">
-                <div class="admin-field">
-                    <label>Tên người chơi</label>
-                    <input type="text" value="${safeName}" oninput="updateAdminField(${idx},'name',this.value)">
-                </div>
-                <div class="admin-field">
-                    <label>Ảnh (URL đầy đủ, trên internet)</label>
-                    <input type="text" value="${safeAvatar}" onchange="updateAdminAvatar(${idx}, this.value)">
-                </div>
-                <div class="admin-field" style="max-width:200px;">
-                    <label>Điểm (ghi đè thủ công)</label>
-                    <input type="number" placeholder="Để trống = tự tính theo tier" value="${p.points_override ?? ''}" oninput="updateAdminPoints(${idx}, this.value)">
-                </div>
-            </div>
-            <span class="admin-tiers-label">Tiers chi tiết</span>
-            <div class="admin-tiers-wrap">${tierChips || '<span style="color:var(--text-faint);font-size:0.76rem;">Chưa có tier nào</span>'}</div>
-            <div class="admin-add-tier">
-                <select id="modeSel-${idx}">${modeOptions}</select>
-                <select id="tierSel-${idx}">${tierOptions}</select>
-                <button type="button" class="btn-secondary interactive-btn" style="padding:8px 14px;" onclick="addAdminTier(${idx})"><i class="fa-solid fa-plus"></i> Thêm tier</button>
-            </div>
-            <div class="admin-player-actions">
-                <button type="button" class="admin-delete-btn interactive-btn" onclick="deleteAdminPlayer(${idx})"><i class="fa-solid fa-trash"></i> Xóa người chơi</button>
-            </div>
-        `;
-        list.appendChild(card);
-    });
-}
-function updateAdminField(idx, field, value){ adminPlayersData[idx][field] = value; }
-function updateAdminAvatar(idx, value){ adminPlayersData[idx].avatar = value; renderAdminPlayers(); }
-function updateAdminPoints(idx, value){
-    const v = String(value).trim();
-    adminPlayersData[idx].points_override = v === '' ? null : Number(v);
-}
-function addAdminTier(idx){
-    const mode = document.getElementById('modeSel-'+idx).value;
-    const tier = document.getElementById('tierSel-'+idx).value;
-    adminPlayersData[idx].tiers[mode] = tier;
-    renderAdminPlayers();
-}
-function removeAdminTier(idx, mode){
-    delete adminPlayersData[idx].tiers[mode];
-    renderAdminPlayers();
-}
-function deleteAdminPlayer(idx){
-    adminPlayersData.splice(idx, 1);
-    renderAdminPlayers();
-}
-function addAdminPlayer(){
-    adminPlayersData.push({name:'Người chơi mới', avatar:'https://mc-heads.net/avatar/Steve/100.png', tiers:{}, points_override:null});
-    renderAdminPlayers();
-}
-async function saveAdminPlayers(){
-    const statusEl = document.getElementById('adminStatus');
-    statusEl.textContent = 'Đang lưu...';
-    statusEl.className = 'admin-status';
-    try{
-        const res = await fetch('/api/admin/players', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({players: adminPlayersData})});
-        const data = await res.json();
-        if(data.ok){
-            statusEl.textContent = 'Đã lưu thành công.';
-            statusEl.className = 'admin-status ok';
-            fetchBotData();
-        } else {
-            statusEl.textContent = 'Lỗi: ' + (data.error || 'không rõ');
-            statusEl.className = 'admin-status err';
-        }
-    }catch(e){
-        statusEl.textContent = 'Lỗi kết nối máy chủ.';
-        statusEl.className = 'admin-status err';
-    }
-}
-
-/* ---------- Intro / curtain (chỉ chạy 1 lần / phiên truy cập) ---------- */
-function runIntro(){
-    const seen = sessionStorage.getItem('angeltier_intro_seen');
-    const curtain = document.getElementById('curtain');
-    if(seen || REDUCED_MOTION){
-        document.body.classList.add('loaded');
-        curtain.style.transition = 'none';
-        curtain.remove();
-        return;
-    }
-    sessionStorage.setItem('angeltier_intro_seen','1');
-    const bar = document.getElementById('curtainBar');
-    const status = document.getElementById('curtainStatus');
-    let step = 0;
-    const totalSteps = 34;
-    const timer = setInterval(() => {
-        step++;
-        const pct = Math.min(100, Math.round((step/totalSteps)*100 + Math.random()*4));
-        bar.style.width = pct + '%';
-        status.textContent = (pct<100 ? 'ĐANG NHÓM LỬA · ' : 'SẴN SÀNG · ') + Math.min(pct,100) + '%';
-        if(step>=totalSteps || pct>=100){
-            clearInterval(timer);
-            bar.style.width = '100%';
-            status.textContent = 'SẴN SÀNG · 100%';
-            setTimeout(() => document.body.classList.add('loaded'), 300);
-        }
-    }, 42);
-}
-
-/* ---------- Custom cinematic cursor (dot + ring + tia lửa nhẹ) ---------- */
-(function initCustomCursor(){
-    const isFinePointer = window.matchMedia('(pointer:fine)').matches;
-    if(!isFinePointer || REDUCED_MOTION) return;
-
-    document.body.classList.add('custom-cursor');
-    const dot = document.getElementById('cursorDot');
-    const ring = document.getElementById('cursorRing');
-
-    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
-    let ringX = mouseX, ringY = mouseY;
-    let lastSpark = 0;
-
-    window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX; mouseY = e.clientY;
-        dot.style.left = mouseX + 'px';
-        dot.style.top = mouseY + 'px';
-
-        const now = performance.now();
-        if(now - lastSpark > 70){
-            const dx = mouseX-ringX, dy = mouseY-ringY;
-            if(Math.hypot(dx,dy) > 18){
-                lastSpark = now;
-                const s = document.createElement('div');
-                s.className = 'cursor-spark';
-                s.style.left = mouseX + 'px';
-                s.style.top = mouseY + 'px';
-                document.body.appendChild(s);
-                setTimeout(() => s.remove(), 720);
-            }
-        }
-    });
-
-    function renderRing(){
-        ringX += (mouseX - ringX) * 0.16;
-        ringY += (mouseY - ringY) * 0.16;
-        ring.style.left = ringX + 'px';
-        ring.style.top = ringY + 'px';
-        requestAnimationFrame(renderRing);
-    }
-    renderRing();
-
-    const hoverTargets = 'a, button, .tilt-card, .interactive-btn, .stat-card, .mode-card, .lb-row, .faq-item, .rk-tab';
-    document.addEventListener('mouseover', (e) => { if(e.target.closest(hoverTargets)) ring.classList.add('grow'); });
-    document.addEventListener('mouseout', (e) => { if(e.target.closest(hoverTargets)) ring.classList.remove('grow'); });
-
-    window.addEventListener('mousedown', () => ring.classList.add('press'));
-    window.addEventListener('mouseup', () => ring.classList.remove('press'));
-
-    document.addEventListener('mouseleave', () => { dot.classList.add('hide'); ring.classList.add('hide'); });
-    document.addEventListener('mouseenter', () => { dot.classList.remove('hide'); ring.classList.remove('hide'); });
-})();
-
-/* ---------- Split hero title into letters for quench reveal ---------- */
-const heroTitle = document.getElementById('heroTitle');
-(function splitLetters(el){
-    el.childNodes.forEach(node => {
-        if(node.nodeType === 3){
-            const frag = document.createDocumentFragment();
-            [...node.textContent].forEach((ch) => {
-                const span = document.createElement('span');
-                span.className = 'letter' + (ch === ' ' ? ' space' : '');
-                span.textContent = ch === ' ' ? String.fromCharCode(160) : ch;
-                frag.appendChild(span);
-            });
-            node.replaceWith(frag);
-        } else if(node.nodeType === 1){
-            splitLetters(node);
-        }
-    });
-})(heroTitle);
-
-let letterIdx = 0;
-heroTitle.querySelectorAll('.letter').forEach(l => {
-    l.style.animationDelay = (letterIdx * 35) + 'ms';
-    letterIdx++;
-});
-
-/* ---------- Ember particle canvas (hero) ---------- */
-const canvas = document.getElementById('emberCanvas');
-const ctx = canvas.getContext('2d');
-let particles = [];
-let heroRect;
-
-function resizeCanvas(){
-    heroRect = canvas.parentElement.getBoundingClientRect();
-    canvas.width = heroRect.width;
-    canvas.height = heroRect.height;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-const PARTICLE_COUNT = REDUCED_MOTION ? 0 : (window.innerWidth < 600 ? 36 : 72);
-
-function spawnParticle(){
-    const isFlare = Math.random() < 0.12;
-    return {
-        x: Math.random() * canvas.width,
-        y: canvas.height + Math.random() * 40,
-        r: isFlare ? 3 + Math.random() * 2.5 : 1 + Math.random() * 2.2,
-        speed: (isFlare ? 0.7 : 0.4) + Math.random() * 1.2,
-        drift: (Math.random() - 0.5) * 0.7,
-        life: 0,
-        maxLife: 200 + Math.random() * 220,
-        flare: isFlare,
-        hue: Math.random() > 0.5 ? '255,207,92' : '255,106,31'
+/* Ánh xạ tier -> CSS class */
+function tierClass(tier) {
+    const t = (tier||'').toUpperCase().trim();
+    const map = {
+        'HT1':'tier-ht1','LT1':'tier-lt1',
+        'HT2':'tier-ht2','LT2':'tier-lt2',
+        'HT3':'tier-ht3','LT3':'tier-lt3',
+        'HT4':'tier-ht4','LT4':'tier-lt4',
+        'HT5':'tier-ht5','LT5':'tier-lt5',
     };
-}
-for(let i=0;i<PARTICLE_COUNT;i++){
-    const p = spawnParticle();
-    p.y = Math.random() * canvas.height;
-    particles.push(p);
+    return map[t] || 'tier-other';
 }
 
-let animId;
-function animateEmbers(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles.forEach(p => {
-        p.y -= p.speed;
-        p.x += p.drift;
-        p.life++;
-        const lifeRatio = 1 - (p.life / p.maxLife);
-        const baseOpacity = p.flare ? 0.9 : 0.65;
-        const opacity = Math.max(0, Math.min(1, lifeRatio) * baseOpacity);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-        ctx.fillStyle = `rgba(${p.hue},${opacity})`;
-        ctx.shadowBlur = p.flare ? 18 : 8;
-        ctx.shadowColor = `rgba(${p.hue},${opacity})`;
-        ctx.fill();
-        if(p.life >= p.maxLife || p.y < -10){
-            Object.assign(p, spawnParticle());
-        }
-    });
-    animId = requestAnimationFrame(animateEmbers);
+/* Dữ liệu player — load từ API, KHÔNG hardcode */
+let players = [];
+let isAdmin = false;
+let currentRankTab = 'all';
+
+/* =========================================================
+   ICON ERROR HANDLER
+   ========================================================= */
+function handleIconError(img) {
+    var frame = img.closest('.icon-frame') || img.closest('.emblem-frame');
+    if (frame) frame.classList.add('broken');
 }
-if(!REDUCED_MOTION) animateEmbers();
 
-document.addEventListener('visibilitychange', () => {
-    if(document.hidden){ cancelAnimationFrame(animId); }
-    else if(!REDUCED_MOTION){ animateEmbers(); }
-});
+/* =========================================================
+   ICON ORB HTML — tạo icon tròn với ảnh đúng mode
+   ========================================================= */
+function iconOrbHTML(modeId, sizeClass) {
+    var m = MODES.find(function(x){ return x.id === modeId; });
+    if (!m) return '';
+    return '<div class="icon-orb ' + (sizeClass || 'md') + '">' +
+        '<div class="icon-ring"></div>' +
+        '<div class="icon-frame" data-fallback="' + m.fallback + '">' +
+        '<img src="' + m.img + '" alt="' + m.name + '" onerror="handleIconError(this)" loading="lazy">' +
+        '</div></div>';
+}
 
-/* ---------- Ember field lan tỏa toàn trang ---------- */
-function buildEmberField(){
-    if(REDUCED_MOTION) return;
-    const field = document.getElementById('emberField');
-    const count = window.innerWidth < 600 ? 9 : 16;
-    for(let i=0;i<count;i++){
-        const e = document.createElement('div');
-        e.className = 'ember-p' + (i % 5 === 0 ? ' cool' : '');
-        const size = 2 + Math.random()*3;
-        e.style.width = size+'px';
-        e.style.height = size+'px';
-        e.style.left = (Math.random()*100)+'%';
-        e.style.setProperty('--drift', (Math.random()*40-20).toFixed(0)+'px');
-        e.style.animationDelay = (Math.random()*10)+'s';
-        e.style.animationDuration = (7 + Math.random()*7)+'s';
-        field.appendChild(e);
+/* =========================================================
+   FETCH PLAYERS TỪ API — đúng backend
+   ========================================================= */
+async function fetchPlayers() {
+    try {
+        var res = await fetch('/api/leaderboard');
+        if (!res.ok) throw new Error('API error');
+        players = await res.json();
+    } catch(e) {
+        console.error('Không thể tải dữ liệu:', e);
+        players = [];
     }
+    renderAll();
 }
 
-/* ---------- 3D tilt card (leaderboard preview) ---------- */
-document.querySelectorAll('.tilt-card').forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const rx = ((y / rect.height) - 0.5) * -8;
-        const ry = ((x / rect.width) - 0.5) * 8;
-        card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
-    });
-    card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(900px) rotateX(0) rotateY(0)';
-    });
-});
+/* =========================================================
+   RENDER TẤT CẢ CÁC PHẦN TỪ DỮ LIỆU API
+   ========================================================= */
+function renderAll() {
+    renderHeroPlayers();
+    renderHomeLeaderboard();
+    renderFlameLadder();
+    renderStats();
+    renderModesGrid();
+}
 
-/* ---------- Scroll reveal chung cho mọi .reveal ---------- */
-function setupReveal(){
-    const io = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if(entry.isIntersecting){
-                entry.target.classList.add('in');
-                io.unobserve(entry.target);
+/* =========================================================
+   RENDER MODES GRID — icon đúng từng mode
+   ========================================================= */
+function renderModesGrid() {
+    var grid = document.getElementById('modesGrid');
+    grid.innerHTML = MODES.map(function(m, i) {
+        return '<div class="mode-card card-box" style="border-radius:16px;padding:22px 12px;" data-mode="' + m.id + '" onclick="modeCardClick(event,\'' + m.id + '\')" data-stagger="' + i + '">' +
+            iconOrbHTML(m.id, 'lg') +
+            '<div class="mode-name">' + m.name + '</div></div>';
+    }).join('');
+    observeModeCards();
+}
+
+function modeCardClick(e, modeId) {
+    var card = e.currentTarget;
+    var rect = card.getBoundingClientRect();
+    var ripple = document.createElement('div');
+    ripple.className = 'mode-ripple';
+    var size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+    card.appendChild(ripple);
+    setTimeout(function(){ ripple.remove(); }, 600);
+    setTimeout(function(){
+        currentRankTab = modeId;
+        switchView('ranking');
+    }, 300);
+}
+
+function observeModeCards() {
+    var cards = document.querySelectorAll('.mode-card');
+    var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(en) {
+            if (en.isIntersecting) {
+                var delay = parseInt(en.target.dataset.stagger) * 80;
+                setTimeout(function(){ en.target.classList.add('entered'); }, delay);
+                obs.unobserve(en.target);
             }
         });
     }, { threshold: 0.15 });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    cards.forEach(function(c){ obs.observe(c); });
+}
 
-    const heroCard = document.getElementById('leaderboard');
-    const io2 = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if(entry.isIntersecting){ heroCard.classList.add('in-view'); io2.unobserve(heroCard); }
+/* =========================================================
+   RENDER HERO PLAYER LIST (top 3)
+   ========================================================= */
+function renderHeroPlayers() {
+    var wrap = document.getElementById('heroPlayerList');
+    if (!players.length) { wrap.innerHTML = '<div class="empty-state">Đang tải...</div>'; return; }
+    var top3 = players.slice(0, 3);
+    var maxPts = top3[0] ? top3[0].points : 1;
+    var fills = ['fill-1','fill-2','fill-3'];
+    wrap.innerHTML = top3.map(function(p, i) {
+        var best = getBestTier(p);
+        var cls = tierClass(best);
+        var pct = maxPts > 0 ? Math.round((p.points / maxPts) * 100) : 0;
+        return '<div class="player-item">' +
+            '<div class="player-row">' +
+            '<div class="player-info">' +
+            '<div class="rank-mark r' + (i+1) + '">' + (i+1) + '</div>' +
+            '<img class="avatar" src="' + p.avatar + '" alt="' + p.name + '" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2234%22 height=%2234%22><rect fill=%22%231a140e%22 width=%2234%22 height=%2234%22/></svg>\'">' +
+            '<div><div class="p-name">' + p.name + '</div>' +
+            '<div class="p-points">' + p.points + ' pts · ' + best + '</div></div></div>' +
+            '<span class="tier-chip ' + cls + '">' + best + '</span></div>' +
+            '<div class="heat-bar"><div class="heat-fill ' + fills[i] + '" style="--fill:' + pct + '%"></div></div></div>';
+    }).join('');
+}
+
+/* =========================================================
+   RENDER HOME LEADERBOARD
+   ========================================================= */
+function renderHomeLeaderboard() {
+    var wrap = document.getElementById('homeLeaderboard');
+    if (!players.length) { wrap.innerHTML = '<div class="empty-state">Đang tải...</div>'; return; }
+    var top5 = players.slice(0, 5);
+    wrap.innerHTML = top5.map(function(p, i) {
+        var best = getBestTier(p);
+        var cls = tierClass(best);
+        var bestMode = getBestTierMode(p);
+        return '<div class="lb-row ' + (i===0?'top1':'') + '" data-lb-stagger="' + i + '">' +
+            '<div class="lb-left">' +
+            '<span class="rank-chip ' + (i<3?'medal':'') + '">' + (i+1) + '</span>' +
+            '<img class="avatar" src="' + p.avatar + '" alt="' + p.name + '" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2234%22 height=%2234%22><rect fill=%22%231a140e%22 width=%2234%22 height=%2234%22/></svg>\'">' +
+            '<div>' +
+            '<div class="lb-name">' + p.name + '</div>' +
+            '<div style="display:flex;align-items:center;gap:6px;margin-top:3px;">' +
+            (bestMode ? iconOrbHTML(bestMode, 'sm') : '') +
+            '<span class="tier-chip ' + cls + '" style="font-size:0.6rem;">' + best + '</span></div></div></div>' +
+            '<span class="lb-points">' + p.points + ' pts</span></div>';
+    }).join('');
+    setTimeout(function() {
+        document.querySelectorAll('.lb-row[data-lb-stagger]').forEach(function(row) {
+            var d = parseInt(row.dataset.lbStagger) * 100;
+            setTimeout(function(){ row.classList.add('slide-in'); }, d);
         });
-    }, { threshold: 0.35 });
-    io2.observe(heroCard);
+    }, 200);
+}
 
-    const steps = document.querySelectorAll('#timeline .tl-step');
-    const io3 = new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('active'); });
+/* =========================================================
+   RENDER FLAME LADDER — 10 cấp tier
+   ========================================================= */
+function renderFlameLadder() {
+    var wrap = document.getElementById('flameLadder');
+    var data = [
+        { label:'HT1', h:98, cls:'t-ht1', hi:true },
+        { label:'LT1', h:88, cls:'t-lt1', hi:true },
+        { label:'HT2', h:78, cls:'t-ht2', hi:true },
+        { label:'LT2', h:68, cls:'t-lt2' },
+        { label:'HT3', h:58, cls:'t-ht3' },
+        { label:'LT3', h:50, cls:'t-lt3' },
+        { label:'HT4', h:40, cls:'t-ht4' },
+        { label:'LT4', h:32, cls:'t-lt4' },
+        { label:'HT5', h:24, cls:'t-ht5' },
+        { label:'LT5', h:18, cls:'t-lt5' },
+    ];
+    wrap.innerHTML = data.map(function(d) {
+        return '<div class="flame-col ' + (d.hi?'hi':'') + '">' +
+            '<div class="flame-bar ' + d.cls + '" style="height:' + d.h + '%"></div>' +
+            '<span class="flame-label">' + d.label + '</span></div>';
+    }).join('');
+    document.getElementById('tierBadgeCount').textContent = players.length + ' chiến binh';
+}
+
+/* =========================================================
+   RENDER STATS — từ dữ liệu API thật
+   ========================================================= */
+function renderStats() {
+    var totalTiers = 0;
+    var uniqueModes = new Set();
+    players.forEach(function(p) {
+        var tiers = p.tiers || {};
+        Object.keys(tiers).forEach(function(m) {
+            totalTiers++;
+            uniqueModes.add(m);
+        });
+    });
+    document.getElementById('statPlayers').textContent = players.length;
+    document.getElementById('statTiers').textContent = totalTiers;
+    document.getElementById('statModes').textContent = Math.max(uniqueModes.size, MODES.length);
+}
+
+/* =========================================================
+   HELPER — tìm tier cao nhất
+   ========================================================= */
+function getBestTier(player) {
+    var tiers = player.tiers || {};
+    var best = 'LT5';
+    var bestOrd = TIER_ORDER['LT5'] !== undefined ? TIER_ORDER['LT5'] : 99;
+    Object.values(tiers).forEach(function(t) {
+        var t2 = t.toUpperCase().trim();
+        if (TIER_ORDER[t2] !== undefined && TIER_ORDER[t2] < bestOrd) {
+            bestOrd = TIER_ORDER[t2];
+            best = t2;
+        }
+    });
+    return best;
+}
+
+function getBestTierMode(player) {
+    var tiers = player.tiers || {};
+    var best = getBestTier(player);
+    for (var mode in tiers) {
+        if (tiers[mode].toUpperCase().trim() === best) return mode;
+    }
+    return null;
+}
+
+/* =========================================================
+   RENDER RANKING TABS — icon đúng mode
+   ========================================================= */
+function renderRankTabs() {
+    var wrap = document.getElementById('rkTabs');
+    var html = '<div class="rk-tab ' + (currentRankTab==='all'?'active':'') + '" onclick="switchRankTab(\'all\')">' +
+        '<i class="fa-solid fa-fire" style="color:var(--ember-hot);font-size:0.9rem;"></i><span>Tất cả</span></div>';
+    MODES.forEach(function(m) {
+        html += '<div class="rk-tab ' + (currentRankTab===m.id?'active':'') + '" onclick="switchRankTab(\'' + m.id + '\')">' +
+            iconOrbHTML(m.id, 'sm') + '<span>' + m.name + '</span></div>';
+    });
+    wrap.innerHTML = html;
+}
+
+function switchRankTab(mode) {
+    currentRankTab = mode;
+    renderRankTabs();
+    renderRankTable();
+}
+
+/* =========================================================
+   RENDER RANK TABLE
+   ========================================================= */
+function renderRankTable() {
+    var body = document.getElementById('rkBody');
+    var empty = document.getElementById('rkEmpty');
+    var filtered = players;
+    if (currentRankTab !== 'all') {
+        filtered = players.filter(function(p) { return p.tiers && p.tiers[currentRankTab]; });
+    }
+    if (!filtered.length) { body.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    /* Sắp xếp theo điểm giảm dần (API đã sort, nhưng filter có thể thay đổi) */
+    filtered.sort(function(a,b){ return (b.points||0) - (a.points||0); });
+    body.innerHTML = filtered.map(function(p, i) {
+        var best = getBestTier(p);
+        var cls = tierClass(best);
+        var chips = '';
+        var tiers = p.tiers || {};
+        Object.keys(tiers).forEach(function(mode) {
+            var tier = tiers[mode];
+            var isMatch = currentRankTab === mode;
+            var m = MODES.find(function(x){ return x.id === mode; });
+            var tc = tierClass(tier);
+            chips += '<div class="mode-tier-chip ' + (isMatch?'match':'') + '">' +
+                (m ? '<img src="' + m.img + '" alt="' + m.name + '" onerror="this.style.display=\'none\'" style="width:14px;height:14px;border-radius:3px;object-fit:cover;">' : '') +
+                '<span class="tier-chip ' + tc + '" style="padding:2px 5px;font-size:0.55rem;">' + mode + ' ' + tier + '</span></div>';
+        });
+        return '<tr style="animation-delay:' + (i*0.06) + 's">' +
+            '<td><span class="rank-chip ' + (i<3?'medal':'') + '">' + (i+1) + '</span></td>' +
+            '<td style="display:flex;align-items:center;gap:10px;">' +
+            '<img class="avatar" src="' + p.avatar + '" alt="' + p.name + '" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2248%22 height=%2248%22><rect fill=%22%231a140e%22 width=%2248%22 height=%2248%22/></svg>\'">' +
+            '<span class="lb-name">' + p.name + '</span></td>' +
+            '<td><span class="lb-points">' + (p.points||0) + ' pts</span></td>' +
+            '<td><div class="tiers-wrap">' + chips + '</div></td></tr>';
+    }).join('');
+}
+
+/* =========================================================
+   VIEW SWITCHING
+   ========================================================= */
+function switchView(view) {
+    document.querySelectorAll('.view-section').forEach(function(s){ s.classList.remove('active'); });
+    var target = document.getElementById('view-' + view);
+    if (target) {
+        target.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    if (view === 'ranking') { renderRankTabs(); renderRankTable(); }
+    if (view === 'admin') renderAdminPanel();
+}
+
+/* =========================================================
+   FAQ
+   ========================================================= */
+function toggleFaq(item) {
+    var wasActive = item.classList.contains('active');
+    document.querySelectorAll('.faq-item').forEach(function(f){ f.classList.remove('active'); });
+    if (!wasActive) item.classList.add('active');
+}
+
+/* =========================================================
+   ADMIN — XÁC THỰC 2 LỚP ĐÚNG BACKEND
+   ========================================================= */
+function openAdminModal() {
+    if (isAdmin) { switchView('admin'); return; }
+    document.getElementById('adminModal').classList.add('open');
+    document.getElementById('adminStep1').style.display = 'block';
+    document.getElementById('adminStep2').style.display = 'none';
+    document.getElementById('adminPassInput').value = '';
+    document.getElementById('adminWebhookInput').value = '';
+    document.getElementById('adminError1').textContent = '';
+    document.getElementById('adminError2').textContent = '';
+    document.getElementById('adminModalTitle').textContent = 'Xác Thực Quản Trị';
+    setTimeout(function(){ document.getElementById('adminPassInput').focus(); }, 100);
+}
+function closeAdminModal() { document.getElementById('adminModal').classList.remove('open'); }
+
+async function adminStep1Submit() {
+    var pass = document.getElementById('adminPassInput').value.trim();
+    var errEl = document.getElementById('adminError1');
+    errEl.textContent = '';
+    try {
+        var res = await fetch('/api/admin/step1', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({password: pass})
+        });
+        if (res.ok) {
+            document.getElementById('adminStep1').style.display = 'none';
+            document.getElementById('adminStep2').style.display = 'block';
+            document.getElementById('adminModalTitle').textContent = 'Xác Thực Quản Trị — Bước 2';
+            setTimeout(function(){ document.getElementById('adminWebhookInput').focus(); }, 100);
+        } else {
+            errEl.textContent = 'Sai mật khẩu lớp 1';
+            document.getElementById('adminModalCard').classList.add('shake-anim');
+            setTimeout(function(){ document.getElementById('adminModalCard').classList.remove('shake-anim'); }, 500);
+        }
+    } catch(e) {
+        errEl.textContent = 'Lỗi kết nối server';
+    }
+}
+
+async function adminStep2Submit() {
+    var webhook = document.getElementById('adminWebhookInput').value.trim();
+    var errEl = document.getElementById('adminError2');
+    errEl.textContent = '';
+    try {
+        var res = await fetch('/api/admin/step2', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({webhook: webhook})
+        });
+        if (res.ok) {
+            isAdmin = true;
+            closeAdminModal();
+            switchView('admin');
+        } else {
+            errEl.textContent = 'Sai webhook URL lớp 2';
+            document.getElementById('adminModalCard').classList.add('shake-anim');
+            setTimeout(function(){ document.getElementById('adminModalCard').classList.remove('shake-anim'); }, 500);
+        }
+    } catch(e) {
+        errEl.textContent = 'Lỗi kết nối server';
+    }
+}
+
+/* =========================================================
+   ADMIN PANEL — load & save qua API
+   ========================================================= */
+var adminPlayers = [];
+
+async function renderAdminPanel() {
+    var wrap = document.getElementById('adminPlayersList');
+    wrap.innerHTML = '<div class="empty-state">Đang tải dữ liệu...</div>';
+    try {
+        var res = await fetch('/api/admin/players');
+        var data = await res.json();
+        if (data.ok) {
+            adminPlayers = data.players;
+        } else {
+            adminPlayers = [];
+        }
+    } catch(e) {
+        adminPlayers = players.map(function(p){
+            return { name: p.name, avatar: p.avatar, tiers: p.tiers || {} };
+        });
+    }
+    buildAdminHTML();
+}
+
+function buildAdminHTML() {
+    var wrap = document.getElementById('adminPlayersList');
+    if (!adminPlayers.length) { wrap.innerHTML = '<div class="empty-state">Không có người chơi.</div>'; return; }
+    wrap.innerHTML = adminPlayers.map(function(p, i) {
+        var tierChips = '';
+        var tiers = p.tiers || {};
+        Object.keys(tiers).forEach(function(mode) {
+            var m = MODES.find(function(x){ return x.id === mode; });
+            var displayName = m ? m.name : mode;
+            tierChips += '<div class="admin-tier-chip">' + displayName + ' ' + tiers[mode] +
+                '<button onclick="adminRemoveTier(' + i + ',\'' + mode + '\')">&times;</button></div>';
+        });
+        var modeOpts = MODES.filter(function(m){ return !tiers[m.id]; }).map(function(m){
+            return '<option value="' + m.id + '">' + m.name + '</option>';
+        }).join('');
+        var tierOpts = ALL_TIERS.map(function(t){ return '<option value="' + t + '">' + t + '</option>'; }).join('');
+        return '<div class="admin-player-card">' +
+            '<div class="admin-player-top">' +
+            '<img class="admin-avatar-preview" src="' + p.avatar + '" alt="' + p.name + '" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2248%22 height=%2248%22><rect fill=%22%231a140e%22 width=%2248%22 height=%2248%22/></svg>\'">' +
+            '<div class="admin-field"><label>Tên</label><input type="text" value="' + p.name + '" onchange="adminPlayers[' + i + '].name=this.value"></div>' +
+            '<div class="admin-field"><label>Avatar URL</label><input type="text" value="' + p.avatar + '" onchange="adminPlayers[' + i + '].avatar=this.value"></div></div>' +
+            '<span class="admin-tiers-label">Tier theo mode</span>' +
+            '<div class="admin-tiers-wrap">' + tierChips + '</div>' +
+            '<div class="admin-add-tier">' +
+            '<select id="adminModeSel_' + i + '">' + modeOpts + '</select>' +
+            '<select id="adminTierSel_' + i + '">' + tierOpts + '</select>' +
+            '<button class="btn-secondary interactive-btn" style="padding:8px 14px;font-size:0.78rem;" onclick="adminAddTier(' + i + ')"><i class="fa-solid fa-plus"></i> Thêm</button></div>' +
+            '<div class="admin-player-actions">' +
+            '<button class="admin-delete-btn" onclick="adminDeletePlayer(' + i + ')"><i class="fa-solid fa-trash"></i> Xóa</button></div></div>';
+    }).join('');
+}
+
+function adminAddTier(pi) {
+    var modeEl = document.getElementById('adminModeSel_' + pi);
+    var tierEl = document.getElementById('adminTierSel_' + pi);
+    if (modeEl && tierEl && modeEl.value && tierEl.value) {
+        if (!adminPlayers[pi].tiers) adminPlayers[pi].tiers = {};
+        adminPlayers[pi].tiers[modeEl.value] = tierEl.value;
+        buildAdminHTML();
+    }
+}
+function adminRemoveTier(pi, mode) {
+    if (adminPlayers[pi].tiers) delete adminPlayers[pi].tiers[mode];
+    buildAdminHTML();
+}
+function adminDeletePlayer(pi) {
+    adminPlayers.splice(pi, 1);
+    buildAdminHTML();
+}
+function adminAddPlayer() {
+    adminPlayers.push({ name: 'Người chơi mới', avatar: 'https://mc-heads.net/avatar/MHF_Steve/100.png', tiers: {} });
+    buildAdminHTML();
+}
+
+async function adminSave() {
+    var st = document.getElementById('adminStatus');
+    st.textContent = 'Đang lưu...';
+    st.className = 'admin-status';
+    try {
+        var res = await fetch('/api/admin/players', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({players: adminPlayers})
+        });
+        var data = await res.json();
+        if (data.ok) {
+            st.textContent = 'Đã lưu thành công!';
+            st.className = 'admin-status ok';
+            await fetchPlayers();
+        } else {
+            st.textContent = 'Lỗi: ' + (data.error || 'không xác định');
+            st.className = 'admin-status err';
+        }
+    } catch(e) {
+        st.textContent = 'Lỗi kết nối server';
+        st.className = 'admin-status err';
+    }
+    setTimeout(function(){ st.textContent = ''; st.className = 'admin-status'; }, 3000);
+}
+
+/* =========================================================
+   HERO TITLE ANIMATION
+   ========================================================= */
+function setHeroTitle() {
+    var text = 'Lò Rèn Tier PvP Việt Nam';
+    var el = document.getElementById('heroTitle');
+    var accentWords = ['Tier', 'PvP'];
+    var html = '';
+    var ci = 0;
+    text.split(' ').forEach(function(word, wi) {
+        if (wi > 0) html += '<span class="letter space"> </span>';
+        var isAccent = accentWords.indexOf(word) !== -1;
+        word.split('').forEach(function(ch) {
+            html += '<span class="letter' + (isAccent?' accent':'') + '" style="animation-delay:' + (ci*0.04) + 's">' + ch + '</span>';
+            ci++;
+        });
+    });
+    el.innerHTML = html;
+}
+
+/* =========================================================
+   SCROLL REVEAL
+   ========================================================= */
+function initReveal() {
+    var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(en) {
+            if (en.isIntersecting) en.target.classList.add('in');
+        });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+}
+
+/* Card shimmer */
+function initCardShimmer() {
+    var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(en) {
+            if (en.isIntersecting) {
+                en.target.classList.add('shimmer-active');
+                setTimeout(function(){ en.target.classList.remove('shimmer-active'); }, 900);
+                obs.unobserve(en.target);
+            }
+        });
     }, { threshold: 0.5 });
-    steps.forEach(s => io3.observe(s));
+    document.querySelectorAll('.card-box').forEach(function(c){ obs.observe(c); });
 }
 
-/* ---------- Count-up numbers ---------- */
-function animateCount(el, target, duration){
-    const fmt = new Intl.NumberFormat('vi-VN');
-    let startTime = null;
-    function step(ts){
-        if(!startTime) startTime = ts;
-        const progress = Math.min((ts - startTime) / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        const current = Math.floor(eased * target);
-        el.textContent = fmt.format(current) + '+';
-        if(progress < 1) requestAnimationFrame(step);
-        else el.textContent = fmt.format(target) + '+';
-    }
-    requestAnimationFrame(step);
+/* Tilt */
+function initTilt() {
+    document.querySelectorAll('.tilt-card').forEach(function(card) {
+        card.addEventListener('mousemove', function(e) {
+            var rect = card.getBoundingClientRect();
+            var x = (e.clientX - rect.left) / rect.width - 0.5;
+            var y = (e.clientY - rect.top) / rect.height - 0.5;
+            card.style.transform = 'perspective(600px) rotateY(' + (x*6) + 'deg) rotateX(' + (-y*6) + 'deg) scale(1.01)';
+        });
+        card.addEventListener('mouseleave', function() {
+            card.style.transform = 'perspective(600px) rotateY(0) rotateX(0) scale(1)';
+        });
+    });
 }
 
-/* ---------- Spark burst khi stat card "được rèn" ---------- */
-function spawnSparks(container){
-    if(REDUCED_MOTION) return;
-    const count = 14;
-    for(let i=0;i<count;i++){
-        const s = document.createElement('span');
-        s.className = 'spark-particle';
-        const angle = Math.random() * Math.PI * 2;
-        const dist = 40 + Math.random() * 75;
-        const dx = Math.cos(angle) * dist;
-        const dy = Math.sin(angle) * dist - 22;
-        container.appendChild(s);
-        const anim = s.animate([
-            { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 },
-            { transform: `translate(${dx - 2}px, ${dy - 2}px) scale(0.15)`, opacity: 0 }
-        ], { duration: 550 + Math.random() * 320, easing: 'cubic-bezier(.2,.8,.2,1)' });
-        anim.onfinish = () => s.remove();
+/* =========================================================
+   EMBER PARTICLES
+   ========================================================= */
+function spawnEmbers() {
+    var field = document.getElementById('emberField');
+    for (var i = 0; i < 28; i++) {
+        var p = document.createElement('div');
+        p.className = 'ember-p' + (Math.random() > 0.7 ? ' cool' : '');
+        var size = 2 + Math.random() * 4;
+        p.style.cssText = 'left:' + (Math.random()*100) + '%;width:' + size + 'px;height:' + size + 'px;animation-duration:' + (4+Math.random()*6) + 's;animation-delay:' + (Math.random()*6) + 's;--drift:' + (-20+Math.random()*40) + 'px;';
+        field.appendChild(p);
     }
 }
 
-/* ---------- Ignite stats section ---------- */
-const statsSection = document.getElementById('statsSection');
-const statsGrid = document.getElementById('statsGrid');
-const igniteObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if(entry.isIntersecting){
-            statsSection.classList.add('ignited');
-            setTimeout(() => {
-                statsGrid.classList.add('shake');
-                setTimeout(() => statsGrid.classList.remove('shake'), 500);
-            }, 90);
-            igniteObserver.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.35 });
-igniteObserver.observe(statsSection);
+/* =========================================================
+   EMBER CANVAS
+   ========================================================= */
+function initEmberCanvas() {
+    var c = document.getElementById('emberCanvas');
+    if (!c) return;
+    var ctx = c.getContext('2d');
+    var w, h, particles = [];
+    function resize() {
+        var r = c.parentElement.getBoundingClientRect();
+        w = c.width = r.width;
+        h = c.height = r.height + 40;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    for (var i = 0; i < 50; i++) {
+        particles.push({
+            x: Math.random()*w, y: Math.random()*h,
+            vx: (Math.random()-0.5)*0.5, vy: -0.3 - Math.random()*0.8,
+            size: 1 + Math.random()*2.5, life: Math.random(),
+            maxLife: 0.6 + Math.random()*0.4,
+            hue: 20 + Math.random()*25,
+        });
+    }
+    function draw() {
+        ctx.clearRect(0,0,w,h);
+        particles.forEach(function(p) {
+            p.x += p.vx; p.y += p.vy; p.life -= 0.003;
+            if (p.life <= 0 || p.y < -10) {
+                p.x = Math.random()*w; p.y = h + 10; p.life = p.maxLife;
+            }
+            var alpha = Math.max(0, p.life / p.maxLife) * 0.7;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, Math.max(0.5, p.size * p.life), 0, Math.PI*2);
+            ctx.fillStyle = 'hsla(' + p.hue + ',100%,65%,' + alpha + ')';
+            ctx.fill();
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
+}
 
-const strikeObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-        if(entry.isIntersecting){
-            const card = entry.target;
-            setTimeout(() => {
-                card.classList.add('struck');
-                const iconWrap = card.querySelector('.stat-icon-wrap');
-                spawnSparks(iconWrap);
-                const numEl = card.querySelector('.stat-number');
-                animateCount(numEl, parseInt(numEl.dataset.target, 10), 1600);
-            }, i * 150);
-            strikeObserver.unobserve(entry.target);
-        }
+/* =========================================================
+   CUSTOM CURSOR
+   ========================================================= */
+function initCursor() {
+    if (!window.matchMedia('(pointer:fine)').matches) return;
+    document.body.classList.add('custom-cursor');
+    var dot = document.getElementById('cursorDot');
+    var ring = document.getElementById('cursorRing');
+    var mx=0, my=0, rx=0, ry=0;
+    document.addEventListener('mousemove', function(e) { mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+    function tick() { rx+=(mx-rx)*0.15; ry+=(my-ry)*0.15; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(tick); }
+    tick();
+    document.addEventListener('mousedown', function() { ring.classList.add('press'); });
+    document.addEventListener('mouseup', function() { ring.classList.remove('press'); });
+    function bindHover(el) {
+        el.addEventListener('mouseenter', function() { ring.classList.add('grow'); });
+        el.addEventListener('mouseleave', function() { ring.classList.remove('grow'); });
+    }
+    document.querySelectorAll('.interactive-btn, .mode-card, .lb-row, .faq-item, .rk-tab, a, button').forEach(bindHover);
+    var mo = new MutationObserver(function() {
+        document.querySelectorAll('.interactive-btn, .mode-card, .lb-row, .faq-item, .rk-tab, a, button').forEach(function(el) {
+            if (!el.dataset.cursorBound) { el.dataset.cursorBound = '1'; bindHover(el); }
+        });
     });
-}, { threshold: 0.3 });
-document.querySelectorAll('.stat-card').forEach((card, i) => {
-    card.style.transitionDelay = (i * 0.1) + 's';
-    strikeObserver.observe(card);
-});
+    mo.observe(document.body, { childList: true, subtree: true });
+}
 
-window.addEventListener('load', () => {
-    buildEmberField();
-    renderModesGrid();
-    setupReveal();
-    fetchBotData();
-    runIntro();
+/* =========================================================
+   STATS COUNTER ANIMATION
+   ========================================================= */
+function animateStats() {
+    var section = document.getElementById('statsSection');
+    var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(en) {
+            if (en.isIntersecting) {
+                section.classList.add('ignited');
+                var grid = document.getElementById('statsGrid');
+                grid.classList.add('shake');
+                setTimeout(function(){ grid.classList.remove('shake'); }, 500);
+                document.querySelectorAll('.stat-card').forEach(function(card, i) {
+                    setTimeout(function() {
+                        card.classList.add('struck');
+                        var numEl = card.querySelector('.stat-number');
+                        var target = parseInt(numEl.textContent) || 0;
+                        countUp(numEl, 0, target, 1400);
+                    }, i * 250);
+                });
+                obs.unobserve(en.target);
+            }
+        });
+    }, { threshold: 0.3 });
+    obs.observe(section);
+}
+
+function countUp(el, start, end, duration) {
+    var startTime = performance.now();
+    function tick(now) {
+        var elapsed = now - startTime;
+        var progress = Math.min(elapsed / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(start + (end - start) * eased).toLocaleString();
+        if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+}
+
+/* =========================================================
+   TIMELINE ANIMATION
+   ========================================================= */
+function initTimeline() {
+    var steps = document.querySelectorAll('.tl-step');
+    var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(en) {
+            if (en.isIntersecting) {
+                steps.forEach(function(s, i) {
+                    setTimeout(function(){ s.classList.add('active'); }, i * 300);
+                });
+                obs.unobserve(en.target);
+            }
+        });
+    }, { threshold: 0.3 });
+    var tl = document.getElementById('timeline');
+    if (tl) obs.observe(tl);
+}
+
+/* =========================================================
+   CURTAIN INTRO
+   ========================================================= */
+function runCurtain() {
+    var bar = document.getElementById('curtainBar');
+    var status = document.getElementById('curtainStatus');
+    var progress = 0;
+    var interval = setInterval(function() {
+        progress += Math.random() * 18 + 5;
+        if (progress > 100) progress = 100;
+        bar.style.width = progress + '%';
+        status.textContent = 'ĐANG NHÓM LỬA · ' + Math.round(progress) + '%';
+        if (progress >= 100) {
+            clearInterval(interval);
+            status.textContent = 'HOÀN TẤT';
+            setTimeout(function(){ document.body.classList.add('loaded'); }, 200);
+        }
+    }, 120);
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', function() {
+    setHeroTitle();
+    spawnEmbers();
+    initEmberCanvas();
+    initReveal();
+    initCardShimmer();
+    initTilt();
+    initTimeline();
+    runCurtain();
+    setTimeout(initCursor, 1000);
+    /* Load dữ liệu từ API backend */
+    fetchPlayers();
+    /* Stats animation sẽ dùng số thật khi API trả về */
+    setTimeout(animateStats, 500);
 });
 </script>
 </body>
