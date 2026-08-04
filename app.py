@@ -25,7 +25,7 @@ ADMIN_WEBHOOK_URL = "https://discord.com/api/webhooks/1533666984867270696/g6UmiB
 # ⚡ KẾT NỐI DATABASE SUPABASE
 # Thay thế URL bên dưới bằng URL dự án Supabase của bạn (ví dụ: https://xyz.supabase.co)
 SUPABASE_URL = os.environ.get("https://zkkkfasdwuvqrytdgqxbl.supabase.co/")
-SUPABASE_KEY = os.environ.get("sb_secret_MdzthCPQ9-1MA3ld_tEUzg_w9BneWFM")
+SUPABASE_KEY = os.environ.get("sb_publishable_ejd9s6yhQimvU8sy8YR_ww_44db-pwP")
 
 try:
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
