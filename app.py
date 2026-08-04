@@ -121,18 +121,7 @@ def require_admin():
     return bool(session.get("admin_authed"))
 
 
-DEFAULT_PLAYERS = [
-    {
-        "name": "thekidpika",
-        "avatar": "https://mc-heads.net/avatar/thekidpika/100.png",
-        "tiers": {"Tier": "HT1"},
-    },
-    {
-        "name": "AGL_Mipp",
-        "avatar": "https://mc-heads.net/avatar/AGL_Mipp/100.png",
-        "tiers": {"Tier": "HT2"},
-    },
-]
+DEFAULT_PLAYERS = []
 
 
 @app.route("/api/leaderboard", methods=["GET"])
