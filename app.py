@@ -1,8 +1,7 @@
-# made by MCO (mr.coco own web) , code 003 -> nâng cấp giao diện đồng bộ với code 004 + thêm animation
+# made by MCO (mr.coco own web) , code 003 -> nâng cấp giao diện đồng bộ với code 004 + thêm animation + kết nối Supabase
 import json
 import os
 import secrets
-# 🔴 ĐÃ FIX: Thêm render_template vào import từ flask
 from flask import (
     Flask,
     jsonify,
@@ -12,32 +11,33 @@ from flask import (
     session,
 )
 import requests
+from supabase import create_client, Client
 
 app = Flask(__name__)
-# Đảm bảo Secret Key cố định hoặc fallback an toàn
 app.secret_key = os.environ.get(
     "ANGELTIER_SECRET_KEY", "ANGELTIER_SUPER_SECRET_KEY_2026"
 )
 
-# 🔐 Cấu hình bảng điều khiển nhân viên kỹ thuật (2 lớp mật khẩu)
+# 🔐 Cấu hình bảng điều khiển nhân viên kỹ thuật
 ADMIN_PASSWORD_1 = "33298"
 ADMIN_WEBHOOK_URL = "https://discord.com/api/webhooks/1533666984867270696/g6UmiB6KgOZU3jgpjGuUcN-iR32G26RJfEkeNEAE-ssF-HSUzdg8gQ4qtlUkMntYhSks"
-PLAYERS_FILE = "players.json"
+
+# ⚡ KẾT NỐI DATABASE SUPABASE
+# Thay thế URL bên dưới bằng URL dự án Supabase của bạn (ví dụ: https://xyz.supabase.co)
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://your-project-id.supabase.co")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "sb_secret_MdzthCPQ9-1MA3ld_tEUzg_w9BneWFM")
+
+try:
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+except Exception as e:
+    supabase = None
+    print(f"⚠️ Chưa khởi tạo được Supabase Client: {e}")
 
 # 📊 Bảng quy đổi điểm số Tier
 TIER_POINTS = {
-    "LT5": 10,
-    "HT5": 15,
-    "LT4": 20,
-    "HT4": 25,
-    "LT3": 30,
-    "HT3": 40,
-    "LT2": 50,
-    "HT2": 60,
-    "LT1": 70,
-    "HT1": 80,
+    "LT5": 10, "HT5": 15, "LT4": 20, "HT4": 25, "LT3": 30,
+    "HT3": 40, "LT2": 50, "HT2": 60, "LT1": 70, "HT1": 80,
 }
-
 
 def calculate_points(tiers):
     """Hàm tính tổng điểm từ các Tier của người chơi"""
@@ -49,32 +49,41 @@ def calculate_points(tiers):
         total += TIER_POINTS.get(clean_tier, 0)
     return total
 
-
 def load_real_players():
-    """Hàm đọc dữ liệu từ file JSON nếu bot lưu ra file"""
-    for filename in ["data.json", "players.json", "leaderboard.json"]:
-        if os.path.exists(filename):
-            try:
-                with open(filename, "r", encoding="utf-8") as f:
-                    return json.load(f)
-            except Exception as e:
-                print(f"Lỗi đọc file {filename}: {e}")
-    return None
-
+    """Hàm đọc dữ liệu từ database Supabase (Bảng 'players')"""
+    if not supabase:
+        return None
+    try:
+        response = supabase.table("players").select("*").execute()
+        data = response.data
+        
+        # Định dạng lại dữ liệu trả về theo cấu trúc của App
+        formatted_players = []
+        for row in data:
+            # Chuyển đổi dữ liệu từ cột Supabase
+            formatted_players.append({
+                "id": row.get("id"),
+                "name": row.get("ign") or row.get("name", "Unknown"),
+                "avatar": row.get("avatar") or f"https://mc-heads.net/avatar/{row.get('ign', 'Steve')}/100.png",
+                "tiers": row.get("tier") if isinstance(row.get("tier"), dict) else {},
+                "points_override": row.get("points_override")
+            })
+        return formatted_players if formatted_players else None
+    except Exception as e:
+        print(f"Lỗi đọc dữ liệu từ Supabase: {e}")
+        return None
 
 def notify_discord(message):
-    """Gửi thông báo về Discord qua webhook cấu hình sẵn ở server (không lộ ra client)."""
+    """Gửi thông báo về Discord qua webhook"""
     try:
         requests.post(ADMIN_WEBHOOK_URL, json={"content": message}, timeout=5)
     except Exception as e:
         print(f"Không gửi được thông báo Discord: {e}")
 
-
 def require_admin():
     return bool(session.get("admin_authed"))
 
-
-# Dữ liệu mẫu
+# Dữ liệu mẫu fallback nếu Database rỗng hoặc không kết nối được
 DEFAULT_PLAYERS = [
     {
         "name": "thekidpika",
@@ -86,58 +95,7 @@ DEFAULT_PLAYERS = [
         "avatar": "https://mc-heads.net/avatar/AGL_Mipp/100.png",
         "tiers": {"Sword": "HT1", "Nethpot": "HT2"},
     },
-    {
-        "name": "anh5me27051",
-        "avatar": "https://mc-heads.net/avatar/anh5me27051/100.png",
-        "tiers": {"Sword": "HT1", "Nethpot": "HT2"},
-    },
-    {
-        "name": "Ghost_kevin",
-        "avatar": "https://mc-heads.net/avatar/Ghost_kevin/100.png",
-        "tiers": {"Sword": "HT1", "Pot": "HT2"},
-    },
-    {
-        "name": "zemnr",
-        "avatar": "https://mc-heads.net/avatar/zemnr/100.png",
-        "tiers": {"Sword": "HT2", "Axe": "HT2"},
-    },
-    {
-        "name": "NeoReo_",
-        "avatar": "https://mc-heads.net/avatar/NeoReo_/100.png",
-        "tiers": {"Sword": "HT2", "Axe": "HT2"},
-    },
-    {
-        "name": "Ag_qkhang",
-        "avatar": "https://mc-heads.net/avatar/Ag_qkhang/100.png",
-        "tiers": {"Sword": "HT2", "Nethpot": "HT3"},
-    },
-    {
-        "name": "LikedaeMC",
-        "avatar": "https://mc-heads.net/avatar/LikedaeMC/100.png",
-        "tiers": {"Sword": "HT2", "Nethpot": "HT3"},
-    },
-    {
-        "name": "Vandekynang22",
-        "avatar": "https://mc-heads.net/avatar/Vandekynang22/100.png",
-        "tiers": {"Sword": "HT3", "Smp": "HT2"},
-    },
-    {
-        "name": "Uchiha_nho",
-        "avatar": "https://mc-heads.net/avatar/Uchiha_nho/100.png",
-        "tiers": {"Sword": "HT3", "Pot": "HT3"},
-    },
-    {
-        "name": "Chuyenn",
-        "avatar": "https://mc-heads.net/avatar/Chuyenn/100.png",
-        "tiers": {"Sword": "HT3", "Pot": "HT3"},
-    },
-    {
-        "name": "FoxXinhGai",
-        "avatar": "https://mc-heads.net/avatar/FoxXinhGai/100.png",
-        "tiers": {"Sword": "HT4", "Vanilla": "HT3"},
-    },
 ]
-
 
 @app.route("/api/leaderboard", methods=["GET"])
 def get_leaderboard():
@@ -164,15 +122,12 @@ def get_leaderboard():
             "tier_display": tier_display,
         })
 
-    # 🏆 SẮP XẾP GIẢM DẦN THEO POINT
     leaderboard.sort(key=lambda x: x["points"], reverse=True)
     return jsonify(leaderboard)
 
-
 # ============================================================
-# 🛠️ BẢNG ĐIỀU KHIỂN NHÂN VIÊN KỸ THUẬT — xác thực 2 lớp
+# 🛠️ BẢNG ĐIỀU KHIỂN NHÂN VIÊN KỸ THUẬT
 # ============================================================
-
 
 @app.route("/api/admin/step1", methods=["POST"])
 def admin_step1():
@@ -184,13 +139,10 @@ def admin_step1():
     session["admin_step1_ok"] = False
     return jsonify({"ok": False}), 401
 
-
 @app.route("/api/admin/step2", methods=["POST"])
 def admin_step2():
     if not session.get("admin_step1_ok"):
-        return jsonify(
-            {"ok": False, "error": "Chưa hoàn thành lớp mật khẩu 1"}
-        ), 401
+        return jsonify({"ok": False, "error": "Chưa hoàn thành lớp mật khẩu 1"}), 401
 
     data = request.get_json(silent=True) or {}
     webhook = str(data.get("webhook", "")).strip()
@@ -198,27 +150,19 @@ def admin_step2():
     if webhook == ADMIN_WEBHOOK_URL:
         session["admin_authed"] = True
         session["admin_step1_ok"] = False
-        notify_discord(
-            "✅ **AngelTier** — Một nhân viên kỹ thuật vừa đăng nhập thành"
-            " công vào bảng điều khiển."
-        )
+        notify_discord("✅ **AngelTier** — Một nhân viên kỹ thuật vừa đăng nhập thành công vào bảng điều khiển.")
         return jsonify({"ok": True})
     else:
         session["admin_authed"] = False
         session["admin_step1_ok"] = False
-        notify_discord(
-            "🚨 **AngelTier** — CẢNH BÁO: có người nhập sai mật khẩu lớp 2 khi"
-            " cố truy cập bảng điều khiển (khả năng đột nhập)."
-        )
+        notify_discord("🚨 **AngelTier** — CẢNH BÁO: có người nhập sai mật khẩu lớp 2.")
         return jsonify({"ok": False}), 401
-
 
 @app.route("/api/admin/logout", methods=["POST"])
 def admin_logout():
     session["admin_authed"] = False
     session["admin_step1_ok"] = False
     return jsonify({"ok": True})
-
 
 @app.route("/api/admin/players", methods=["GET"])
 def admin_get_players():
@@ -228,7 +172,6 @@ def admin_get_players():
     if raw_players is None:
         raw_players = DEFAULT_PLAYERS
     return jsonify({"ok": True, "players": raw_players})
-
 
 @app.route("/api/admin/players", methods=["POST"])
 def admin_save_players():
@@ -241,6 +184,8 @@ def admin_save_players():
         return jsonify({"ok": False, "error": "Dữ liệu không hợp lệ"}), 400
 
     cleaned = []
+    db_records = []
+
     for p in players:
         if not isinstance(p, dict):
             continue
@@ -259,34 +204,38 @@ def admin_save_players():
                 tier = str(tier).strip().upper()
                 if mode and tier:
                     tiers[mode] = tier
+
         entry = {"name": name, "avatar": avatar, "tiers": tiers}
         po = p.get("points_override")
         if isinstance(po, (int, float)):
             entry["points_override"] = po
         cleaned.append(entry)
 
-    try:
-        with open(PLAYERS_FILE, "w", encoding="utf-8") as f:
-            json.dump(cleaned, f, ensure_ascii=False, indent=2)
-    except Exception as e:
-        return jsonify({"ok": False, "error": f"Không thể lưu file: {e}"}), 500
+        # Chuẩn bị bản ghi cho bảng 'players' trong Supabase (sử dụng cột 'ign' và 'tier')
+        db_records.append({
+            "ign": name,
+            "avatar": avatar,
+            "tier": tiers,
+            "points_override": po if isinstance(po, (int, float)) else None
+        })
+
+    # Đồng bộ lên Supabase
+    if supabase:
+        try:
+            # Cập nhật hoặc chèn dữ liệu vào Supabase
+            supabase.table("players").upsert(db_records, on_conflict="ign").execute()
+        except Exception as e:
+            return jsonify({"ok": False, "error": f"Không thể lưu lên Supabase: {e}"}), 500
 
     notify_discord(
-        f"🛠️ **AngelTier** — Nhân viên kỹ thuật vừa cập nhật bảng xếp hạng"
-        f" ({len(cleaned)} người chơi)."
+        f"🛠️ **AngelTier** — Nhân viên kỹ thuật vừa cập nhật bảng xếp hạng ({len(cleaned)} người chơi)."
     )
     return jsonify({"ok": True, "players": cleaned})
 
-
-# 🟢 TRANG CHỦ (Yêu cầu có file templates/index.html trong project)
 @app.route("/")
 def home():
     return render_template("index.html")
 
-
 if __name__ == "__main__":
-    print(
-        "🔥 Server AngelTier (giao diện mới + animation) đang chạy tại"
-        " http://localhost:5000"
-    )
+    print("🔥 Server AngelTier đang chạy tại http://localhost:5000")
     app.run(host="0.0.0.0", port=5000)
