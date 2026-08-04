@@ -1,4 +1,4 @@
-# made by MCO (mr.coco own web) , code 003 -> nâng cấp giao diện đồng bộ với code 004 + thêm animation + kết nối Supabase
+# made by MCO (mr.coco own web) - Code 004 Enhanced
 import json
 import os
 import secrets
@@ -6,7 +6,6 @@ from flask import (
     Flask,
     jsonify,
     render_template,
-    render_template_string,
     request,
     session,
 )
@@ -16,14 +15,14 @@ from supabase import create_client, Client
 app = Flask(__name__)
 # Secret key định danh phiên đăng nhập Flask
 app.secret_key = os.environ.get(
-    "ANGELTIER_SECRET_KEY", "ANGELTIER_SUPER_SECRET_KEY_2026"
+    "ANGELTIER_SECRET_KEY", "ANGELTIER_SUPER_SECRET_KEY_2026_MCO"
 )
 
 # 🔐 Cấu hình bảng điều khiển nhân viên kỹ thuật (2 lớp mật khẩu)
 ADMIN_PASSWORD_1 = "33298"
 ADMIN_WEBHOOK_URL = "https://discord.com/api/webhooks/1533666984867270696/g6UmiB6KgOZU3jgpjGuUcN-iR32G26RJfEkeNEAE-ssF-HSUzdg8gQ4qtlUkMntYhSks"
 
-# ⚡ KẾT NỐI DATABASE SUPABASE (Gán trực tiếp chuỗi theo yêu cầu)
+# ⚡ KẾT NỐI DATABASE SUPABASE
 SUPABASE_URL = "https://zkkkfasdwuvqrytdgqxbl.supabase.co/"
 SUPABASE_KEY = "sb_publishable_ejd9s6yhQimvU8sy8YR_ww_44db-pwP"
 
@@ -47,7 +46,6 @@ TIER_POINTS = {
     "HT1": 80,
 }
 
-
 def calculate_points(tiers):
     """Hàm tính tổng điểm từ các Tier của người chơi"""
     if not tiers or not isinstance(tiers, dict):
@@ -58,13 +56,11 @@ def calculate_points(tiers):
         total += TIER_POINTS.get(clean_tier, 0)
     return total
 
-
 def load_real_players():
     """Hàm đọc dữ liệu từ database Supabase (Bảng 'Angel bot - website')"""
     if not supabase:
         return None
     try:
-        # 🔴 ĐÃ SỬA: Đọc dữ liệu từ bảng "Angel bot - website"
         response = supabase.table("Angel bot - website").select("*").execute()
         data = response.data
 
@@ -73,7 +69,6 @@ def load_real_players():
             ign = row.get("ign") or "Unknown"
             raw_tier = row.get("tier")
             
-            # Đọc dữ liệu tier từ bot gửi lên (Xử lý cả dạng chuỗi lẫn dict)
             if isinstance(raw_tier, dict):
                 tiers_dict = raw_tier
             elif raw_tier:
@@ -95,18 +90,15 @@ def load_real_players():
         print(f"Lỗi đọc dữ liệu từ Supabase: {e}")
         return None
 
-
 def notify_discord(message):
-    """Gửi thông báo về Discord qua webhook cấu hình sẵn ở server (không lộ ra client)."""
+    """Gửi thông báo về Discord qua webhook cấu hình sẵn."""
     try:
         requests.post(ADMIN_WEBHOOK_URL, json={"content": message}, timeout=5)
     except Exception as e:
         print(f"Không gửi được thông báo Discord: {e}")
 
-
 def require_admin():
     return bool(session.get("admin_authed"))
-
 
 # Dữ liệu mẫu dự phòng khi database rỗng hoặc lỗi kết nối
 DEFAULT_PLAYERS = [
@@ -121,7 +113,6 @@ DEFAULT_PLAYERS = [
         "tiers": {"Tier": "HT2"},
     },
 ]
-
 
 @app.route("/api/leaderboard", methods=["GET"])
 def get_leaderboard():
@@ -150,15 +141,8 @@ def get_leaderboard():
             }
         )
 
-    # 🏆 SẮP XẾP GIẢM DẦN THEO POINT
     leaderboard.sort(key=lambda x: x["points"], reverse=True)
     return jsonify(leaderboard)
-
-
-# ============================================================
-# 🛠️ BẢNG ĐIỀU KHIỂN NHÂN VIÊN KỸ THUẬT — xác thực 2 lớp
-# ============================================================
-
 
 @app.route("/api/admin/step1", methods=["POST"])
 def admin_step1():
@@ -170,16 +154,10 @@ def admin_step1():
     session["admin_step1_ok"] = False
     return jsonify({"ok": False}), 401
 
-
 @app.route("/api/admin/step2", methods=["POST"])
 def admin_step2():
     if not session.get("admin_step1_ok"):
-        return (
-            jsonify(
-                {"ok": False, "error": "Chưa hoàn thành lớp mật khẩu 1"}
-            ),
-            401,
-        )
+        return jsonify({"ok": False, "error": "Chưa hoàn thành lớp mật khẩu 1"}), 401
 
     data = request.get_json(silent=True) or {}
     webhook = str(data.get("webhook", "")).strip()
@@ -187,27 +165,19 @@ def admin_step2():
     if webhook == ADMIN_WEBHOOK_URL:
         session["admin_authed"] = True
         session["admin_step1_ok"] = False
-        notify_discord(
-            "✅ **AngelTier** — Một nhân viên kỹ thuật vừa đăng nhập thành"
-            " công vào bảng điều khiển."
-        )
+        notify_discord("✅ **AngelTier (MCO Code 004)** — Nhân viên kỹ thuật đăng nhập thành công.")
         return jsonify({"ok": True})
     else:
         session["admin_authed"] = False
         session["admin_step1_ok"] = False
-        notify_discord(
-            "🚨 **AngelTier** — CẢNH BÁO: có người nhập sai mật khẩu lớp 2 khi"
-            " cố truy cập bảng điều khiển (khả năng đột nhập)."
-        )
+        notify_discord("🚨 **AngelTier (MCO Code 004)** — CẢNH BÁO: Nhập sai mật khẩu lớp 2.")
         return jsonify({"ok": False}), 401
-
 
 @app.route("/api/admin/logout", methods=["POST"])
 def admin_logout():
     session["admin_authed"] = False
     session["admin_step1_ok"] = False
     return jsonify({"ok": True})
-
 
 @app.route("/api/admin/players", methods=["GET"])
 def admin_get_players():
@@ -217,7 +187,6 @@ def admin_get_players():
     if raw_players is None:
         raw_players = DEFAULT_PLAYERS
     return jsonify({"ok": True, "players": raw_players})
-
 
 @app.route("/api/admin/players", methods=["POST"])
 def admin_save_players():
@@ -238,10 +207,7 @@ def admin_save_players():
         name = str(p.get("name", "")).strip()
         if not name:
             continue
-        avatar = (
-            str(p.get("avatar", "")).strip()
-            or f"https://mc-heads.net/avatar/{name}/100.png"
-        )
+        avatar = str(p.get("avatar", "")).strip() or f"https://mc-heads.net/avatar/{name}/100.png"
         tiers_in = p.get("tiers", {}) or {}
         tiers = {}
         if isinstance(tiers_in, dict):
@@ -257,47 +223,22 @@ def admin_save_players():
             entry["points_override"] = po
         cleaned.append(entry)
 
-        # Lấy giá trị tier để lưu xuống DB (nếu có 1 mode thì lưu string, nếu nhiều mode thì lưu dict/string)
         tier_val = list(tiers.values())[0] if len(tiers) == 1 else (tiers if tiers else None)
+        db_records.append({"ign": name, "tier": tier_val})
 
-        # Tạo bản ghi cập nhật Supabase chuẩn định dạng cột ign và tier
-        db_records.append(
-            {
-                "ign": name,
-                "tier": tier_val
-            }
-        )
-
-    # 🔴 ĐÃ SỬA: Cập nhật dữ liệu vào bảng "Angel bot - website"
     if supabase:
         try:
-            supabase.table("Angel bot - website").upsert(
-                db_records, on_conflict="ign"
-            ).execute()
+            supabase.table("Angel bot - website").upsert(db_records, on_conflict="ign").execute()
         except Exception as e:
-            return (
-                jsonify(
-                    {"ok": False, "error": f"Không thể lưu lên Supabase: {e}"}
-                ),
-                500,
-            )
+            return jsonify({"ok": False, "error": f"Không thể lưu lên Supabase: {e}"}), 500
 
-    notify_discord(
-        f"🛠️ **AngelTier** — Nhân viên kỹ thuật vừa cập nhật bảng xếp hạng"
-        f" ({len(cleaned)} người chơi)."
-    )
+    notify_discord(f"🛠️ **AngelTier (MCO Code 004)** — Cập nhật thành công ({len(cleaned)} người chơi).")
     return jsonify({"ok": True, "players": cleaned})
 
-
-# 🟢 TRANG CHỦ (Yêu cầu có file templates/index.html trong project)
 @app.route("/")
 def home():
     return render_template("index.html")
 
-
 if __name__ == "__main__":
-    print(
-        "🔥 Server AngelTier (kết nối Supabase) đang chạy tại"
-        " http://localhost:5000"
-    )
+    print("🔥 Server AngelTier (MCO Code 004) đang chạy tại http://localhost:5000")
     app.run(host="0.0.0.0", port=5000)
