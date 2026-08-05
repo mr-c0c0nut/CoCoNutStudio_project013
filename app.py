@@ -30,7 +30,7 @@ SUPABASE_KEY = "sb_publishable_ejd9s6yhQimvU8sy8YR_ww_44db-pwP"
 
 try:
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-    print("✅ Đã kết nối Supabase thành công")
+    print("✅ Đã khởi tạo Supabase Client thành công")
 except Exception as e:
     supabase = None
     print(f"⚠️ Chưa khởi tạo được Supabase Client: {e}")
@@ -44,10 +44,10 @@ TIER_POINTS = {
     "LT1": 70, "HT1": 80,
 }
 
-# ── Danh sách mode PvP ───────────────────────────────
+# ── Danh sách mode PvP (PHẢI khớp với mảng MODES trong index.html) ──
 PVP_MODES = [
-    "NoDebuff", "Debuff", "Combo", "Sword",
-    "Bow", "Fist", "Axe", "Gapple",
+    "Sword", "Nethpot", "Pot", "UHC",
+    "Axe", "Mace", "Smp", "Vanilla",
 ]
 
 
@@ -148,7 +148,7 @@ def require_admin():
     return bool(session.get("admin_authed"))
 
 
-# Dữ liệu mẫu dự phòng
+# Dữ liệu mẫu dự phòng (chỉ dùng khi DB trống/mất kết nối)
 DEFAULT_PLAYERS = [
     {"name": "thekidpika", "tiers": {"Tier": "HT1"}},
     {"name": "AGL_Mipp", "tiers": {"Tier": "HT2"}},
@@ -323,7 +323,18 @@ def admin_get_players():
 
 @app.route("/api/admin/players", methods=["POST"])
 def admin_save_players():
-    """Admin: Lưu toàn bộ danh sách (bulk upsert)"""
+    """
+    Admin: Lưu toàn bộ danh sách (từ Bảng Điều Khiển -> nút "Lưu thay đổi").
+
+    QUAN TRỌNG: người chơi ĐÃ có "id" sẽ được UPDATE theo id (khóa chính,
+    luôn có ràng buộc UNIQUE mặc định trên Supabase). Người chơi CHƯA có
+    "id" (mới thêm ở admin) sẽ được INSERT. Trước đây code dùng
+    upsert(..., on_conflict="ign") cho TẤT CẢ bản ghi — nếu cột "ign"
+    không có ràng buộc UNIQUE trong bảng Supabase (trường hợp thường gặp),
+    Postgres từ chối toàn bộ upsert và không có gì được lưu, dù response
+    trông như thành công. Tách update/insert như dưới đây không phụ thuộc
+    vào ràng buộc đó nữa nên sẽ lưu được trong mọi trường hợp.
+    """
     if not require_admin():
         return jsonify({"ok": False, "error": "Chưa xác thực"}), 403
 
@@ -332,7 +343,12 @@ def admin_save_players():
     if not isinstance(players, list):
         return jsonify({"ok": False, "error": "Dữ liệu không hợp lệ"}), 400
 
-    db_records = []
+    if not supabase:
+        return jsonify({"ok": False, "error": "Không có kết nối DB (Supabase chưa khởi tạo được)"}), 500
+
+    to_update = []
+    to_insert = []
+
     for p in players:
         if not isinstance(p, dict):
             continue
@@ -354,23 +370,30 @@ def admin_save_players():
             "review_note": p.get("review_note", ""),
             "updated_at": datetime.utcnow().isoformat(),
         }
-        # Nếu có id (UUID) thì giữ lại để upsert chính xác
-        if p.get("id") and isinstance(p["id"], str) and len(p["id"]) > 10:
-            rec["id"] = p["id"]
-        db_records.append(rec)
 
-    if supabase and db_records:
-        try:
-            supabase.table(TABLE).upsert(
-                db_records, on_conflict="ign"
-            ).execute()
-        except Exception as e:
-            return jsonify({"ok": False, "error": f"Lỗi lưu: {e}"}), 500
+        has_valid_id = p.get("id") and isinstance(p["id"], str) and len(p["id"]) > 10
+        if has_valid_id:
+            rec["id"] = p["id"]
+            to_update.append(rec)
+        else:
+            rec["created_at"] = datetime.utcnow().isoformat()
+            to_insert.append(rec)
+
+    try:
+        # Cập nhật người chơi đã tồn tại — xung đột theo "id" (khóa chính),
+        # KHÔNG theo "ign", nên không cần ràng buộc UNIQUE trên "ign".
+        if to_update:
+            supabase.table(TABLE).upsert(to_update, on_conflict="id").execute()
+        # Thêm người chơi hoàn toàn mới (chưa có id) — insert thẳng.
+        if to_insert:
+            supabase.table(TABLE).insert(to_insert).execute()
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"Lỗi lưu: {e}"}), 500
 
     notify_discord(
-        f"🛠️ **AngelTier** — Cập nhật {len(db_records)} người chơi."
+        f"🛠️ **AngelTier** — Cập nhật {len(to_update)} người chơi, thêm mới {len(to_insert)} người chơi."
     )
-    return jsonify({"ok": True, "count": len(db_records)})
+    return jsonify({"ok": True, "count": len(to_update) + len(to_insert)})
 
 
 @app.route("/api/admin/players/<player_id>", methods=["PUT"])
@@ -388,10 +411,13 @@ def admin_update_player(player_id):
         if field in data:
             update_data[field] = data[field]
 
-    # Nếu đổi tên, tính lại điểm nếu chưa có points
+    # Nếu đổi tier, tính lại điểm nếu chưa có points
     if "tier" in data and "points" not in data:
         tiers = normalize_tiers(data["tier"])
         update_data["points"] = calculate_points(tiers)
+
+    if not supabase:
+        return jsonify({"ok": False, "error": "Không có kết nối DB"}), 500
 
     # Nếu duyệt, tự động tính điểm
     if data.get("status") == "approved" and "points" not in data:
@@ -402,9 +428,6 @@ def admin_update_player(player_id):
             if current.data:
                 tiers = normalize_tiers(current.data[0].get("tier"))
         update_data["points"] = calculate_points(tiers)
-
-    if not supabase:
-        return jsonify({"ok": False, "error": "Không có kết nối DB"}), 500
 
     try:
         resp = (
