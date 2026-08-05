@@ -2,471 +2,417 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>AngelTier - Lò Rèn Bảng Xếp Hạng PvP Việt Nam</title>
-<meta name="description" content="AngelTier — nơi kỹ năng PvP Minecraft được tôi luyện qua lửa và phán xét bởi hệ thống Tier công tâm nhất Việt Nam.">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>AngelTier - Lo Ren Bang Xep Hang PvP Viet Nam</title>
 <link rel="icon" href="https://i.ibb.co/MDM2jGCX/1785672737209-6292537109541337385428-8470405b249247be4b15602be05cd5ef.jpg">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Be+Vietnam+Pro:wght@400;600;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{
-    --bg:#0a0806;--bg-panel:#14100c;--bg-panel-2:#1c160f;
-    --border:#2c2117;--border-soft:rgba(255,138,61,0.14);
-    --ember:#ff6a1f;--ember-hot:#ffcf5c;--ember-white:#fff4de;--ember-dim:#8a3a0f;
-    --gold:#f7c873;--gold-deep:#c98f3e;
-    --celestial:#8ec9ff;--celestial-deep:#3f6fa8;
-    --blood:#c1272d;--steel:#93a2ac;--iron-cold:#6f6a60;
-    --text:#f2ede3;--text-dim:#a89a86;--text-faint:#6e6355;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;position:relative;}
-::selection{background:var(--ember-dim);color:var(--ember-white);}
-::-webkit-scrollbar{width:8px;}
-::-webkit-scrollbar-track{background:var(--bg);}
-::-webkit-scrollbar-thumb{background:linear-gradient(var(--gold-deep),var(--ember-dim));border-radius:10px;}
-:focus-visible{outline:2px solid var(--celestial);outline-offset:3px;border-radius:4px;}
-a{color:inherit;text-decoration:none;}
-button{font-family:inherit;cursor:pointer;}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:998;opacity:0.04;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:997;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,0.55) 100%);}
+:root{--bg:#0a0806;--bg-panel:#14100c;--bg-panel-2:#1c160f;--border:#2c2117;--border-soft:rgba(255,138,61,.14);--ember:#ff6a1f;--ember-hot:#ffcf5c;--ember-white:#fff4de;--ember-dim:#8a3a0f;--gold:#f7c873;--gold-deep:#c98f3e;--celestial:#8ec9ff;--celestial-deep:#3f6fa8;--blood:#c1272d;--steel:#93a2ac;--iron-cold:#6f6a60;--text:#f2ede3;--text-dim:#a89a86;--text-faint:#6e6355}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+::selection{background:var(--ember-dim);color:var(--ember-white)}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:linear-gradient(var(--gold-deep),var(--ember-dim));border-radius:10px}
+:focus-visible{outline:2px solid var(--celestial);outline-offset:3px;border-radius:4px}
+a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:998;opacity:.04;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:997;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.55) 100%)}
+.container{width:90%;max-width:1140px;margin:0 auto;position:relative;z-index:2}
 
-.container{width:90%;max-width:1140px;margin:0 auto;position:relative;z-index:2;}
+.icon-orb{position:relative;flex-shrink:0;width:56px;height:56px}
+.icon-orb.md{width:52px;height:52px}.icon-orb.sm{width:28px;height:28px}
+.icon-ring{position:absolute;inset:0;border-radius:50%;padding:3px;background:conic-gradient(from 0deg,var(--ember-hot),var(--ember),var(--ember-dim),var(--gold),var(--ember-hot));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:frameSpin 7s linear infinite;filter:drop-shadow(0 0 6px rgba(255,106,31,.5))}
+.icon-orb.sm .icon-ring{padding:1.5px;animation-duration:5s}
+@keyframes frameSpin{to{transform:rotate(360deg)}}
+.icon-frame{position:absolute;inset:4px;border-radius:50%;overflow:hidden;background:radial-gradient(circle,#241a10,#0c0805);box-shadow:0 0 16px rgba(255,106,31,.32),inset 0 0 10px rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center}
+.icon-orb.sm .icon-frame{inset:2.5px}
+.icon-frame img{width:100%;height:100%;object-fit:cover}
+.icon-frame.broken img{display:none}
+.icon-frame.broken::after{content:attr(data-fallback);font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--ember-hot);font-size:.65em}
 
-/* Icon Orb */
-.icon-orb{position:relative;flex-shrink:0;width:56px;height:56px;}
-.icon-orb.xl{width:96px;height:96px;}.icon-orb.lg{width:72px;height:72px;}.icon-orb.md{width:52px;height:52px;}.icon-orb.sm{width:28px;height:28px;}
-.icon-ring{position:absolute;inset:0;border-radius:50%;padding:3px;background:conic-gradient(from 0deg,var(--ember-hot),var(--ember),var(--ember-dim),var(--gold),var(--ember-hot));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:frameSpin 7s linear infinite;filter:drop-shadow(0 0 6px rgba(255,106,31,0.5));}
-.icon-orb.sm .icon-ring{padding:1.5px;animation-duration:5s;}
-@keyframes frameSpin{to{transform:rotate(360deg);}}
-.icon-frame{position:absolute;inset:4px;border-radius:50%;overflow:hidden;background:radial-gradient(circle,#241a10,#0c0805);box-shadow:0 0 16px rgba(255,106,31,0.32),inset 0 0 10px rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;}
-.icon-orb.sm .icon-frame{inset:2.5px;}
-.icon-frame img{width:100%;height:100%;object-fit:cover;}
-.icon-frame.broken img{display:none;}
-.icon-frame.broken::after{content:attr(data-fallback);font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--ember-hot);font-size:0.7em;}
+.brand-emblem{position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand-emblem.lg{width:180px;height:58px}.brand-emblem.sm{width:96px;height:32px}
+.emblem-frame{position:relative;width:100%;height:100%;border-radius:12px;overflow:hidden;background:radial-gradient(circle,#241a10,#0c0805);border:1px solid var(--border);box-shadow:0 0 16px rgba(255,106,31,.28),inset 0 0 10px rgba(0,0,0,.6);z-index:2;transition:border-color .4s,box-shadow .4s}
+.brand-emblem.sm .emblem-frame{border-radius:9px}
+.emblem-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:5px}
+.emblem-wing{position:absolute;top:50%;width:52px;height:38px;transform:translateY(-50%);pointer-events:none;z-index:1;opacity:.5;transition:transform .5s cubic-bezier(.2,.8,.2,1),filter .5s,opacity .4s}
+.brand-emblem.sm .emblem-wing{width:34px;height:24px}
+.emblem-wing.left{left:-24px;transform-origin:right center;animation:wingL 4s ease-in-out infinite}
+.brand-emblem.sm .emblem-wing.left{left:-14px}
+.emblem-wing.right{right:-24px;transform:translateY(-50%) scaleX(-1);transform-origin:left center;animation:wingR 4s ease-in-out infinite}
+.brand-emblem.sm .emblem-wing.right{right:-14px}
+@keyframes wingL{0%,100%{transform:translateY(-50%) rotate(0);opacity:.4}50%{transform:translateY(-50%) rotate(-4deg);opacity:.55}}
+@keyframes wingR{0%,100%{transform:translateY(-50%) scaleX(-1) rotate(0);opacity:.4}50%{transform:translateY(-50%) scaleX(-1) rotate(-4deg);opacity:.55}}
+.emblem-wing path{fill:var(--iron-cold);transition:fill .4s}
+.brand-emblem:hover .emblem-wing{opacity:1!important;animation:none!important}
+.brand-emblem:hover .emblem-wing path{fill:var(--ember-hot)}
+.brand-emblem:hover .emblem-wing.left{transform:translateY(-50%) rotate(-22deg) scale(1.25);filter:drop-shadow(0 0 14px rgba(255,106,31,.9))}
+.brand-emblem:hover .emblem-wing.right{transform:translateY(-50%) scaleX(-1) rotate(-22deg) scale(1.25);filter:drop-shadow(0 0 14px rgba(255,106,31,.9))}
+.brand-emblem:hover .emblem-frame{border-color:rgba(255,138,61,.6);box-shadow:0 0 32px rgba(255,106,31,.55),inset 0 0 10px rgba(0,0,0,.6)}
 
-/* Brand Emblem */
-.brand-emblem{position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.brand-emblem.lg{width:180px;height:58px;}.brand-emblem.md{width:128px;height:42px;}.brand-emblem.sm{width:96px;height:32px;}
-.emblem-frame{position:relative;width:100%;height:100%;border-radius:12px;overflow:hidden;background:radial-gradient(circle,#241a10,#0c0805);border:1px solid var(--border);box-shadow:0 0 16px rgba(255,106,31,0.28),inset 0 0 10px rgba(0,0,0,0.6);z-index:2;transition:border-color .4s,box-shadow .4s;}
-.emblem-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:5px;}
-.emblem-wing{position:absolute;top:50%;width:52px;height:38px;transform:translateY(-50%);pointer-events:none;z-index:1;opacity:0.5;transition:transform .5s cubic-bezier(.2,.8,.2,1),filter .5s,opacity .4s;}
-.brand-emblem.md .emblem-wing,.brand-emblem.sm .emblem-wing{width:34px;height:24px;}
-.emblem-wing.left{left:-24px;transform-origin:right center;animation:wingIdleL 4s ease-in-out infinite;}
-.brand-emblem.md .emblem-wing.left,.brand-emblem.sm .emblem-wing.left{left:-14px;}
-.emblem-wing.right{right:-24px;transform:translateY(-50%) scaleX(-1);transform-origin:left center;animation:wingIdleR 4s ease-in-out infinite;}
-.brand-emblem.md .emblem-wing.right,.brand-emblem.sm .emblem-wing.right{right:-14px;}
-@keyframes wingIdleL{0%,100%{transform:translateY(-50%) rotate(0);opacity:.4;}50%{transform:translateY(-50%) rotate(-4deg);opacity:.55;}}
-@keyframes wingIdleR{0%,100%{transform:translateY(-50%) scaleX(-1) rotate(0);opacity:.4;}50%{transform:translateY(-50%) scaleX(-1) rotate(-4deg);opacity:.55;}}
-.emblem-wing path{fill:var(--iron-cold);transition:fill .4s;}
-.brand-emblem:hover .emblem-wing{opacity:1!important;animation:none!important;}
-.brand-emblem:hover .emblem-wing path{fill:var(--ember-hot);}
-.brand-emblem:hover .emblem-wing.left{transform:translateY(-50%) rotate(-22deg) scale(1.25);filter:drop-shadow(0 0 14px rgba(255,106,31,0.9));}
-.brand-emblem:hover .emblem-wing.right{transform:translateY(-50%) scaleX(-1) rotate(-22deg) scale(1.25);filter:drop-shadow(0 0 14px rgba(255,106,31,0.9));}
-.brand-emblem:hover .emblem-frame{border-color:rgba(255,138,61,0.6);box-shadow:0 0 32px rgba(255,106,31,0.55),inset 0 0 10px rgba(0,0,0,0.6);}
+.letterbox{position:fixed;left:0;right:0;height:14vh;background:#000;z-index:2000;pointer-events:none}
+.letterbox.top{top:0}.letterbox.bottom{bottom:0}
+.curtain{position:fixed;inset:0;background:#050403;z-index:1999;display:flex;align-items:center;justify-content:center;transition:opacity .8s ease .2s}
+.curtain-inner{display:flex;flex-direction:column;align-items:center;gap:18px}
+.curtain-logo{filter:drop-shadow(0 0 30px rgba(255,106,31,.4));animation:cBreathe 2.4s ease-in-out infinite}
+@keyframes cBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.curtain-word{font-family:'Cinzel',serif;font-weight:700;font-size:1.15rem;letter-spacing:7px;color:var(--ember-white);opacity:0;animation:mFlicker 1s ease .2s forwards}
+.curtain-bar-wrap{width:220px;height:2px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+.curtain-bar{width:0%;height:100%;background:linear-gradient(90deg,var(--gold),var(--ember));transition:width .2s linear}
+.curtain-status{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:2px;color:var(--text-faint);text-transform:uppercase}
+@keyframes mFlicker{0%{opacity:0}20%{opacity:1}30%{opacity:.3}40%{opacity:1}100%{opacity:1}}
+body.loaded .curtain{opacity:0;visibility:hidden;transition:opacity .8s,visibility 0s linear .8s}
+body.loaded .letterbox.top{animation:retTop .9s cubic-bezier(.7,0,.2,1) .15s forwards}
+body.loaded .letterbox.bottom{animation:retBot .9s cubic-bezier(.7,0,.2,1) .15s forwards}
+@keyframes retTop{to{transform:translateY(-100%)}}
+@keyframes retBot{to{transform:translateY(100%)}}
 
-/* Curtain */
-.letterbox{position:fixed;left:0;right:0;height:14vh;background:#000;z-index:2000;pointer-events:none;}
-.letterbox.top{top:0;}.letterbox.bottom{bottom:0;}
-.curtain{position:fixed;inset:0;background:#050403;z-index:1999;display:flex;align-items:center;justify-content:center;transition:opacity 0.8s ease 0.2s;}
-.curtain-inner{display:flex;flex-direction:column;align-items:center;gap:18px;}
-.curtain-logo{filter:drop-shadow(0 0 30px rgba(255,106,31,0.4));animation:curtainBreathe 2.4s ease-in-out infinite;}
-@keyframes curtainBreathe{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
-.curtain-word{font-family:'Cinzel',serif;font-weight:700;font-size:1.15rem;letter-spacing:7px;color:var(--ember-white);opacity:0;animation:markFlicker 1s ease 0.2s forwards;}
-.curtain-bar-wrap{width:220px;height:2px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
-.curtain-bar{width:0%;height:100%;background:linear-gradient(90deg,var(--gold),var(--ember));transition:width 0.2s linear;}
-.curtain-status{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:2px;color:var(--text-faint);text-transform:uppercase;}
-@keyframes markFlicker{0%{opacity:0;}20%{opacity:1;}30%{opacity:0.3;}40%{opacity:1;}100%{opacity:1;}}
-body.loaded .curtain{opacity:0;visibility:hidden;transition:opacity 0.8s,visibility 0s linear 0.8s;}
-body.loaded .letterbox.top{animation:retractTop 0.9s cubic-bezier(.7,0,.2,1) 0.15s forwards;}
-body.loaded .letterbox.bottom{animation:retractBottom 0.9s cubic-bezier(.7,0,.2,1) 0.15s forwards;}
-@keyframes retractTop{to{transform:translateY(-100%);}}
-@keyframes retractBottom{to{transform:translateY(100%);}}
+header{width:100%;display:flex;justify-content:center;padding:22px 0;position:sticky;top:0;z-index:100;background:rgba(10,8,6,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--border-soft)}
+.nav-container{width:90%;max-width:1140px;background:linear-gradient(180deg,var(--bg-panel),var(--bg-panel-2));border:1px solid var(--border);border-radius:16px;padding:10px 22px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.03);gap:14px;flex-wrap:wrap}
+.logo-box{display:flex;align-items:center;gap:14px;cursor:pointer;background:none;border:none;padding:4px 0}
+.brand-name{font-family:'Cinzel',serif;font-weight:700;font-size:1.1rem;letter-spacing:1px;color:#fff}
+.brand-sub{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text-faint);letter-spacing:2px;text-transform:uppercase;display:block;margin-top:1px}
+.nav-links{display:flex;gap:26px;list-style:none;align-items:center}
+.nav-links a{color:var(--text-dim);font-size:.88rem;font-weight:600;position:relative;padding:4px 0;cursor:pointer;transition:color .25s}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--ember);transition:width .25s}
+.nav-links a:hover,.nav-links a.active{color:var(--ember-hot)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-discord{background:#5865F2;color:#fff;padding:9px 20px;border-radius:10px;font-weight:700;font-size:.88rem;border:none;display:flex;align-items:center;gap:9px;transition:transform .15s,box-shadow .25s}
+.btn-discord:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(88,101,242,.4)}
+.btn-icon{background:var(--bg-panel-2);border:1px solid var(--border);color:var(--text-faint);width:38px;height:38px;min-width:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;transition:.2s;font-size:.9rem}
+.btn-icon:hover{border-color:var(--ember);color:var(--ember-hot)}
 
-/* Header */
-header{width:100%;display:flex;justify-content:center;padding:22px 0;position:sticky;top:0;z-index:100;background:rgba(10,8,6,0.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--border-soft);}
-.nav-container{width:90%;max-width:1140px;background:linear-gradient(180deg,var(--bg-panel),var(--bg-panel-2));border:1px solid var(--border);border-radius:16px;padding:10px 22px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.03);gap:14px;flex-wrap:wrap;}
-.logo-box{display:flex;align-items:center;gap:14px;cursor:pointer;background:none;border:none;padding:4px 0;}
-.brand-name{font-family:'Cinzel',serif;font-weight:700;font-size:1.1rem;letter-spacing:1px;color:#fff;}
-.brand-sub{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text-faint);letter-spacing:2px;text-transform:uppercase;display:block;margin-top:1px;}
-.nav-links{display:flex;gap:26px;list-style:none;align-items:center;}
-.nav-links a{color:var(--text-dim);font-size:0.88rem;font-weight:600;position:relative;padding:4px 0;cursor:pointer;transition:color 0.25s;}
-.nav-links a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--ember);transition:width 0.25s;}
-.nav-links a:hover{color:var(--ember-hot);}
-.nav-links a:hover::after{width:100%;}
-.nav-links a.active{color:var(--ember-hot);}
-.nav-links a.active::after{width:100%;}
-.nav-actions{display:flex;align-items:center;gap:10px;}
-.btn-discord{background:#5865F2;color:white;padding:9px 20px;border-radius:10px;font-weight:700;font-size:0.88rem;border:none;cursor:pointer;display:flex;align-items:center;gap:9px;transition:transform 0.15s,box-shadow 0.25s;}
-.btn-discord:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(88,101,242,0.4);}
-.btn-icon{background:var(--bg-panel-2);border:1px solid var(--border);color:var(--text-faint);width:38px;height:38px;min-width:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;transition:.2s;font-size:0.9rem;}
-.btn-icon:hover{border-color:var(--ember);color:var(--ember-hot);}
+.hero-wrap{position:relative;padding-top:60px}
+.ambient-glow{position:absolute;border-radius:50%;filter:blur(130px);pointer-events:none;z-index:0;animation:breathe 5s ease-in-out infinite alternate}
+@keyframes breathe{0%{opacity:.32;transform:scale(1)}100%{opacity:.75;transform:scale(1.32)}}
+.glow-hero{width:680px;height:680px;background:radial-gradient(circle,var(--ember) 0%,transparent 70%);top:-180px;left:0%}
+.ember-field{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.ember-p{position:absolute;bottom:-10px;border-radius:50%;background:radial-gradient(circle,var(--ember-white) 0%,var(--ember) 55%,transparent 75%);opacity:0;animation:rise linear infinite}
+@keyframes rise{0%{transform:translateY(0) translateX(0) scale(1);opacity:0}8%{opacity:.85}50%{transform:translateY(-320px) translateX(var(--drift,18px)) scale(.8)}92%{opacity:.4}100%{transform:translateY(-620px) translateX(calc(var(--drift,18px)*2)) scale(.15);opacity:0}}
 
-/* Hero */
-.hero-wrap{position:relative;padding-top:60px;}
-.ambient-glow{position:absolute;border-radius:50%;filter:blur(130px);pointer-events:none;z-index:0;animation:breathe 5s ease-in-out infinite alternate;}
-@keyframes breathe{0%{opacity:.32;transform:scale(1);}100%{opacity:.75;transform:scale(1.32);}}
-.glow-hero{width:680px;height:680px;background:radial-gradient(circle,var(--ember) 0%,transparent 70%);top:-180px;left:0%;}
+.hero-emblem-wrap{display:flex;justify-content:center;position:relative;z-index:1;margin-bottom:14px;opacity:0;animation:reveal .8s .1s ease forwards}
+@keyframes reveal{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;position:relative;z-index:1;align-items:center;padding-bottom:70px}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr}}
+.hero-left{display:flex;flex-direction:column;gap:22px}
+.tag-badge{align-self:flex-start;font-family:'JetBrains Mono',monospace;background:rgba(255,106,31,.08);color:var(--ember-hot);border:1px solid rgba(255,106,31,.28);padding:7px 16px;border-radius:6px;font-size:.76rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.tag-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--ember);box-shadow:0 0 8px var(--ember);animation:pulseDot 1.6s infinite}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-title{font-family:'Be Vietnam Pro',sans-serif;font-size:3.1rem;font-weight:900;line-height:1.15;color:var(--text)}
+.hero-title .accent{color:var(--ember);animation:accentFlicker 3s ease-in-out infinite}
+@keyframes accentFlicker{0%,100%{text-shadow:0 0 20px rgba(255,106,31,.35)}50%{text-shadow:0 0 50px rgba(255,106,31,.85),0 0 90px rgba(255,106,31,.4)}}
+.letter{display:inline-block;opacity:0;filter:blur(6px);transform:translateY(18px) scale(1.04)}
+.letter.space{width:.28em}
+body.loaded .letter{animation:quench .7s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes quench{0%{opacity:0;filter:blur(10px);transform:translateY(22px);color:var(--ember-white);text-shadow:0 0 22px var(--ember-hot)}45%{opacity:1;filter:blur(1px);color:var(--ember-hot);text-shadow:0 0 14px var(--ember)}100%{opacity:1;filter:blur(0);transform:translateY(0);color:inherit;text-shadow:none}}
+.hero-desc{color:var(--text-dim);line-height:1.75;font-size:1.02rem;max-width:520px}
+.hero-btns{display:flex;gap:14px;margin-top:6px;flex-wrap:wrap}
+.btn-primary{position:relative;background:linear-gradient(135deg,var(--ember-hot),var(--ember));color:#1a0e04;padding:13px 26px;border-radius:10px;font-weight:800;border:none;display:flex;align-items:center;gap:9px;font-size:.95rem;box-shadow:0 8px 22px rgba(255,106,31,.32);transition:transform .18s,box-shadow .25s}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(255,106,31,.45)}
+.btn-secondary{background:var(--bg-panel);color:var(--text);padding:13px 26px;border-radius:10px;font-weight:700;border:1px solid var(--border);display:flex;align-items:center;gap:9px;font-size:.95rem;transition:border-color .2s,transform .18s}
+.btn-secondary:hover{border-color:var(--ember-dim);transform:translateY(-3px)}
 
-.ember-field{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
-.ember-p{position:absolute;bottom:-10px;border-radius:50%;background:radial-gradient(circle,var(--ember-white) 0%,var(--ember) 55%,transparent 75%);opacity:0;animation:rise linear infinite;}
-@keyframes rise{0%{transform:translateY(0) translateX(0) scale(1);opacity:0;}8%{opacity:.85;}50%{transform:translateY(-320px) translateX(var(--drift,18px)) scale(0.8);}92%{opacity:.4;}100%{transform:translateY(-620px) translateX(calc(var(--drift,18px)*2)) scale(0.15);opacity:0;}}
+.card-box{background:linear-gradient(165deg,var(--bg-panel),var(--bg-panel-2));border:1px solid var(--border);border-radius:18px;padding:26px;box-shadow:0 20px 50px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.02);position:relative;overflow:hidden}
+.card-box::before{content:"";position:absolute;top:-40%;left:-20%;width:60%;height:180%;background:linear-gradient(90deg,transparent,rgba(255,138,61,.05),transparent);transform:rotate(20deg);pointer-events:none}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.card-title{font-family:'Be Vietnam Pro',sans-serif;font-size:1.05rem;font-weight:800;color:#fff}
+.card-sub{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--ember-hot);display:flex;align-items:center;gap:6px;letter-spacing:.5px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#3ecf6e;box-shadow:0 0 8px #3ecf6e;animation:pulseDot 1.4s infinite}
 
-.hero-emblem-wrap{display:flex;justify-content:center;position:relative;z-index:1;margin-bottom:14px;opacity:0;animation:reveal 0.8s 0.1s ease forwards;}
-@keyframes reveal{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.player-list{display:flex;flex-direction:column;gap:11px}
+.player-item{background:rgba(255,255,255,.015);border:1px solid var(--border);padding:13px 16px;border-radius:12px}
+.player-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.player-info{display:flex;align-items:center;gap:12px}
+.rank-mark{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:.85rem;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);flex-shrink:0}
+.r1{color:var(--ember-white);border-color:var(--ember-hot);box-shadow:0 0 12px rgba(255,207,92,.35);animation:medalPulse 2s ease-in-out infinite}
+.r2{color:var(--steel);border-color:rgba(147,162,172,.5)}
+.r3{color:#d98a4f;border-color:rgba(217,138,79,.5)}
+@keyframes medalPulse{0%,100%{box-shadow:0 0 12px rgba(255,207,92,.35)}50%{box-shadow:0 0 22px rgba(255,207,92,.7)}}
+.avatar{width:34px;height:34px;border-radius:8px;object-fit:cover;background:linear-gradient(135deg,#2a2118,#1a140e);border:1px solid var(--border);flex-shrink:0}
+.p-name{font-weight:700;font-size:.92rem;color:var(--text)}
+.p-points{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-faint)}
 
-.hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:40px;position:relative;z-index:1;align-items:center;padding-bottom:70px;}
-@media(max-width:900px){.hero-grid{grid-template-columns:1fr;}}
+.tier-chip{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;padding:4px 9px;border-radius:5px;letter-spacing:.5px;white-space:nowrap}
+.tier-ht1{background:rgba(255,244,222,.12);color:var(--ember-white);border:1px solid rgba(255,244,222,.35)}
+.tier-lt1{background:rgba(255,207,92,.1);color:var(--ember-hot);border:1px solid rgba(255,207,92,.3)}
+.tier-ht2{background:rgba(249,200,115,.1);color:var(--gold);border:1px solid rgba(249,200,115,.3)}
+.tier-lt2{background:rgba(201,143,62,.1);color:var(--gold-deep);border:1px solid rgba(201,143,62,.3)}
+.tier-ht3{background:rgba(142,201,255,.1);color:var(--celestial);border:1px solid rgba(142,201,255,.3)}
+.tier-lt3{background:rgba(63,111,168,.1);color:var(--celestial-deep);border:1px solid rgba(63,111,168,.3)}
+.tier-ht4{background:rgba(147,162,172,.08);color:var(--steel);border:1px solid rgba(147,162,172,.3)}
+.tier-lt4{background:rgba(111,106,96,.1);color:var(--iron-cold);border:1px solid rgba(111,106,96,.3)}
+.tier-ht5{background:rgba(193,39,45,.1);color:#e85555;border:1px solid rgba(193,39,45,.3)}
+.tier-lt5{background:rgba(120,30,34,.08);color:#a04040;border:1px solid rgba(120,30,34,.3)}
+.tier-other{background:rgba(142,201,255,.08);color:var(--celestial);border:1px solid rgba(142,201,255,.3)}
 
-.hero-left{display:flex;flex-direction:column;gap:22px;}
-.tag-badge{align-self:flex-start;font-family:'JetBrains Mono',monospace;background:rgba(255,106,31,0.08);color:var(--ember-hot);border:1px solid rgba(255,106,31,0.28);padding:7px 16px;border-radius:6px;font-size:0.76rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:8px;}
-.tag-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--ember);box-shadow:0 0 8px var(--ember);animation:pulseDot 1.6s infinite;}
-@keyframes pulseDot{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.heat-bar{height:5px;border-radius:3px;background:rgba(255,255,255,.05);overflow:hidden}
+.heat-fill{height:100%;border-radius:3px;width:0%;position:relative;transition:width 1.4s cubic-bezier(.2,.7,.2,1)}
+.heat-fill::after{content:"";position:absolute;right:0;top:-5px;bottom:-5px;width:16px;background:inherit;filter:blur(9px);opacity:.95;animation:hFlicker 1.4s ease-in-out infinite}
+@keyframes hFlicker{0%,100%{opacity:.7;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.3)}}
+.fill-1{background:linear-gradient(90deg,var(--ember-dim),var(--ember-hot),var(--ember-white))}
+.fill-2{background:linear-gradient(90deg,var(--ember-dim),var(--ember-hot))}
+.fill-3{background:linear-gradient(90deg,var(--ember-dim),var(--ember))}
+.in-view .heat-fill{width:var(--fill,50%)}
+.skeleton-row{height:64px;border-radius:12px;background:linear-gradient(90deg,rgba(255,255,255,.02),rgba(255,255,255,.05),rgba(255,255,255,.02));background-size:200% 100%;animation:skelShine 1.4s ease-in-out infinite;margin-bottom:11px}
+@keyframes skelShine{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-.hero-title{font-family:'Be Vietnam Pro',sans-serif;font-size:3.1rem;font-weight:900;line-height:1.15;color:var(--text);}
-.hero-title .accent{color:var(--ember);animation:accentFlicker 3s ease-in-out infinite;}
-@keyframes accentFlicker{0%,100%{text-shadow:0 0 20px rgba(255,106,31,0.35);}50%{text-shadow:0 0 50px rgba(255,106,31,0.85),0 0 90px rgba(255,106,31,0.4);}}
-.letter{display:inline-block;opacity:0;filter:blur(6px);transform:translateY(18px) scale(1.04);}
-.letter.space{width:0.28em;}
-body.loaded .letter{animation:quench 0.7s cubic-bezier(.2,.8,.2,1) forwards;}
-@keyframes quench{0%{opacity:0;filter:blur(10px);transform:translateY(22px);color:var(--ember-white);text-shadow:0 0 22px var(--ember-hot);}45%{opacity:1;filter:blur(1px);color:var(--ember-hot);text-shadow:0 0 14px var(--ember);}100%{opacity:1;filter:blur(0);transform:translateY(0);color:inherit;text-shadow:none;}}
+.section-block{margin-top:52px}
+.section-eyebrow{font-family:'JetBrains Mono',monospace;color:var(--ember-hot);font-size:.74rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px}
+.section-heading{font-family:'Be Vietnam Pro',sans-serif;font-size:1.7rem;font-weight:800;color:#fff;margin-bottom:22px}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
 
-.hero-desc{color:var(--text-dim);line-height:1.75;font-size:1.02rem;max-width:520px;}
-.hero-btns{display:flex;gap:14px;margin-top:6px;flex-wrap:wrap;}
-.btn-primary{position:relative;background:linear-gradient(135deg,var(--ember-hot),var(--ember));color:#1a0e04;padding:13px 26px;border-radius:10px;font-weight:800;border:none;cursor:pointer;display:flex;align-items:center;gap:9px;font-size:0.95rem;box-shadow:0 8px 22px rgba(255,106,31,0.32);transition:transform 0.18s,box-shadow 0.25s;}
-.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(255,106,31,0.45);}
-.btn-secondary{background:var(--bg-panel);color:var(--text);padding:13px 26px;border-radius:10px;font-weight:700;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:9px;font-size:0.95rem;transition:border-color 0.2s,transform 0.18s;}
-.btn-secondary:hover{border-color:var(--ember-dim);transform:translateY(-3px);}
+.tier-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;gap:16px;flex-wrap:wrap}
+.tier-eyebrow{font-size:.7rem;font-weight:700;letter-spacing:2px;color:var(--ember);text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+.tier-title-main{font-family:'Cinzel',serif;font-size:1.3rem;font-weight:700;color:#fff;margin-top:6px}
+.tier-badge-count{background:var(--bg-panel-2);border:1px solid var(--border);color:var(--ember-hot);padding:6px 14px;border-radius:20px;font-size:.72rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.flame-ladder{display:flex;align-items:flex-end;justify-content:space-between;gap:3px;height:170px;padding:0 2px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.flame-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px}
+.flame-bar{width:100%;max-width:32px;border-radius:7px 7px 3px 3px;transform-origin:bottom;transform:scaleY(0);transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.reveal.in .flame-bar{transform:scaleY(1)}
+.flame-bar.t-ht1{background:linear-gradient(180deg,var(--ember-white),var(--ember-hot),var(--blood));box-shadow:0 0 22px rgba(193,39,45,.65)}
+.flame-bar.t-lt1{background:linear-gradient(180deg,var(--ember-hot),var(--ember));box-shadow:0 0 16px rgba(255,106,31,.55)}
+.flame-bar.t-ht2{background:linear-gradient(180deg,var(--gold),var(--gold-deep));box-shadow:0 0 14px rgba(249,200,115,.45)}
+.flame-bar.t-lt2{background:linear-gradient(180deg,var(--gold-deep),var(--ember-dim));box-shadow:0 0 12px rgba(201,143,62,.4)}
+.flame-bar.t-ht3{background:linear-gradient(180deg,var(--celestial),var(--celestial-deep));box-shadow:0 0 12px rgba(142,201,255,.45)}
+.flame-bar.t-lt3{background:linear-gradient(180deg,var(--celestial-deep),#2a4a6e);box-shadow:0 0 10px rgba(63,111,168,.4)}
+.flame-bar.t-ht4{background:linear-gradient(180deg,#b8c4cc,#7a8a94);box-shadow:0 0 8px rgba(147,162,172,.35)}
+.flame-bar.t-lt4{background:linear-gradient(180deg,#8a857c,#5a5650);box-shadow:0 0 8px rgba(111,106,96,.3)}
+.flame-bar.t-ht5{background:linear-gradient(180deg,#e85555,#8a2020);box-shadow:0 0 10px rgba(193,39,45,.5)}
+.flame-bar.t-lt5{background:linear-gradient(180deg,#a04040,#5a1a1a);box-shadow:0 0 8px rgba(120,30,34,.4)}
+.flame-label{font-family:'JetBrains Mono',monospace;font-size:.48rem;font-weight:700;color:var(--text-faint);letter-spacing:.3px}
+.flame-col.hi .flame-label{color:var(--ember-hot)}
 
-/* Card */
-.card-box{background:linear-gradient(165deg,var(--bg-panel),var(--bg-panel-2));border:1px solid var(--border);border-radius:18px;padding:26px;box-shadow:0 20px 50px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.02);position:relative;overflow:hidden;}
-.card-box::before{content:"";position:absolute;top:-40%;left:-20%;width:60%;height:180%;background:linear-gradient(90deg,transparent,rgba(255,138,61,0.05),transparent);transform:rotate(20deg);pointer-events:none;}
-.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;}
-.card-title{font-family:'Be Vietnam Pro',sans-serif;font-size:1.05rem;font-weight:800;color:#fff;}
-.card-sub{font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--ember-hot);display:flex;align-items:center;gap:6px;letter-spacing:0.5px;}
-.live-dot{width:6px;height:6px;border-radius:50%;background:#3ecf6e;box-shadow:0 0 8px #3ecf6e;animation:pulseDot 1.4s infinite;}
+.modes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;perspective:800px}
+.mode-card{padding:22px 12px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:.35s cubic-bezier(.2,.8,.2,1);text-align:center;opacity:0;transform:translateY(30px) scale(.92) rotateX(8deg);background:linear-gradient(165deg,var(--bg-panel),var(--bg-panel-2));border:1px solid var(--border);border-radius:18px}
+.mode-card.entered{opacity:1;transform:translateY(0) scale(1) rotateX(0)}
+.mode-card:hover{transform:translateY(-6px) scale(1.04) rotateX(-2deg);border-color:rgba(255,138,61,.45);box-shadow:0 12px 36px rgba(255,106,31,.18)}
+.mode-card .icon-orb{animation:iconFloat 3.2s ease-in-out infinite}
+.mode-card:nth-child(2) .icon-orb{animation-delay:-.4s}.mode-card:nth-child(3) .icon-orb{animation-delay:-.8s}.mode-card:nth-child(4) .icon-orb{animation-delay:-1.2s}.mode-card:nth-child(5) .icon-orb{animation-delay:-1.6s}.mode-card:nth-child(6) .icon-orb{animation-delay:-2s}.mode-card:nth-child(7) .icon-orb{animation-delay:-2.4s}.mode-card:nth-child(8) .icon-orb{animation-delay:-2.8s}
+@keyframes iconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.mode-card:hover .icon-orb{animation-play-state:paused;transform:translateY(-8px) scale(1.08)}
+.mode-name{font-size:.72rem;font-weight:800;color:var(--text);letter-spacing:1px;transition:color .3s}
+.mode-card:hover .mode-name{color:var(--ember-hot);text-shadow:0 0 12px rgba(255,207,92,.4)}
 
-/* Player items */
-.player-list{display:flex;flex-direction:column;gap:11px;}
-.player-item{background:rgba(255,255,255,0.015);border:1px solid var(--border);padding:13px 16px;border-radius:12px;position:relative;overflow:hidden;}
-.player-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
-.player-info{display:flex;align-items:center;gap:12px;}
-.rank-mark{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:0.85rem;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);flex-shrink:0;}
-.r1{color:var(--ember-white);border-color:var(--ember-hot);box-shadow:0 0 12px rgba(255,207,92,0.35);animation:medalPulse 2s ease-in-out infinite;}
-.r2{color:var(--steel);border-color:rgba(147,162,172,0.5);}
-.r3{color:#d98a4f;border-color:rgba(217,138,79,0.5);}
-@keyframes medalPulse{0%,100%{box-shadow:0 0 12px rgba(255,207,92,0.35);}50%{box-shadow:0 0 22px rgba(255,207,92,0.7);}}
-.avatar{width:34px;height:34px;border-radius:8px;object-fit:cover;background:linear-gradient(135deg,#2a2118,#1a140e);border:1px solid var(--border);flex-shrink:0;}
-.p-name{font-weight:700;font-size:0.92rem;color:var(--text);}
-.p-points{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--text-faint);}
+.stats-section{margin-top:52px;text-align:center;padding-bottom:30px;position:relative;overflow:hidden}
+.stats-inner{position:relative;z-index:1}
+.ignite-flash{position:absolute;inset:-40px 0 auto 0;height:480px;background:radial-gradient(ellipse at 50% 0%,rgba(255,207,92,.55),rgba(255,106,31,.18) 45%,transparent 78%);opacity:0;pointer-events:none;z-index:0}
+.stats-section.ignited .ignite-flash{animation:flashPulse 1.1s ease forwards}
+@keyframes flashPulse{0%{opacity:0}12%{opacity:1}30%{opacity:.4}45%{opacity:.85}100%{opacity:0}}
+.eyebrow{font-family:'JetBrains Mono',monospace;color:var(--text-faint);font-size:.75rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase}
+.section-title{font-family:'Be Vietnam Pro',sans-serif;font-size:2.1rem;font-weight:800;margin-top:8px;color:#fff;animation:titleFlicker 3s ease-in-out infinite}
+@keyframes titleFlicker{0%,100%{text-shadow:0 0 20px rgba(255,138,61,.25)}50%{text-shadow:0 0 60px rgba(255,138,61,.75),0 0 110px rgba(255,106,31,.35)}}
+.molten-underline{width:130px;height:3px;margin:16px auto 0;border-radius:2px;background:linear-gradient(90deg,transparent,var(--ember-hot),var(--ember),transparent);background-size:220% 100%;transform:scaleX(0);transform-origin:center;transition:transform .9s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 30px rgba(255,106,31,.75);animation:shimmer 2.4s linear infinite}
+.stats-section.ignited .molten-underline{transform:scaleX(1)}
+@keyframes shimmer{0%{background-position:220% 0}100%{background-position:-220% 0}}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+@media(max-width:700px){.stats-grid{grid-template-columns:1fr}.modes-grid{grid-template-columns:repeat(2,1fr)}}
+.stat-card{background:linear-gradient(165deg,var(--bg-panel),var(--bg-panel-2));border:1px solid var(--border);padding:36px 26px;border-radius:16px;position:relative;opacity:0;transform:translateY(30px) scale(.94);transition:opacity .6s,transform .6s cubic-bezier(.2,.8,.2,1),box-shadow .4s,border-color .4s}
+.stat-card.struck{opacity:1;transform:translateY(0) scale(1);box-shadow:0 0 90px rgba(255,106,31,.3),0 20px 50px rgba(0,0,0,.5);border-color:rgba(255,138,61,.5)}
+.stat-icon-wrap{position:relative;width:66px;height:66px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;background:radial-gradient(circle,rgba(255,106,31,.18),transparent 72%)}
+.stat-icon-wrap::before{content:"";position:absolute;inset:-9px;border-radius:50%;border:1px solid rgba(255,138,61,.3);animation:ringGrow 2.6s ease-in-out infinite}
+@keyframes ringGrow{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.3);opacity:1;box-shadow:0 0 46px rgba(255,106,31,.85)}}
+.stat-icon{font-size:1.5rem;color:var(--ember-hot);position:relative;z-index:1;filter:drop-shadow(0 0 18px rgba(255,207,92,.85))}
+.stat-number{font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:700;color:#fff}
+.stat-label{color:var(--text-faint);font-size:.78rem;font-weight:700;margin-top:8px;text-transform:uppercase;letter-spacing:1px}
+.stat-progress{height:4px;border-radius:2px;background:rgba(255,255,255,.06);margin-top:20px;overflow:hidden}
+.stat-progress-fill{height:100%;width:0%;border-radius:2px;background:linear-gradient(90deg,var(--ember-dim),var(--ember-hot));box-shadow:0 0 14px var(--ember);transition:width 1.6s cubic-bezier(.2,.8,.2,1)}
+.stat-card.struck .stat-progress-fill{width:100%}
 
-/* Tier chips */
-.tier-chip{font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:700;padding:4px 9px;border-radius:5px;letter-spacing:0.5px;white-space:nowrap;}
-.tier-ht1{background:rgba(255,244,222,0.12);color:var(--ember-white);border:1px solid rgba(255,244,222,0.35);}
-.tier-lt1{background:rgba(255,207,92,0.1);color:var(--ember-hot);border:1px solid rgba(255,207,92,0.3);}
-.tier-ht2{background:rgba(249,200,115,0.1);color:var(--gold);border:1px solid rgba(249,200,115,0.3);}
-.tier-lt2{background:rgba(201,143,62,0.1);color:var(--gold-deep);border:1px solid rgba(201,143,62,0.3);}
-.tier-ht3{background:rgba(142,201,255,0.1);color:var(--celestial);border:1px solid rgba(142,201,255,0.3);}
-.tier-lt3{background:rgba(63,111,168,0.1);color:var(--celestial-deep);border:1px solid rgba(63,111,168,0.3);}
-.tier-ht4{background:rgba(147,162,172,0.08);color:var(--steel);border:1px solid rgba(147,162,172,0.3);}
-.tier-lt4{background:rgba(111,106,96,0.1);color:var(--iron-cold);border:1px solid rgba(111,106,96,0.3);}
-.tier-ht5{background:rgba(193,39,45,0.1);color:#e85555;border:1px solid rgba(193,39,45,0.3);}
-.tier-lt5{background:rgba(120,30,34,0.08);color:#a04040;border:1px solid rgba(120,30,34,0.3);}
+.timeline{max-width:640px;margin:26px auto 0;text-align:left;position:relative}
+.timeline::before{content:"";position:absolute;left:19px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--ember-hot),var(--ember) 60%,transparent)}
+.tl-step{display:flex;gap:20px;padding-bottom:26px;position:relative;opacity:.45;transition:opacity .5s}
+.tl-step:last-child{padding-bottom:0}.tl-step.active{opacity:1}
+.tl-num{width:40px;height:40px;min-width:40px;border-radius:50%;background:var(--bg-panel-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700;color:var(--ember-hot);position:relative;z-index:1;transition:.4s}
+.tl-step.active .tl-num{background:linear-gradient(145deg,var(--ember-hot),var(--ember));color:#1a0d04;box-shadow:0 0 16px rgba(255,106,31,.5)}
+.tl-name{font-size:.96rem;font-weight:800;color:#fff;margin-bottom:5px}
+.tl-desc{font-size:.8rem;color:var(--text-dim);line-height:1.6;max-width:480px}
 
-.heat-bar{height:5px;border-radius:3px;background:rgba(255,255,255,0.05);overflow:hidden;}
-.heat-fill{height:100%;border-radius:3px;width:0%;position:relative;transition:width 1.4s cubic-bezier(.2,.7,.2,1);}
-.heat-fill::after{content:"";position:absolute;right:0;top:-5px;bottom:-5px;width:16px;background:inherit;filter:blur(9px);opacity:0.95;animation:heatFlicker 1.4s ease-in-out infinite;}
-@keyframes heatFlicker{0%,100%{opacity:.7;transform:scaleY(1);}50%{opacity:1;transform:scaleY(1.3);}}
-.fill-1{background:linear-gradient(90deg,var(--ember-dim),var(--ember-hot),var(--ember-white));}
-.fill-2{background:linear-gradient(90deg,var(--ember-dim),var(--ember-hot));}
-.fill-3{background:linear-gradient(90deg,var(--ember-dim),var(--ember));}
-.in-view .heat-fill{width:var(--fill,50%);}
+.faq-item{background:var(--bg-panel);border:1px solid var(--border);border-radius:13px;margin-bottom:11px;overflow:hidden;cursor:pointer;transition:.2s}
+.faq-item:hover{border-color:rgba(255,138,61,.3)}
+.faq-q{padding:18px 22px;display:flex;justify-content:space-between;align-items:center;font-size:.9rem;font-weight:700;color:#fff;gap:14px}
+.faq-q .arrow{transition:.3s;color:var(--ember);min-width:14px}
+.faq-item.active .arrow{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;padding:0 22px;font-size:.82rem;color:var(--text-dim);line-height:1.7}
+.faq-item.active .faq-a{max-height:220px;padding:0 22px 20px}
 
-.skeleton-row{height:64px;border-radius:12px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.05),rgba(255,255,255,0.02));background-size:200% 100%;animation:skeletonShine 1.4s ease-in-out infinite;margin-bottom:11px;}
-@keyframes skeletonShine{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+footer{margin-top:60px;padding:40px 0 34px;border-top:1px solid var(--border);display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px}
+.footer-brand{display:flex;align-items:center;gap:14px}
+.footer-brand p{font-size:.8rem;color:var(--text-dim);line-height:1.7;margin-top:12px;max-width:320px}
+.footer-col h4{font-size:.78rem;font-weight:800;color:#fff;margin-bottom:15px;letter-spacing:1px;text-transform:uppercase}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+.footer-col ul a{color:var(--text-dim);font-size:.8rem;cursor:pointer;transition:.2s}
+.footer-col ul a:hover{color:var(--ember-hot)}
+.footer-bottom{margin-top:30px;padding-top:20px;border-top:1px solid var(--border);font-size:.72rem;color:var(--text-faint);text-align:center;grid-column:1/-1}
+@media(max-width:860px){footer{grid-template-columns:1fr;gap:26px}}
 
-/* Sections */
-.section-block{margin-top:52px;}
-.section-eyebrow{font-family:'JetBrains Mono',monospace;color:var(--ember-hot);font-size:0.74rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px;}
-.section-heading{font-family:'Be Vietnam Pro',sans-serif;font-size:1.7rem;font-weight:800;color:#fff;margin-bottom:22px;}
-.reveal{opacity:0;transform:translateY(26px);transition:opacity 0.7s,transform 0.7s cubic-bezier(.2,.8,.2,1);}
-.reveal.in{opacity:1;transform:translateY(0);}
+.view-section{display:none}.view-section.active{display:block;animation:viewEnter .5s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes viewEnter{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-/* Flame ladder */
-.tier-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;gap:16px;flex-wrap:wrap;}
-.tier-eyebrow{font-size:0.7rem;font-weight:700;letter-spacing:2px;color:var(--ember);text-transform:uppercase;font-family:'JetBrains Mono',monospace;}
-.tier-title-main{font-family:'Cinzel',serif;font-size:1.3rem;font-weight:700;color:#fff;margin-top:6px;}
-.tier-badge-count{background:var(--bg-panel-2);border:1px solid var(--border);color:var(--ember-hot);padding:6px 14px;border-radius:20px;font-size:0.72rem;font-weight:700;font-family:'JetBrains Mono',monospace;}
-.flame-ladder{display:flex;align-items:flex-end;justify-content:space-between;gap:3px;height:170px;padding:0 2px;border-bottom:1px solid var(--border);margin-bottom:14px;}
-.flame-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px;}
-.flame-bar{width:100%;max-width:32px;border-radius:7px 7px 3px 3px;transform-origin:bottom;transform:scaleY(0);transition:transform 1s cubic-bezier(.2,.8,.2,1);}
-.reveal.in .flame-bar{transform:scaleY(1);}
-.flame-bar.t-ht1{background:linear-gradient(180deg,var(--ember-white),var(--ember-hot),var(--blood));box-shadow:0 0 22px rgba(193,39,45,.65);}
-.flame-bar.t-lt1{background:linear-gradient(180deg,var(--ember-hot),var(--ember));box-shadow:0 0 16px rgba(255,106,31,.55);}
-.flame-bar.t-ht2{background:linear-gradient(180deg,var(--gold),var(--gold-deep));box-shadow:0 0 14px rgba(249,200,115,.45);}
-.flame-bar.t-lt2{background:linear-gradient(180deg,var(--gold-deep),var(--ember-dim));box-shadow:0 0 12px rgba(201,143,62,.4);}
-.flame-bar.t-ht3{background:linear-gradient(180deg,var(--celestial),var(--celestial-deep));box-shadow:0 0 12px rgba(142,201,255,.45);}
-.flame-bar.t-lt3{background:linear-gradient(180deg,var(--celestial-deep),#2a4a6e);box-shadow:0 0 10px rgba(63,111,168,.4);}
-.flame-bar.t-ht4{background:linear-gradient(180deg,#b8c4cc,#7a8a94);box-shadow:0 0 8px rgba(147,162,172,.35);}
-.flame-bar.t-lt4{background:linear-gradient(180deg,#8a857c,#5a5650);box-shadow:0 0 8px rgba(111,106,96,.3);}
-.flame-bar.t-ht5{background:linear-gradient(180deg,#e85555,#8a2020);box-shadow:0 0 10px rgba(193,39,45,.5);}
-.flame-bar.t-lt5{background:linear-gradient(180deg,#a04040,#5a1a1a);box-shadow:0 0 8px rgba(120,30,34,.4);}
-.flame-label{font-family:'JetBrains Mono',monospace;font-size:0.48rem;font-weight:700;color:var(--text-faint);letter-spacing:.3px;}
-.flame-col.hi .flame-label{color:var(--ember-hot);}
+.rk-back{display:inline-flex;align-items:center;gap:8px;color:var(--text-dim);font-size:.82rem;font-weight:700;cursor:pointer;margin-bottom:18px;transition:.2s}
+.rk-back:hover{color:var(--ember-hot)}
+.rk-title{font-family:'Cinzel',serif;font-size:1.5rem;font-weight:700;color:#fff}
+.rk-sub{font-size:.78rem;color:var(--text-dim);margin-top:6px}
+.rk-tabs{display:flex;gap:9px;overflow-x:auto;padding-bottom:14px;border-bottom:1px solid var(--border);margin-bottom:20px}
+.rk-tab{display:flex;align-items:center;gap:8px;background:var(--bg-panel-2);border:1px solid var(--border);padding:8px 14px 8px 8px;border-radius:10px;cursor:pointer;opacity:.65;transition:.3s;white-space:nowrap;font-size:.72rem;font-weight:700;color:#fff}
+.rk-tab.active,.rk-tab:hover{opacity:1;border-color:var(--ember);background:rgba(255,106,31,.08);transform:translateY(-2px)}
+.rk-tab .fa-fire{color:var(--ember-hot)}
+.rk-table-wrap{width:100%;overflow-x:auto}
+.rk-table{width:100%;border-collapse:collapse;min-width:680px}
+.rk-table th{text-align:left;font-size:.68rem;font-weight:700;color:var(--text-faint);padding:12px;border-bottom:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+.rk-table td{padding:14px 12px;border-bottom:1px solid var(--border);font-size:.86rem;vertical-align:middle}
+.rk-table tr{opacity:0;animation:rowFade .4s ease forwards}
+@keyframes rowFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.rk-table tr:hover td{background:rgba(255,106,31,.03)}
+.tiers-wrap{display:flex;flex-wrap:wrap;gap:6px;max-width:520px}
+.mode-tier-chip{display:flex;align-items:center;gap:5px;background:var(--bg-panel-2);border:1px solid var(--border);border-radius:7px;padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:700;color:var(--celestial)}
+.mode-tier-chip.match{color:var(--ember-hot);border-color:rgba(255,207,92,.35);background:rgba(255,207,92,.06)}
+.empty-state{padding:50px 10px;text-align:center;color:var(--text-faint);font-size:.82rem}
 
-/* Leaderboard */
-.lb-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;}
-.lb-live{display:flex;align-items:center;gap:6px;font-size:0.68rem;font-weight:700;letter-spacing:1px;color:#ff5555;text-transform:uppercase;font-family:'JetBrains Mono',monospace;}
-.lb-dot{width:6px;height:6px;border-radius:50%;background:#ff3d3d;box-shadow:0 0 8px #ff3d3d;}
-.lb-title-text{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;color:#fff;margin-top:3px;}
-.lb-view-all{background:var(--bg-panel-2);border:1px solid var(--border);color:var(--text);padding:9px 16px;border-radius:9px;font-size:0.78rem;font-weight:700;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:7px;}
-.lb-view-all:hover{border-color:var(--ember);color:var(--ember-hot);}
-.lb-row{background:rgba(255,255,255,0.015);border:1px solid var(--border);border-radius:11px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;transition:.3s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden;opacity:0;transform:translateX(-20px);}
-.lb-row.slide-in{opacity:1;transform:translateX(0);}
-.lb-row:hover{border-color:rgba(255,138,61,0.35);transform:translateX(4px);background:rgba(255,255,255,0.03);}
-.lb-row.top1{border-color:rgba(255,106,31,0.4);background:linear-gradient(90deg,rgba(255,106,31,0.08),rgba(255,255,255,0.015) 55%);}
-.lb-left{display:flex;align-items:center;gap:14px;}
-.rank-chip{font-family:'JetBrains Mono',monospace;font-size:0.95rem;font-weight:700;color:var(--text-faint);min-width:28px;text-align:center;}
-.rank-chip.medal{color:var(--ember-hot);animation:medalPulse 2s ease-in-out infinite;}
-.lb-name{font-size:0.9rem;font-weight:700;color:#fff;}
-.lb-points{font-size:0.8rem;color:var(--ember-hot);font-weight:700;font-family:'JetBrains Mono',monospace;}
+.modal-overlay{position:fixed;inset:0;background:rgba(4,3,2,.8);backdrop-filter:blur(6px);display:none;justify-content:center;align-items:center;z-index:1500;padding:16px}
+.modal-overlay.open{display:flex}
+.modal-card{background:linear-gradient(165deg,#191309,#100c07);border:1px solid var(--border);border-radius:18px;padding:34px;max-width:500px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.6);animation:modalIn .3s cubic-bezier(.2,.9,.2,1);max-height:90vh;overflow-y:auto}
+@keyframes modalIn{0%{opacity:0;transform:scale(.9) translateY(10px)}60%{transform:scale(1.02)}100%{opacity:1;transform:scale(1) translateY(0)}}
+.modal-icon{font-size:2.2rem;color:var(--ember-hot);margin-bottom:14px}
+.modal-text{font-size:.94rem;font-weight:700;color:#fff;margin-bottom:16px;line-height:1.55}
+.modal-step-label{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--ember-hot);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.btn-modal-close{background:linear-gradient(135deg,var(--ember-hot),var(--ember));color:#1a0e04;border:none;padding:11px 26px;border-radius:10px;font-weight:800;font-size:.9rem;transition:.2s}
+.btn-modal-close:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(255,106,31,.4)}
+.btn-modal-cancel{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:11px 22px;border-radius:10px;font-weight:700;font-size:.88rem;transition:.2s}
+.btn-modal-cancel:hover{border-color:var(--ember-dim);color:var(--text)}
+.admin-input{width:100%;background:var(--bg-panel-2);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:10px;font-size:.92rem;font-family:'Inter',sans-serif;margin-bottom:6px;text-align:center}
+.admin-input:focus{outline:none;border-color:var(--ember)}
+.admin-error{color:#ff6767;font-size:.72rem;font-family:'JetBrains Mono',monospace;min-height:16px;margin:2px 0 8px}
+.admin-modal-actions{display:flex;gap:10px;justify-content:center;margin-top:6px;flex-wrap:wrap}
 
-/* Modes grid */
-.modes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;perspective:800px;}
-.mode-card{padding:22px 12px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:.35s cubic-bezier(.2,.8,.2,1);text-align:center;opacity:0;transform:translateY(30px) scale(0.92) rotateX(8deg);position:relative;overflow:hidden;background:linear-gradient(165deg,var(--bg-panel),var(--bg-panel-2));border:1px solid var(--border);border-radius:18px;}
-.mode-card.entered{opacity:1;transform:translateY(0) scale(1) rotateX(0deg);}
-.mode-card:hover{transform:translateY(-6px) scale(1.04) rotateX(-2deg);border-color:rgba(255,138,61,0.45);box-shadow:0 12px 36px rgba(255,106,31,0.18);}
-.mode-card .icon-orb{animation:iconFloat 3.2s ease-in-out infinite;}
-.mode-card:nth-child(2) .icon-orb{animation-delay:-0.4s;}.mode-card:nth-child(3) .icon-orb{animation-delay:-0.8s;}.mode-card:nth-child(4) .icon-orb{animation-delay:-1.2s;}.mode-card:nth-child(5) .icon-orb{animation-delay:-1.6s;}.mode-card:nth-child(6) .icon-orb{animation-delay:-2.0s;}.mode-card:nth-child(7) .icon-orb{animation-delay:-2.4s;}.mode-card:nth-child(8) .icon-orb{animation-delay:-2.8s;}
-@keyframes iconFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
-.mode-card:hover .icon-orb{animation-play-state:paused;transform:translateY(-8px) scale(1.08);}
-.mode-name{font-size:0.72rem;font-weight:800;color:var(--text);letter-spacing:1px;transition:color 0.3s;}
-.mode-card:hover .mode-name{color:var(--ember-hot);text-shadow:0 0 12px rgba(255,207,92,0.4);}
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.admin-header h2{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:700;color:#fff}
+.admin-actions-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn-admin{padding:9px 18px;border-radius:10px;font-size:.82rem;font-weight:700;border:1px solid var(--border);transition:.2s;display:flex;align-items:center;gap:7px}
+.btn-admin.primary{background:linear-gradient(135deg,var(--ember-hot),var(--ember));color:#1a0e04;border:none}
+.btn-admin.primary:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(255,106,31,.4)}
+.btn-admin.secondary{background:var(--bg-panel-2);color:var(--text)}
+.btn-admin.secondary:hover{border-color:var(--ember);color:var(--ember-hot)}
+.btn-admin.danger{background:rgba(193,39,45,.1);color:#ff8080;border-color:rgba(193,39,45,.4)}
+.btn-admin.danger:hover{background:rgba(193,39,45,.2)}
+.btn-admin.success{background:rgba(62,207,110,.1);color:#3ecf6e;border-color:rgba(62,207,110,.4)}
+.btn-admin.success:hover{background:rgba(62,207,110,.2)}
 
-/* Stats */
-.stats-section{margin-top:52px;text-align:center;padding-bottom:30px;position:relative;overflow:hidden;}
-.stats-inner{position:relative;z-index:1;}
-.ignite-flash{position:absolute;inset:-40px 0 auto 0;height:480px;background:radial-gradient(ellipse at 50% 0%,rgba(255,207,92,0.55),rgba(255,106,31,0.18) 45%,transparent 78%);opacity:0;pointer-events:none;z-index:0;}
-.stats-section.ignited .ignite-flash{animation:flashPulse 1.1s ease forwards;}
-@keyframes flashPulse{0%{opacity:0;}12%{opacity:1;}30%{opacity:0.4;}45%{opacity:0.85;}100%{opacity:0;}}
-.eyebrow{font-family:'JetBrains Mono',monospace;color:var(--text-faint);font-size:0.75rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;}
-.section-title{font-family:'Be Vietnam Pro',sans-serif;font-size:2.1rem;font-weight:800;margin-top:8px;color:#fff;animation:titleFlicker 3s ease-in-out infinite;}
-@keyframes titleFlicker{0%,100%{text-shadow:0 0 20px rgba(255,138,61,0.25);}50%{text-shadow:0 0 60px rgba(255,138,61,0.75),0 0 110px rgba(255,106,31,0.35);}}
-.molten-underline{width:130px;height:3px;margin:16px auto 0;border-radius:2px;background:linear-gradient(90deg,transparent,var(--ember-hot),var(--ember),transparent);background-size:220% 100%;transform:scaleX(0);transform-origin:center;transition:transform 0.9s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 30px rgba(255,106,31,0.75);animation:shimmer 2.4s linear infinite;}
-.stats-section.ignited .molten-underline{transform:scaleX(1);}
-@keyframes shimmer{0%{background-position:220% 0;}100%{background-position:-220% 0;}}
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px;}
-@media(max-width:700px){.stats-grid{grid-template-columns:1fr;}.modes-grid{grid-template-columns:repeat(2,1fr);}}
-.stat-card{background:linear-gradient(165deg,var(--bg-panel),var(--bg-panel-2));border:1px solid var(--border);padding:36px 26px;border-radius:16px;position:relative;opacity:0;transform:translateY(30px) scale(0.94);transition:opacity 0.6s,transform 0.6s cubic-bezier(.2,.8,.2,1),box-shadow 0.4s,border-color 0.4s;}
-.stat-card.struck{opacity:1;transform:translateY(0) scale(1);box-shadow:0 0 90px rgba(255,106,31,0.3),0 20px 50px rgba(0,0,0,0.5);border-color:rgba(255,138,61,0.5);}
-.stat-icon-wrap{position:relative;width:66px;height:66px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;background:radial-gradient(circle,rgba(255,106,31,0.18),transparent 72%);}
-.stat-icon-wrap::before{content:"";position:absolute;inset:-9px;border-radius:50%;border:1px solid rgba(255,138,61,0.3);animation:ringGrow 2.6s ease-in-out infinite;}
-@keyframes ringGrow{0%,100%{transform:scale(1);opacity:0.5;}50%{transform:scale(1.3);opacity:1;box-shadow:0 0 46px rgba(255,106,31,0.85);}}
-.stat-icon{font-size:1.5rem;color:var(--ember-hot);position:relative;z-index:1;filter:drop-shadow(0 0 18px rgba(255,207,92,0.85));}
-.stat-number{font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:700;color:#fff;text-shadow:0 0 20px rgba(255,106,31,0.25);}
-.stat-label{color:var(--text-faint);font-size:0.78rem;font-weight:700;margin-top:8px;text-transform:uppercase;letter-spacing:1px;}
-.stat-progress{height:4px;border-radius:2px;background:rgba(255,255,255,0.06);margin-top:20px;overflow:hidden;}
-.stat-progress-fill{height:100%;width:0%;border-radius:2px;background:linear-gradient(90deg,var(--ember-dim),var(--ember-hot));box-shadow:0 0 14px var(--ember);transition:width 1.6s cubic-bezier(.2,.8,.2,1);}
-.stat-card.struck .stat-progress-fill{width:100%;}
+.admin-search{background:var(--bg-panel-2);border:1px solid var(--border);color:var(--text);padding:9px 14px 9px 36px;border-radius:10px;font-size:.84rem;width:220px;transition:.2s}
+.admin-search:focus{outline:none;border-color:var(--ember);width:280px}
+.admin-search-wrap{position:relative}
+.admin-search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-faint);font-size:.8rem}
 
-/* Timeline */
-.timeline{max-width:640px;margin:26px auto 0;text-align:left;position:relative;}
-.timeline::before{content:"";position:absolute;left:19px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--ember-hot),var(--ember) 60%,transparent);}
-.tl-step{display:flex;gap:20px;padding-bottom:26px;position:relative;opacity:0.45;transition:opacity .5s;}
-.tl-step:last-child{padding-bottom:0;}.tl-step.active{opacity:1;}
-.tl-num{width:40px;height:40px;min-width:40px;border-radius:50%;background:var(--bg-panel-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700;color:var(--ember-hot);position:relative;z-index:1;transition:.4s;}
-.tl-step.active .tl-num{background:linear-gradient(145deg,var(--ember-hot),var(--ember));color:#1a0d04;box-shadow:0 0 16px rgba(255,106,31,.5);}
-.tl-name{font-size:0.96rem;font-weight:800;color:#fff;margin-bottom:5px;}
-.tl-desc{font-size:0.8rem;color:var(--text-dim);line-height:1.6;max-width:480px;}
+.admin-player-card{background:rgba(255,255,255,.015);border:1px solid var(--border);border-radius:14px;padding:18px;transition:.2s}
+.admin-player-card:hover{border-color:rgba(255,138,61,.2)}
+.admin-player-top{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
+.admin-avatar-preview{width:48px;height:48px;border-radius:10px;object-fit:cover;background:#1a140e;border:1px solid var(--border);flex-shrink:0}
+.admin-field{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px}
+.admin-field label{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint)}
+.admin-field input,.admin-field select,.admin-field textarea{background:var(--bg-panel-2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:.84rem;font-family:'Inter',sans-serif;width:100%}
+.admin-field input:focus,.admin-field select:focus,.admin-field textarea:focus{border-color:var(--ember);outline:none}
+.admin-field textarea{resize:vertical;min-height:60px}
+.admin-tiers-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);display:block;margin-bottom:8px}
+.admin-tiers-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.admin-tier-chip{display:flex;align-items:center;gap:8px;background:var(--bg-panel-2);border:1px solid var(--border);border-radius:8px;padding:6px 6px 6px 12px;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--celestial)}
+.admin-tier-chip button{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:.95rem;line-height:1;padding:2px 4px}
+.admin-tier-chip button:hover{color:#ff5555}
+.admin-add-tier{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.admin-add-tier select{background:var(--bg-panel-2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-size:.78rem}
+.admin-player-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap}
 
-/* FAQ */
-.faq-item{background:var(--bg-panel);border:1px solid var(--border);border-radius:13px;margin-bottom:11px;overflow:hidden;cursor:pointer;transition:.2s;}
-.faq-item:hover{border-color:rgba(255,138,61,0.3);}
-.faq-q{padding:18px 22px;display:flex;justify-content:space-between;align-items:center;font-size:0.9rem;font-weight:700;color:#fff;gap:14px;}
-.faq-q .arrow{transition:.3s;color:var(--ember);min-width:14px;}
-.faq-item.active .arrow{transform:rotate(45deg);}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;padding:0 22px;font-size:0.82rem;color:var(--text-dim);line-height:1.7;}
-.faq-item.active .faq-a{max-height:220px;padding:0 22px 20px;}
+.review-filters{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.review-filter-btn{padding:8px 16px;border-radius:8px;font-size:.78rem;font-weight:700;border:1px solid var(--border);background:var(--bg-panel-2);color:var(--text-dim);transition:.2s;cursor:pointer}
+.review-filter-btn.active{border-color:var(--ember);color:var(--ember-hot);background:rgba(255,106,31,.08)}
+.review-filter-btn:hover{border-color:var(--ember-dim)}
+.review-card{background:rgba(255,255,255,.015);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;transition:.2s}
+.review-card:hover{border-color:rgba(255,138,61,.2)}
+.review-card-header{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.review-card-body{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.review-card-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.review-info{font-size:.82rem;color:var(--text-dim);line-height:1.6}
+.review-info strong{color:var(--text)}
 
-/* Footer */
-footer{margin-top:60px;padding:40px 0 34px;border-top:1px solid var(--border);display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;}
-.footer-brand{display:flex;align-items:center;gap:14px;}
-.footer-brand p{font-size:0.8rem;color:var(--text-dim);line-height:1.7;margin-top:12px;max-width:320px;}
-.footer-col h4{font-size:0.78rem;font-weight:800;color:#fff;margin-bottom:15px;letter-spacing:1px;text-transform:uppercase;}
-.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:11px;}
-.footer-col ul a{color:var(--text-dim);font-size:0.8rem;cursor:pointer;transition:.2s;}
-.footer-col ul a:hover{color:var(--ember-hot);}
-.footer-bottom{margin-top:30px;padding-top:20px;border-top:1px solid var(--border);font-size:0.72rem;color:var(--text-faint);text-align:center;grid-column:1/-1;}
-@media(max-width:860px){footer{grid-template-columns:1fr;gap:26px;}}
+.status-badge{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:.5px;text-transform:uppercase}
+.status-pending{background:rgba(255,207,92,.1);color:var(--ember-hot);border:1px solid rgba(255,207,92,.3)}
+.status-approved{background:rgba(62,207,110,.1);color:#3ecf6e;border:1px solid rgba(62,207,110,.3)}
+.status-rejected{background:rgba(193,39,45,.1);color:#ff8080;border:1px solid rgba(193,39,45,.3)}
 
-/* Views */
-.view-section{display:none;}
-.view-section.active{display:block;animation:viewEnter 0.5s cubic-bezier(.2,.8,.2,1) forwards;}
-@keyframes viewEnter{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.toast-container{position:fixed;top:90px;right:20px;z-index:3000;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.toast{pointer-events:auto;padding:14px 20px;border-radius:12px;font-size:.84rem;font-weight:600;display:flex;align-items:center;gap:10px;min-width:280px;max-width:420px;animation:toastIn .4s cubic-bezier(.2,.8,.2,1);box-shadow:0 10px 30px rgba(0,0,0,.5);backdrop-filter:blur(10px)}
+.toast.success{background:rgba(62,207,110,.15);border:1px solid rgba(62,207,110,.4);color:#3ecf6e}
+.toast.error{background:rgba(193,39,45,.15);border:1px solid rgba(193,39,45,.4);color:#ff8080}
+.toast.info{background:rgba(142,201,255,.15);border:1px solid rgba(142,201,255,.4);color:var(--celestial)}
+.toast.out{animation:toastOut .3s ease forwards}
+@keyframes toastIn{from{opacity:0;transform:translateX(40px) scale(.95)}to{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes toastOut{to{opacity:0;transform:translateX(40px) scale(.95)}}
 
-/* Ranking view */
-.rk-back{display:inline-flex;align-items:center;gap:8px;color:var(--text-dim);font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:18px;transition:.2s;}
-.rk-back:hover{color:var(--ember-hot);}
-.rk-title{font-family:'Cinzel',serif;font-size:1.5rem;font-weight:700;color:#fff;}
-.rk-sub{font-size:0.78rem;color:var(--text-dim);margin-top:6px;}
-.rk-tabs{display:flex;gap:9px;overflow-x:auto;padding-bottom:14px;border-bottom:1px solid var(--border);margin-bottom:20px;scrollbar-width:thin;}
-.rk-tab{display:flex;align-items:center;gap:8px;background:var(--bg-panel-2);border:1px solid var(--border);padding:8px 14px 8px 8px;border-radius:10px;cursor:pointer;opacity:.65;transition:.3s cubic-bezier(.2,.8,.2,1);white-space:nowrap;font-size:0.72rem;font-weight:700;color:#fff;}
-.rk-tab.active,.rk-tab:hover{opacity:1;border-color:var(--ember);background:rgba(255,106,31,0.08);transform:translateY(-2px);}
-.rk-tab .fa-fire{color:var(--ember-hot);}
-.rk-table-wrap{width:100%;overflow-x:auto;}
-.rk-table{width:100%;border-collapse:collapse;min-width:680px;}
-.rk-table th{text-align:left;font-size:0.68rem;font-weight:700;color:var(--text-faint);padding:12px;border-bottom:1px solid var(--border);letter-spacing:1px;text-transform:uppercase;}
-.rk-table td{padding:14px 12px;border-bottom:1px solid var(--border);font-size:0.86rem;vertical-align:middle;}
-.rk-table tr:hover td{background:rgba(255,106,31,0.03);}
-.tiers-wrap{display:flex;flex-wrap:wrap;gap:6px;max-width:520px;}
-.mode-tier-chip{display:flex;align-items:center;gap:5px;background:var(--bg-panel-2);border:1px solid var(--border);border-radius:7px;padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:0.65rem;font-weight:700;color:var(--celestial);}
-.mode-tier-chip.match{color:var(--ember-hot);border-color:rgba(255,207,92,0.35);background:rgba(255,207,92,0.06);}
-.empty-state{padding:50px 10px;text-align:center;color:var(--text-faint);font-size:0.82rem;}
+.loading-overlay{position:fixed;inset:0;background:rgba(10,8,6,.6);backdrop-filter:blur(4px);display:none;justify-content:center;align-items:center;z-index:2500}
+.loading-overlay.active{display:flex}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--ember-hot);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-/* Modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(4,3,2,0.8);backdrop-filter:blur(6px);display:none;justify-content:center;align-items:center;z-index:1500;padding:16px;}
-.modal-overlay.open{display:flex;}
-.modal-card{background:linear-gradient(165deg,#191309,#100c07);border:1px solid var(--border);border-radius:18px;padding:34px;max-width:480px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.6);animation:modalIn 0.3s cubic-bezier(.2,.9,.2,1);max-height:90vh;overflow-y:auto;}
-@keyframes modalIn{0%{opacity:0;transform:scale(0.9) translateY(10px);}60%{transform:scale(1.02);}100%{opacity:1;transform:scale(1) translateY(0);}}
-.modal-icon{font-size:2.2rem;color:var(--ember-hot);margin-bottom:14px;}
-.modal-text{font-size:0.94rem;font-weight:700;color:#fff;margin-bottom:16px;line-height:1.55;}
-.modal-step-label{font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--ember-hot);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
-.btn-modal-close{background:linear-gradient(135deg,var(--ember-hot),var(--ember));color:#1a0e04;border:none;padding:11px 26px;border-radius:10px;font-weight:800;cursor:pointer;font-size:0.9rem;transition:.2s;}
-.btn-modal-close:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(255,106,31,0.4);}
-.btn-modal-cancel{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:11px 22px;border-radius:10px;font-weight:700;cursor:pointer;font-size:0.88rem;transition:.2s;}
-.btn-modal-cancel:hover{border-color:var(--ember-dim);color:var(--text);}
-.admin-input{width:100%;background:var(--bg-panel-2);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:10px;font-size:0.92rem;font-family:'Inter',sans-serif;margin-bottom:6px;text-align:center;}
-.admin-input:focus{outline:none;border-color:var(--ember);}
-.admin-error{color:#ff6767;font-size:0.72rem;font-family:'JetBrains Mono',monospace;min-height:16px;margin:2px 0 8px;}
-.admin-modal-actions{display:flex;gap:10px;justify-content:center;margin-top:6px;}
+.register-form{max-width:500px;margin:0 auto}
+.register-field{margin-bottom:16px}
+.register-field label{display:block;font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px}
+.register-field input,.register-field select,.register-field textarea{width:100%;background:var(--bg-panel-2);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:10px;font-size:.9rem;font-family:'Inter',sans-serif;transition:.2s}
+.register-field input:focus,.register-field textarea:focus{border-color:var(--ember);outline:none}
+.register-modes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.register-mode-btn{padding:8px 14px;border-radius:8px;font-size:.78rem;font-weight:700;border:1px solid var(--border);background:var(--bg-panel-2);color:var(--text-dim);transition:.2s;cursor:pointer}
+.register-mode-btn.selected{border-color:var(--ember);color:var(--ember-hot);background:rgba(255,106,31,.08)}
+.register-mode-btn:hover{border-color:var(--ember-dim)}
 
-/* Admin panel */
-.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
-.admin-header h2{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:700;color:#fff;}
-.admin-actions-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-.btn-admin{padding:9px 18px;border-radius:10px;font-size:0.82rem;font-weight:700;border:1px solid var(--border);transition:.2s;display:flex;align-items:center;gap:7px;}
-.btn-admin.primary{background:linear-gradient(135deg,var(--ember-hot),var(--ember));color:#1a0e04;border:none;}
-.btn-admin.primary:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(255,106,31,0.4);}
-.btn-admin.secondary{background:var(--bg-panel-2);color:var(--text);}
-.btn-admin.secondary:hover{border-color:var(--ember);color:var(--ember-hot);}
-.btn-admin.danger{background:rgba(193,39,45,0.1);color:#ff8080;border-color:rgba(193,39,45,0.4);}
-.btn-admin.danger:hover{background:rgba(193,39,45,0.2);}
-.btn-admin.success{background:rgba(62,207,110,0.1);color:#3ecf6e;border-color:rgba(62,207,110,0.4);}
-.btn-admin.success:hover{background:rgba(62,207,110,0.2);}
+.admin-stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
+.admin-stat-box{background:var(--bg-panel);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.admin-stat-num{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;color:#fff}
+.admin-stat-label{font-size:.68rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
 
-.admin-search{background:var(--bg-panel-2);border:1px solid var(--border);color:var(--text);padding:9px 14px 9px 36px;border-radius:10px;font-size:0.84rem;width:220px;transition:.2s;}
-.admin-search:focus{outline:none;border-color:var(--ember);width:280px;}
-.admin-search-wrap{position:relative;}
-.admin-search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-faint);font-size:0.8rem;}
-
-.admin-players-list{display:flex;flex-direction:column;gap:14px;}
-.admin-player-card{background:rgba(255,255,255,0.015);border:1px solid var(--border);border-radius:14px;padding:18px;transition:.2s;}
-.admin-player-card:hover{border-color:rgba(255,138,61,0.2);}
-.admin-player-top{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px;}
-.admin-avatar-preview{width:48px;height:48px;border-radius:10px;object-fit:cover;background:#1a140e;border:1px solid var(--border);flex-shrink:0;}
-.admin-field{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px;}
-.admin-field label{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);}
-.admin-field input,.admin-field select,.admin-field textarea{background:var(--bg-panel-2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:0.84rem;font-family:'Inter',sans-serif;width:100%;}
-.admin-field input:focus,.admin-field select:focus,.admin-field textarea:focus{border-color:var(--ember);outline:none;}
-.admin-field textarea{resize:vertical;min-height:60px;}
-.admin-tiers-label{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);display:block;margin-bottom:8px;}
-.admin-tiers-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
-.admin-tier-chip{display:flex;align-items:center;gap:8px;background:var(--bg-panel-2);border:1px solid var(--border);border-radius:8px;padding:6px 6px 6px 12px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;font-weight:700;color:var(--celestial);}
-.admin-tier-chip button{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:0.95rem;line-height:1;padding:2px 4px;}
-.admin-tier-chip button:hover{color:#ff5555;}
-.admin-add-tier{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-.admin-add-tier select{background:var(--bg-panel-2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-size:0.78rem;}
-.admin-player-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap;}
-
-/* Review panel */
-.review-filters{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
-.review-filter-btn{padding:8px 16px;border-radius:8px;font-size:0.78rem;font-weight:700;border:1px solid var(--border);background:var(--bg-panel-2);color:var(--text-dim);transition:.2s;cursor:pointer;}
-.review-filter-btn.active{border-color:var(--ember);color:var(--ember-hot);background:rgba(255,106,31,0.08);}
-.review-filter-btn:hover{border-color:var(--ember-dim);}
-.review-card{background:rgba(255,255,255,0.015);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;transition:.2s;}
-.review-card:hover{border-color:rgba(255,138,61,0.2);}
-.review-card-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
-.review-card-body{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
-.review-card-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
-.review-info{font-size:0.82rem;color:var(--text-dim);line-height:1.6;}
-.review-info strong{color:var(--text);}
-
-/* Status badges */
-.status-badge{font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:0.5px;text-transform:uppercase;}
-.status-pending{background:rgba(255,207,92,0.1);color:var(--ember-hot);border:1px solid rgba(255,207,92,0.3);}
-.status-approved{background:rgba(62,207,110,0.1);color:#3ecf6e;border:1px solid rgba(62,207,110,0.3);}
-.status-rejected{background:rgba(193,39,45,0.1);color:#ff8080;border:1px solid rgba(193,39,45,0.3);}
-
-/* Toast */
-.toast-container{position:fixed;top:90px;right:20px;z-index:3000;display:flex;flex-direction:column;gap:10px;pointer-events:none;}
-.toast{pointer-events:auto;padding:14px 20px;border-radius:12px;font-size:0.84rem;font-weight:600;display:flex;align-items:center;gap:10px;min-width:280px;max-width:420px;animation:toastIn 0.4s cubic-bezier(.2,.8,.2,1);box-shadow:0 10px 30px rgba(0,0,0,0.5);backdrop-filter:blur(10px);}
-.toast.success{background:rgba(62,207,110,0.15);border:1px solid rgba(62,207,110,0.4);color:#3ecf6e;}
-.toast.error{background:rgba(193,39,45,0.15);border:1px solid rgba(193,39,45,0.4);color:#ff8080;}
-.toast.info{background:rgba(142,201,255,0.15);border:1px solid rgba(142,201,255,0.4);color:var(--celestial);}
-.toast.out{animation:toastOut 0.3s ease forwards;}
-@keyframes toastIn{from{opacity:0;transform:translateX(40px) scale(0.95);}to{opacity:1;transform:translateX(0) scale(1);}}
-@keyframes toastOut{to{opacity:0;transform:translateX(40px) scale(0.95);}}
-
-/* Loading overlay */
-.loading-overlay{position:fixed;inset:0;background:rgba(10,8,6,0.6);backdrop-filter:blur(4px);display:none;justify-content:center;align-items:center;z-index:2500;}
-.loading-overlay.active{display:flex;}
-.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--ember-hot);border-radius:50%;animation:spin 0.8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-
-/* Player register form */
-.register-form{max-width:500px;margin:0 auto;}
-.register-field{margin-bottom:16px;}
-.register-field label{display:block;font-family:'JetBrains Mono',monospace;font-size:0.68rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px;}
-.register-field input,.register-field select,.register-field textarea{width:100%;background:var(--bg-panel-2);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:10px;font-size:0.9rem;font-family:'Inter',sans-serif;transition:.2s;}
-.register-field input:focus,.register-field select:focus,.register-field textarea:focus{border-color:var(--ember);outline:none;}
-.register-modes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
-.register-mode-btn{padding:8px 14px;border-radius:8px;font-size:0.78rem;font-weight:700;border:1px solid var(--border);background:var(--bg-panel-2);color:var(--text-dim);transition:.2s;cursor:pointer;}
-.register-mode-btn.selected{border-color:var(--ember);color:var(--ember-hot);background:rgba(255,106,31,0.08);}
-.register-mode-btn:hover{border-color:var(--ember-dim);}
+.shake-anim{animation:shake .45s ease}
+@keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-3px,2px)}40%{transform:translate(3px,-2px)}60%{transform:translate(-2px,3px)}80%{transform:translate(2px,-3px)}}
 
 @media(max-width:600px){
-    .container{width:92%;}header{padding:14px 0;}.nav-container{padding:9px 12px;border-radius:13px;gap:8px;}
-    .brand-name{font-size:0.96rem;}.brand-sub{font-size:0.54rem;}.nav-links{gap:16px;}.nav-links a:not(.nav-cta){display:none;}
-    .hero-wrap{padding-top:34px;}.hero-grid{gap:26px;padding-bottom:44px;}.hero-title{font-size:2.1rem;}.hero-desc{font-size:0.92rem;}
-    .hero-btns .btn-primary,.hero-btns .btn-secondary{flex:1;min-width:140px;justify-content:center;}
-    .card-box{padding:18px;}.section-heading{font-size:1.36rem;}.section-title{font-size:1.7rem;}
-    .modes-grid{grid-template-columns:repeat(2,1fr);gap:10px;}.mode-card{padding:16px 8px;}
-    .stats-grid{gap:14px;}.stat-card{padding:24px 16px;}.stat-number{font-size:1.9rem;}
-    .modal-card{padding:24px 20px;}.admin-player-top{gap:10px;}.review-card-body{grid-template-columns:1fr;}
-    .rk-title{font-size:1.22rem;}.admin-search{width:160px;}.admin-search:focus{width:200px;}
-    .register-modes{gap:6px;}.register-mode-btn{padding:6px 10px;font-size:0.72rem;}
+    .container{width:92%}header{padding:14px 0}.nav-container{padding:9px 12px;border-radius:13px;gap:8px}
+    .brand-name{font-size:.96rem}.brand-sub{display:none}.nav-links{gap:16px}.nav-links a:not(.nav-cta){display:none}
+    .hero-wrap{padding-top:34px}.hero-grid{gap:26px;padding-bottom:44px}.hero-title{font-size:2.1rem}
+    .hero-btns .btn-primary,.hero-btns .btn-secondary{flex:1;min-width:140px;justify-content:center}
+    .card-box{padding:18px}.section-heading{font-size:1.36rem}.section-title{font-size:1.7rem}
+    .modes-grid{grid-template-columns:repeat(2,1fr);gap:10px}.mode-card{padding:16px 8px}
+    .stats-grid{gap:14px}.stat-card{padding:24px 16px}.stat-number{font-size:1.9rem}
+    .modal-card{padding:24px 20px}.admin-player-top{gap:10px}.review-card-body{grid-template-columns:1fr}
+    .rk-title{font-size:1.22rem}.admin-search{width:160px}.admin-search:focus{width:200px}
+    .register-mode-btn{padding:6px 10px;font-size:.72rem}.flame-ladder{height:130px}.flame-bar{max-width:24px}.flame-label{font-size:.4rem}
 }
-@media(prefers-reduced-motion:reduce){*{animation-duration:0.001s!important;transition-duration:0.001s!important;}.letter{opacity:1!important;filter:none!important;transform:none!important;}.reveal{opacity:1!important;transform:none!important;}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}.letter{opacity:1!important;filter:none!important;transform:none!important}.reveal{opacity:1!important;transform:none!important}}
 </style>
 </head>
 <body>
 
-<!-- Curtain loading -->
+<!-- Curtain -->
 <div class="letterbox top"></div>
 <div class="letterbox bottom"></div>
-<div class="curtain">
+<div class="curtain" id="curtain">
     <div class="curtain-inner">
         <div class="curtain-logo brand-emblem lg">
-            <svg class="emblem-wing left" viewBox="0 0 52 38"><path d="M0 19 Q12 0 26 6 Q16 12 8 19 Q16 26 26 32 Q12 38 0 19Z"/></svg>
+            <svg class="emblem-wing left" viewBox="0 0 52 38"><path d="M0 19Q12 0 26 6Q16 12 8 19Q16 26 26 32Q12 38 0 19Z"/></svg>
             <div class="emblem-frame" data-fallback="AT">
                 <img src="https://i.ibb.co/MDM2jGCX/1785672737209-6292537109541337385428-8470405b249247be4b15602be05cd5ef.jpg" alt="AngelTier" onerror="this.parentElement.classList.add('broken')">
             </div>
-            <svg class="emblem-wing right" viewBox="0 0 52 38"><path d="M0 19 Q12 0 26 6 Q16 12 8 19 Q16 26 26 32 Q12 38 0 19Z"/></svg>
+            <svg class="emblem-wing right" viewBox="0 0 52 38"><path d="M0 19Q12 0 26 6Q16 12 8 19Q16 26 26 32Q12 38 0 19Z"/></svg>
         </div>
         <div class="curtain-word">ANGELTIER</div>
         <div class="curtain-bar-wrap"><div class="curtain-bar" id="curtainBar"></div></div>
-        <div class="curtain-status" id="curtainStatus">Ket noi database...</div>
+        <div class="curtain-status" id="curtainStatus">Ket noi server...</div>
     </div>
 </div>
 
-<!-- Ember particles -->
+<!-- Embers -->
 <div class="ember-field" id="emberField"></div>
 
-<!-- Loading overlay -->
+<!-- Loading -->
 <div class="loading-overlay" id="loadingOverlay"><div class="spinner"></div></div>
 
-<!-- Toast container -->
+<!-- Toasts -->
 <div class="toast-container" id="toastContainer"></div>
 
 <!-- Header -->
@@ -474,51 +420,44 @@ footer{margin-top:60px;padding:40px 0 34px;border-top:1px solid var(--border);di
     <nav class="nav-container">
         <button class="logo-box" onclick="App.showView('home')">
             <div class="brand-emblem sm">
-                <svg class="emblem-wing left" viewBox="0 0 52 38"><path d="M0 19 Q12 0 26 6 Q16 12 8 19 Q16 26 26 32 Q12 38 0 19Z"/></svg>
-                <div class="emblem-frame" data-fallback="AT" style="border-radius:9px;">
+                <svg class="emblem-wing left" viewBox="0 0 52 38"><path d="M0 19Q12 0 26 6Q16 12 8 19Q16 26 26 32Q12 38 0 19Z"/></svg>
+                <div class="emblem-frame" data-fallback="AT" style="border-radius:9px">
                     <img src="https://i.ibb.co/MDM2jGCX/1785672737209-6292537109541337385428-8470405b249247be4b15602be05cd5ef.jpg" alt="AT" onerror="this.parentElement.classList.add('broken')">
                 </div>
-                <svg class="emblem-wing right" viewBox="0 0 52 38"><path d="M0 19 Q12 0 26 6 Q16 12 8 19 Q16 26 26 32 Q12 38 0 19Z"/></svg>
+                <svg class="emblem-wing right" viewBox="0 0 52 38"><path d="M0 19Q12 0 26 6Q16 12 8 19Q16 26 26 32Q12 38 0 19Z"/></svg>
             </div>
-            <div>
-                <div class="brand-name">AngelTier</div>
-                <span class="brand-sub">PvP Tier System</span>
-            </div>
+            <div><div class="brand-name">AngelTier</div><span class="brand-sub">PvP Tier System</span></div>
         </button>
-        <ul class="nav-links">
-            <a onclick="App.showView('home')" class="active" data-nav="home">Trang chu</a>
+        <ul class="nav-links" id="navLinks">
+            <a onclick="App.showView('home')" data-nav="home" class="active">Trang chu</a>
             <a onclick="App.showView('ranking')" data-nav="ranking">Xep hang</a>
             <a onclick="App.showView('reviews')" data-nav="reviews">Xet duyet</a>
             <a onclick="App.showView('register')" data-nav="register" class="nav-cta">Dang ky</a>
         </ul>
         <div class="nav-actions">
-            <button class="btn-discord" onclick="window.open('https://discord.gg/angel','_blank')">
-                <i class="fa-brands fa-discord"></i> Discord
-            </button>
-            <button class="btn-icon btn-admin-trigger" onclick="App.openAdminLogin()" title="Admin Panel">
-                <i class="fa-solid fa-shield-halved"></i>
-            </button>
+            <button class="btn-discord" onclick="window.open('https://discord.gg/angel','_blank')"><i class="fa-brands fa-discord"></i> Discord</button>
+            <button class="btn-icon" onclick="App.openAdminLogin()" title="Admin"><i class="fa-solid fa-shield-halved"></i></button>
         </div>
     </nav>
 </header>
 
-<!-- ========== HOME VIEW ========== -->
+<!-- ═══════ HOME ═══════ -->
 <div class="view-section active" id="view-home">
     <div class="hero-wrap">
         <div class="ambient-glow glow-hero"></div>
         <div class="container">
             <div class="hero-emblem-wrap brand-emblem lg">
-                <svg class="emblem-wing left" viewBox="0 0 52 38"><path d="M0 19 Q12 0 26 6 Q16 12 8 19 Q16 26 26 32 Q12 38 0 19Z"/></svg>
+                <svg class="emblem-wing left" viewBox="0 0 52 38"><path d="M0 19Q12 0 26 6Q16 12 8 19Q16 26 26 32Q12 38 0 19Z"/></svg>
                 <div class="emblem-frame" data-fallback="ANGELTIER">
                     <img src="https://i.ibb.co/MDM2jGCX/1785672737209-6292537109541337385428-8470405b249247be4b15602be05cd5ef.jpg" alt="AngelTier" onerror="this.parentElement.classList.add('broken')">
                 </div>
-                <svg class="emblem-wing right" viewBox="0 0 52 38"><path d="M0 19 Q12 0 26 6 Q16 12 8 19 Q16 26 26 32 Q12 38 0 19Z"/></svg>
+                <svg class="emblem-wing right" viewBox="0 0 52 38"><path d="M0 19Q12 0 26 6Q16 12 8 19Q16 26 26 32Q12 38 0 19Z"/></svg>
             </div>
             <div class="hero-grid">
                 <div class="hero-left">
                     <div class="tag-badge"><span class="dot"></span> He thong danh gia PvP</div>
                     <h1 class="hero-title" id="heroTitle"></h1>
-                    <p class="hero-desc">Nhung chien binh PvP tinh nhat Viet Nam duoc phan loai qua he thong Tier cong tam, duoc xay dung boi cong dong va danh gia boi nhung chuyen gia.</p>
+                    <p class="hero-desc">Nhung chien binh PvP tinh nhat Viet Nam duoc phan loai qua he thong Tier cong tam, duoc xay dung boi cong dong.</p>
                     <div class="hero-btns">
                         <button class="btn-primary" onclick="App.showView('ranking')"><i class="fa-solid fa-fire"></i> Xem Xep Hang</button>
                         <button class="btn-secondary" onclick="App.showView('register')"><i class="fa-solid fa-user-plus"></i> Dang Ky Xet Duyet</button>
@@ -530,42 +469,22 @@ footer{margin-top:60px;padding:40px 0 34px;border-top:1px solid var(--border);di
                         <div class="card-sub"><span class="live-dot"></span> Live</div>
                     </div>
                     <div class="player-list" id="heroPlayerList">
-                        <div class="skeleton-row"></div>
-                        <div class="skeleton-row"></div>
-                        <div class="skeleton-row"></div>
+                        <div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Tier Distribution -->
-    <section class="section-block">
-        <div class="container">
-            <div class="reveal" id="tierSection">
-                <div class="tier-top">
-                    <div>
-                        <div class="tier-eyebrow">Phan bo Tier</div>
-                        <div class="tier-title-main">Cay Lua Tier</div>
-                    </div>
-                    <div class="tier-badge-count" id="tierTotalBadge">0 player</div>
-                </div>
-                <div class="flame-ladder" id="flameLadder"></div>
-                <p class="tier-desc-text">He thong Tier phan loai nguoi choi tu HT1 (Cao nhat) den LT5 (Thap nhat), dua tren ky nang PvP thuc te duoc danh gia boi cong dong.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Modes -->
-    <section class="section-block">
-        <div class="container">
-            <div class="section-eyebrow reveal">Che do choi</div>
-            <div class="section-heading reveal">Lua chon Mode</div>
-            <div class="modes-grid" id="modesGrid"></div>
-        </div>
-    </section>
-
-    <!-- Stats -->
+    <section class="section-block"><div class="container"><div class="reveal" id="tierSection">
+        <div class="tier-top"><div><div class="tier-eyebrow">Phan bo Tier</div><div class="tier-title-main">Cay Lua Tier</div></div><div class="tier-badge-count" id="tierTotalBadge">0 player</div></div>
+        <div class="flame-ladder" id="flameLadder"></div>
+        <p class="tier-desc-text">He thong Tier phan loai nguoi choi tu HT1 (Cao nhat) den LT5 (Thap nhat), dua tren ky nang PvP thuc te.</p>
+    </div></div></section>
+    <section class="section-block"><div class="container">
+        <div class="section-eyebrow reveal">Che do choi</div>
+        <div class="section-heading reveal">Lua chon Mode</div>
+        <div class="modes-grid" id="modesGrid"></div>
+    </div></section>
     <section class="stats-section" id="statsSection">
         <div class="ignite-flash"></div>
         <div class="container stats-inner">
@@ -575,257 +494,163 @@ footer{margin-top:60px;padding:40px 0 34px;border-top:1px solid var(--border);di
             <div class="stats-grid" id="statsGrid"></div>
         </div>
     </section>
-
-    <!-- Timeline -->
-    <section class="section-block">
-        <div class="container">
-            <div class="section-eyebrow reveal">Quy trinh</div>
-            <div class="section-heading reveal">Lam The Nao De Duoc Xep Hang?</div>
-            <div class="timeline reveal" id="timeline">
-                <div class="tl-step active"><div class="tl-num">1</div><div><div class="tl-name">Dang Ky Tai Khoan</div><div class="tl-desc">Nop thong tin Minecraft cua ban va cac mode ban muon duoc xep hang.</div></div></div>
-                <div class="tl-step active"><div class="tl-num">2</div><div><div class="tl-name">Xet Duyet Boi Admin</div><div class="tl-desc">Admin se xem xet don dang ky va kiem tra thong tin cua ban.</div></div></div>
-                <div class="tl-step active"><div class="tl-num">3</div><div><div class="tl-name">Danh Gia Ky Nang</div><div class="tl-desc">Ban se duoc goi vao cac tran PvP de danh gia ky nang thuc te.</div></div></div>
-                <div class="tl-step active"><div class="tl-num">4</div><div><div class="tl-name">Xep Hang & Cong Bo</div><div class="tl-desc">Tier duoc gan va hien thi tren bang xep hang cong khai cho moi nguoi xem.</div></div></div>
-            </div>
+    <section class="section-block"><div class="container">
+        <div class="section-eyebrow reveal">Quy trinh</div>
+        <div class="section-heading reveal">Lam The Nao De Duoc Xep Hang?</div>
+        <div class="timeline reveal">
+            <div class="tl-step active"><div class="tl-num">1</div><div><div class="tl-name">Dang Ky Tai Khoan</div><div class="tl-desc">Nop thong tin Minecraft va cac mode ban muon duoc xep hang.</div></div></div>
+            <div class="tl-step active"><div class="tl-num">2</div><div><div class="tl-name">Xet Duyet Boi Admin</div><div class="tl-desc">Admin se xem xet don dang ky va kiem tra thong tin.</div></div></div>
+            <div class="tl-step active"><div class="tl-num">3</div><div><div class="tl-name">Danh Gia Ky Nang</div><div class="tl-desc">Ban se duoc goi vao cac tran PvP de danh gia ky nang thuc te.</div></div></div>
+            <div class="tl-step active"><div class="tl-num">4</div><div><div class="tl-name">Xep Hang & Cong Bo</div><div class="tl-desc">Tier duoc gan va hien thi tren bang xep hang cong khai.</div></div></div>
         </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="section-block">
-        <div class="container">
-            <div class="section-eyebrow reveal">Cau hoi thuong gap</div>
-            <div class="section-heading reveal">FAQ</div>
-            <div class="reveal" id="faqList">
-                <div class="faq-item" onclick="this.classList.toggle('active')"><div class="faq-q">Tier duoc xac dinh nhu the nao?<span class="arrow"><i class="fa-solid fa-plus"></i></span></div><div class="faq-a">Tier duoc xac dinh dua tren hieu suat PvP thuc te trong cac tran danh gia, bao gom combo, di chuyen, timing, va kha nang phan hoi. Moi tran duoc nhieu admin danh gia doc lap.</div></div>
-                <div class="faq-item" onclick="this.classList.toggle('active')"><div class="faq-q">Toi co the yeu cau xep lai tier khong?<span class="arrow"><i class="fa-solid fa-plus"></i></span></div><div class="faq-a">Co. Ban co the gui yeu cau xep lai tier qua Discord. Mot buoi danh gia moi se duoc to chuc de xac nhan tier moi.</div></div>
-                <div class="faq-item" onclick="this.classList.toggle('active')"><div class="faq-q">He thong co phi khong?<span class="arrow"><i class="fa-solid fa-plus"></i></span></div><div class="faq-a">Hoan toan mien phi. AngelTier la he thong phan loai PvP do cong dong quan ly, khong co bat ky chi phi nao.</div></div>
-            </div>
+    </div></section>
+    <section class="section-block"><div class="container">
+        <div class="section-eyebrow reveal">FAQ</div>
+        <div class="section-heading reveal">Cau Hoi Thuong Gap</div>
+        <div class="reveal">
+            <div class="faq-item" onclick="this.classList.toggle('active')"><div class="faq-q">Tier duoc xac dinh nhu the nao?<span class="arrow"><i class="fa-solid fa-plus"></i></span></div><div class="faq-a">Tier duoc xac dinh dua tren hieu suat PvP thuc te trong cac tran danh gia, bao gom combo, di chuyen, timing, va kha nang phan hoi.</div></div>
+            <div class="faq-item" onclick="this.classList.toggle('active')"><div class="faq-q">Toi co the yeu cau xep lai tier khong?<span class="arrow"><i class="fa-solid fa-plus"></i></span></div><div class="faq-a">Co. Gui yeu cau qua Discord, mot buoi danh gia moi se duoc to chuc.</div></div>
+            <div class="faq-item" onclick="this.classList.toggle('active')"><div class="faq-q">He thong co phi khong?<span class="arrow"><i class="fa-solid fa-plus"></i></span></div><div class="faq-a">Hoan toan mien phi. AngelTier la he thong do cong dong quan ly.</div></div>
         </div>
-    </section>
+    </div></section>
 </div>
 
-<!-- ========== RANKING VIEW ========== -->
+<!-- ═══════ RANKING ═══════ -->
 <div class="view-section" id="view-ranking">
-    <div class="container" style="padding-top:40px;padding-bottom:60px;">
-        <div class="rk-back" onclick="App.showView('home')"><i class="fa-solid fa-arrow-left"></i> Quay lai trang chu</div>
-        <div style="margin-bottom:20px;">
-            <div class="rk-title">Bang Xep Hang PvP</div>
-            <div class="rk-sub">Nhung chien binh tinh nhat da duoc xet duyet va xep hang</div>
-        </div>
+    <div class="container" style="padding-top:40px;padding-bottom:60px">
+        <div class="rk-back" onclick="App.showView('home')"><i class="fa-solid fa-arrow-left"></i> Quay lai</div>
+        <div style="margin-bottom:20px"><div class="rk-title">Bang Xep Hang PvP</div><div class="rk-sub">Nhung chien binh tinh nhat da duoc xet duyet va xep hang</div></div>
         <div class="rk-tabs" id="rkTabs"></div>
-        <div class="rk-table-wrap">
-            <table class="rk-table" id="rkTable">
-                <thead><tr><th>Hang</th><th>Player</th><th>Points</th><th>Tiers</th></tr></thead>
-                <tbody id="rkTableBody"></tbody>
-            </table>
-        </div>
-        <div class="empty-state" id="rkEmpty" style="display:none;">Chua co player nao duoc xep hang o mode nay.</div>
+        <div class="rk-table-wrap"><table class="rk-table"><thead><tr><th>Hang</th><th>Player</th><th>Points</th><th>Tiers</th></tr></thead><tbody id="rkTableBody"></tbody></table></div>
+        <div class="empty-state" id="rkEmpty" style="display:none">Chua co player nao o mode nay.</div>
     </div>
 </div>
 
-<!-- ========== REVIEWS VIEW ========== -->
+<!-- ═══════ REVIEWS ═══════ -->
 <div class="view-section" id="view-reviews">
-    <div class="container" style="padding-top:40px;padding-bottom:60px;">
-        <div class="rk-back" onclick="App.showView('home')"><i class="fa-solid fa-arrow-left"></i> Quay lai trang chu</div>
-        <div style="margin-bottom:20px;">
-            <div class="rk-title">Xem Tai Khoan Da Xet Duyet</div>
-            <div class="rk-sub">Kiem tra trang thai don dang ky cua ban va nhung player da duoc phe duyet</div>
-        </div>
+    <div class="container" style="padding-top:40px;padding-bottom:60px">
+        <div class="rk-back" onclick="App.showView('home')"><i class="fa-solid fa-arrow-left"></i> Quay lai</div>
+        <div style="margin-bottom:20px"><div class="rk-title">Xem Trang Thai Xet Duyet</div><div class="rk-sub">Kiem tra trang thai don dang ky cua ban</div></div>
         <div class="review-filters" id="reviewFilters">
             <button class="review-filter-btn active" data-filter="all" onclick="App.filterReviews('all')">Tat ca</button>
             <button class="review-filter-btn" data-filter="approved" onclick="App.filterReviews('approved')">Da duyet</button>
             <button class="review-filter-btn" data-filter="pending" onclick="App.filterReviews('pending')">Cho duyet</button>
             <button class="review-filter-btn" data-filter="rejected" onclick="App.filterReviews('rejected')">Bi tu choi</button>
         </div>
-        <!-- Tim kiem theo ten -->
-        <div class="admin-search-wrap" style="margin-bottom:20px;">
-            <i class="fa-solid fa-search"></i>
-            <input type="text" class="admin-search" id="reviewSearch" placeholder="Tim kiem theo ten player..." oninput="App.filterReviews(App.state.reviewFilter)">
-        </div>
+        <div class="admin-search-wrap" style="margin-bottom:20px"><i class="fa-solid fa-search"></i><input type="text" class="admin-search" id="reviewSearch" placeholder="Tim kiem ten player..." oninput="App.filterReviews(App.state.reviewFilter)"></div>
         <div id="reviewList"></div>
-        <div class="empty-state" id="reviewEmpty" style="display:none;">Khong tim thay tai khoan nao.</div>
+        <div class="empty-state" id="reviewEmpty" style="display:none">Khong tim thay tai khoan nao.</div>
     </div>
 </div>
 
-<!-- ========== REGISTER VIEW ========== -->
+<!-- ═══════ REGISTER ═══════ -->
 <div class="view-section" id="view-register">
-    <div class="container" style="padding-top:40px;padding-bottom:60px;">
-        <div class="rk-back" onclick="App.showView('home')"><i class="fa-solid fa-arrow-left"></i> Quay lai trang chu</div>
-        <div style="text-align:center;margin-bottom:30px;">
-            <div class="rk-title">Dang Ky Xet Duyet Tier</div>
-            <div class="rk-sub">Dien day du thong tin de duoc admin xem xet va xep hang</div>
-        </div>
-        <div class="card-box">
-            <div class="register-form" id="registerForm">
-                <div class="register-field">
-                    <label>Ten Minecraft</label>
-                    <input type="text" id="regName" placeholder="VD: Notch">
-                </div>
-                <div class="register-field">
-                    <label>Avatar URL (de trong de tu dong lay tu mc-heads.net)</label>
-                    <input type="text" id="regAvatar" placeholder="https://mc-heads.net/avatar/TenCuaBan/64">
-                </div>
-                <div class="register-field">
-                    <label>Discord ID (khong bat buoc)</label>
-                    <input type="text" id="regDiscord" placeholder="VD: 123456789012345678">
-                </div>
-                <div class="register-field">
-                    <label>Ghi chu them (khong bat buoc)</label>
-                    <textarea id="regNote" placeholder="Lien ket Discord, thong tin them ve ban..."></textarea>
-                </div>
-                <div class="register-field">
-                    <label>Chon mode muon duoc xep hang</label>
-                    <div class="register-modes" id="regModes"></div>
-                </div>
-                <button class="btn-primary" style="width:100%;justify-content:center;margin-top:10px;" onclick="App.submitRegister()">
-                    <i class="fa-solid fa-paper-plane"></i> Gui Don Dang Ky
-                </button>
-            </div>
-        </div>
+    <div class="container" style="padding-top:40px;padding-bottom:60px">
+        <div class="rk-back" onclick="App.showView('home')"><i class="fa-solid fa-arrow-left"></i> Quay lai</div>
+        <div style="text-align:center;margin-bottom:30px"><div class="rk-title">Dang Ky Xet Duyet Tier</div><div class="rk-sub">Dien day du thong tin de duoc admin xem xet</div></div>
+        <div class="card-box"><div class="register-form">
+            <div class="register-field"><label>Ten Minecraft</label><input type="text" id="regName" placeholder="VD: Notch"></div>
+            <div class="register-field"><label>Avatar URL (de trong de tu dong lay)</label><input type="text" id="regAvatar" placeholder="https://mc-heads.net/avatar/TenCuaBan/64"></div>
+            <div class="register-field"><label>Discord ID (khong bat buoc)</label><input type="text" id="regDiscord" placeholder="VD: 123456789012345678"></div>
+            <div class="register-field"><label>Ghi chu them</label><textarea id="regNote" placeholder="Lien ket Discord, thong tin them..."></textarea></div>
+            <div class="register-field"><label>Chon mode muon xep hang</label><div class="register-modes" id="regModes"></div></div>
+            <button class="btn-primary" style="width:100%;justify-content:center;margin-top:10px" onclick="App.submitRegister()"><i class="fa-solid fa-paper-plane"></i> Gui Don Dang Ky</button>
+        </div></div>
     </div>
 </div>
 
-<!-- ========== ADMIN VIEW ========== -->
+<!-- ═══════ ADMIN ═══════ -->
 <div class="view-section" id="view-admin">
-    <div class="container" style="padding-top:40px;padding-bottom:60px;">
-        <div class="rk-back" onclick="App.showView('home')"><i class="fa-solid fa-arrow-left"></i> Dang xuat admin</div>
+    <div class="container" style="padding-top:40px;padding-bottom:60px">
+        <div class="rk-back" onclick="App.adminLogout()"><i class="fa-solid fa-arrow-left"></i> Dang xuat admin</div>
         <div class="admin-header">
-            <h2><i class="fa-solid fa-shield-halved" style="color:var(--ember-hot);margin-right:10px;"></i>Admin Panel</h2>
+            <h2><i class="fa-solid fa-shield-halved" style="color:var(--ember-hot);margin-right:10px"></i>Admin Panel</h2>
             <div class="admin-actions-bar">
-                <div class="admin-search-wrap">
-                    <i class="fa-solid fa-search"></i>
-                    <input type="text" class="admin-search" id="adminSearch" placeholder="Tim player..." oninput="App.renderAdminPlayers()">
-                </div>
-                <button class="btn-admin primary" onclick="App.openAddPlayerModal()"><i class="fa-solid fa-plus"></i> Them Player</button>
+                <div class="admin-search-wrap"><i class="fa-solid fa-search"></i><input type="text" class="admin-search" id="adminSearch" placeholder="Tim player..." oninput="App.renderAdminPlayers()"></div>
+                <button class="btn-admin primary" onclick="App.openAddPlayerModal()"><i class="fa-solid fa-plus"></i> Them</button>
+                <button class="btn-admin secondary" onclick="App.saveAllPlayers()"><i class="fa-solid fa-floppy-disk"></i> Luu Tat Ca</button>
             </div>
         </div>
-        <!-- Admin stats -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px;" id="adminStats"></div>
-        <!-- Players list -->
-        <div class="admin-players-list" id="adminPlayersList"></div>
-        <div class="empty-state" id="adminEmpty" style="display:none;">Khong co player nao.</div>
+        <div class="admin-stats-row" id="adminStats"></div>
+        <div id="adminPlayersList"></div>
+        <div class="empty-state" id="adminEmpty" style="display:none">Khong co player nao.</div>
     </div>
 </div>
 
 <!-- Footer -->
 <footer>
-    <div>
-        <div class="footer-brand">
-            <div class="brand-emblem sm">
-                <svg class="emblem-wing left" viewBox="0 0 52 38"><path d="M0 19 Q12 0 26 6 Q16 12 8 19 Q16 26 26 32 Q12 38 0 19Z"/></svg>
-                <div class="emblem-frame" data-fallback="AT" style="border-radius:9px;">
-                    <img src="https://i.ibb.co/MDM2jGCX/1785672737209-6292537109541337385428-8470405b249247be4b15602be05cd5ef.jpg" alt="AT" onerror="this.parentElement.classList.add('broken')">
-                </div>
-                <svg class="emblem-wing right" viewBox="0 0 52 38"><path d="M0 19 Q12 0 26 6 Q16 12 8 19 Q16 26 26 32 Q12 38 0 19Z"/></svg>
-            </div>
-        </div>
-        <p>AngelTier — He thong xep hang PvP Minecraft cong tam nhat Viet Nam. Duoc xay dung va bao tri boi cong dong.</p>
-    </div>
-    <div class="footer-col">
-        <h4>Dieu huong</h4>
-        <ul>
-            <li><a onclick="App.showView('home')">Trang chu</a></li>
-            <li><a onclick="App.showView('ranking')">Xep hang</a></li>
-            <li><a onclick="App.showView('reviews')">Xet duyet</a></li>
-            <li><a onclick="App.showView('register')">Dang ky</a></li>
-        </ul>
-    </div>
-    <div class="footer-col">
-        <h4>Lien ket</h4>
-        <ul>
-            <li><a onclick="window.open('https://discord.gg/angel','_blank')">Discord Server</a></li>
-            <li><a onclick="window.open('#','_blank')">YouTube</a></li>
-            <li><a onclick="window.open('#','_blank')">Twitter</a></li>
-        </ul>
-    </div>
+    <div><div class="footer-brand">
+        <div class="brand-emblem sm"><svg class="emblem-wing left" viewBox="0 0 52 38"><path d="M0 19Q12 0 26 6Q16 12 8 19Q16 26 26 32Q12 38 0 19Z"/></svg><div class="emblem-frame" data-fallback="AT" style="border-radius:9px"><img src="https://i.ibb.co/MDM2jGCX/1785672737209-6292537109541337385428-8470405b249247be4b15602be05cd5ef.jpg" alt="AT" onerror="this.parentElement.classList.add('broken')"></div><svg class="emblem-wing right" viewBox="0 0 52 38"><path d="M0 19Q12 0 26 6Q16 12 8 19Q16 26 26 32Q12 38 0 19Z"/></svg></div>
+    </div><p>AngelTier — He thong xep hang PvP Minecraft cong tam nhat Viet Nam.</p></div>
+    <div class="footer-col"><h4>Dieu huong</h4><ul><li><a onclick="App.showView('home')">Trang chu</a></li><li><a onclick="App.showView('ranking')">Xep hang</a></li><li><a onclick="App.showView('reviews')">Xet duyet</a></li><li><a onclick="App.showView('register')">Dang ky</a></li></ul></div>
+    <div class="footer-col"><h4>Lien ket</h4><ul><li><a href="#">Discord</a></li><li><a href="#">YouTube</a></li></ul></div>
     <div class="footer-bottom">2025 AngelTier. Tat ca quyen duoc bao luu.</div>
 </footer>
 
-<!-- ========== MODALS ========== -->
-<div class="modal-overlay" id="modalOverlay">
-    <div class="modal-card" id="modalCard"></div>
-</div>
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay"><div class="modal-card" id="modalCard"></div></div>
 
 <script>
-/* =============================================
-   SUPABASE CONFIGURATION
-   ============================================= */
-const SB_URL = 'https://dhckhnnavqfzntuxgobd.supabase.co';
-// !! THAY KEYS NAY BANG KEYS THAT TU SUPABASE DASHBOARD !!
-// Vao: Settings > API > Project API keys
-const SB_ANON_KEY = 'sb_publishable_XKKTfkOVsS_kkt13BhWEnw_pR3TlC-Y';
-const SB_SERVICE_KEY = 'sb_secret_gurEexsNnV-acnW8WrUfmg_39_6NR-W';
-
-// Supabase clients: sbPublic cho doc public, sbAdmin cho ghi/xoa (bypass RLS)
-let sbPublic, sbAdmin;
-
-try {
-    const { createClient } = window.supabase || {};
-    if (!createClient) throw new Error('Supabase SDK chua tai xong');
-    sbPublic = createClient(SB_URL, SB_ANON_KEY);
-    sbAdmin = createClient(SB_URL, SB_SERVICE_KEY);
-} catch(e) {
-    console.error('Loi khoi tao Supabase:', e);
-}
-
-/* =============================================
-   TIER CONSTANTS
-   ============================================= */
+/* ═══════════════════════════════════════════════
+   CONSTANTS
+   ═══════════════════════════════════════════════ */
 const TIERS = ['HT1','LT1','HT2','LT2','HT3','LT3','HT4','LT4','HT5','LT5'];
-const TIER_CLASS_MAP = {
-    'HT1':'tier-ht1','LT1':'tier-lt1','HT2':'tier-ht2','LT2':'tier-lt2',
-    'HT3':'tier-ht3','LT3':'tier-lt3','HT4':'tier-ht4','LT4':'tier-lt4',
-    'HT5':'tier-ht5','LT5':'tier-lt5'
-};
-const TIER_FLAME_MAP = {
-    'HT1':'t-ht1','LT1':'t-lt1','HT2':'t-ht2','LT2':'t-lt2',
-    'HT3':'t-ht3','LT3':'t-lt3','HT4':'t-ht4','LT4':'t-lt4',
-    'HT5':'t-ht5','LT5':'t-lt5'
-};
-const TIER_POINTS = {HT1:1000,LT1:900,HT2:800,LT2:700,HT3:600,LT3:500,HT4:400,LT4:300,HT5:200,LT5:100};
+const TIER_CLASS = {HT1:'tier-ht1',LT1:'tier-lt1',HT2:'tier-ht2',LT2:'tier-lt2',HT3:'tier-ht3',LT3:'tier-lt3',HT4:'tier-ht4',LT4:'tier-lt4',HT5:'tier-ht5',LT5:'tier-lt5'};
+const TIER_FLAME = {HT1:'t-ht1',LT1:'t-lt1',HT2:'t-ht2',LT2:'t-lt2',HT3:'t-ht3',LT3:'t-lt3',HT4:'t-ht4',LT4:'t-lt4',HT5:'t-ht5',LT5:'t-lt5'};
+const MODE_ICONS = {NoDebuff:'MHF_Steve',Debuff:'MHF_Alex',Combo:'MHF_Golem',Sword:'MHF_Pig',Bow:'MHF_Skeleton',Fist:'MHF_Zombie',Axe:'MHF_Villager',Gapple:'MHF_Blaze'};
 
-/* =============================================
-   APP STATE & CORE
-   ============================================= */
+/* ═══════════════════════════════════════════════
+   APP
+   ═══════════════════════════════════════════════ */
 const App = {
     state: {
-        players: [],       // Tat ca player (admin)
-        approvedPlayers: [],// Chi player da duyet (public)
+        players: [],       // public approved
+        allPlayers: [],    // admin - all
         modes: [],
         adminAuth: false,
         currentView: 'home',
-        rankingMode: 'all',
+        rankingMode: null,
         reviewFilter: 'all',
-        loading: false,
-        registerModes: []
+        registerModes: [],
+        tierPoints: {}
     },
 
-    // ---- Khoi tao ----
-    async init() {
-        this.updateCurtain('Ket noi database...', 10);
+    /* ── API helper ──────────────────────────────── */
+    async api(url, opts = {}) {
         try {
-            // Tai modes truoc
+            const resp = await fetch(url, {
+                headers: { 'Content-Type': 'application/json', ...opts.headers },
+                ...opts
+            });
+            const data = await resp.json();
+            if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
+            return data;
+        } catch(e) {
+            console.error('API Error:', url, e);
+            throw e;
+        }
+    },
+
+    /* ── Init ────────────────────────────────────── */
+    async init() {
+        this.curtain('Ket noi server...', 10);
+        try {
             await this.loadModes();
-            this.updateCurtain('Tai du lieu players...', 40);
-            // Tai players (public - chi approved)
-            await this.loadApprovedPlayers();
-            this.updateCurtain('Hoan tat!', 100);
-            // Render trang chu
+            this.curtain('Tai du lieu...', 40);
+            await this.loadLeaderboard();
+            this.curtain('Hoan tat!', 100);
             this.renderHeroTitle();
             this.renderHeroPlayers();
             this.renderModes();
             this.renderFlameLadder();
             this.renderStats();
             this.renderRegisterModes();
-            // Animations
             setTimeout(() => document.body.classList.add('loaded'), 300);
             setTimeout(() => this.triggerStats(), 1200);
             setTimeout(() => this.observeReveals(), 600);
             this.createEmbers();
         } catch(e) {
-            console.error('Loi init:', e);
-            this.updateCurtain('Loi: ' + e.message, 100);
-            // Van hien trang
+            this.curtain('Loi: ' + e.message, 100);
             document.body.classList.add('loaded');
             this.renderHeroTitle();
             this.renderModes();
@@ -834,87 +659,51 @@ const App = {
         }
     },
 
-    updateCurtain(text, pct) {
-        const bar = document.getElementById('curtainBar');
-        const status = document.getElementById('curtainStatus');
-        if (bar) bar.style.width = pct + '%';
-        if (status) status.textContent = text;
+    curtain(text, pct) {
+        const b = document.getElementById('curtainBar');
+        const s = document.getElementById('curtainStatus');
+        if (b) b.style.width = pct + '%';
+        if (s) s.textContent = text;
     },
 
-    // ---- Supabase Data Loading ----
     async loadModes() {
-        const { data, error } = await sbPublic
-            .from('modes')
-            .select('*')
-            .eq('is_active', true)
-            .order('sort_order', { ascending: true });
-        if (error) throw new Error('Khong the tai modes: ' + error.message);
-        this.state.modes = data || [];
+        this.state.modes = await this.api('/api/modes');
     },
 
-    async loadApprovedPlayers() {
-        const { data, error } = await sbPublic
-            .from('players')
-            .select('*')
-            .eq('status', 'approved')
-            .order('points', { ascending: false });
-        if (error) throw new Error('Khong the tai players: ' + error.message);
-        this.state.approvedPlayers = data || [];
+    async loadLeaderboard() {
+        this.state.players = await this.api('/api/leaderboard');
     },
 
-    async loadAllPlayers() {
-        // Dung service_role key de lay TAT CA player (bao gom pending/rejected)
-        const { data, error } = await sbAdmin
-            .from('players')
-            .select('*')
-            .order('created_at', { ascending: false });
-        if (error) {
-            this.toast('Loi tai danh sach player: ' + error.message, 'error');
-            return;
-        }
-        this.state.players = data || [];
-    },
-
-    // ---- Render Functions ----
+    /* ── Hero ────────────────────────────────────── */
     renderHeroTitle() {
         const el = document.getElementById('heroTitle');
         if (!el) return;
         const text = 'Lo Ren Bang Xep Hang PvP Viet Nam';
         el.innerHTML = text.split('').map((ch, i) => {
             const cls = ch === ' ' ? 'letter space' : 'letter';
-            const style = `animation-delay:${i * 0.035}s`;
-            return ch === 'P' || ch === 'V' || ch === 'p'
-                ? `<span class="${cls}" style="${style}"><span class="accent">${ch}</span></span>`
-                : `<span class="${cls}" style="${style}">${ch}</span>`;
+            const s = `animation-delay:${i * 0.035}s`;
+            const accent = (ch === 'P' || ch === 'V' || ch === 'p') ? 'accent' : '';
+            return `<span class="${cls}" style="${s}"><span class="${accent}">${ch}</span></span>`;
         }).join('');
     },
 
     renderHeroPlayers() {
         const list = document.getElementById('heroPlayerList');
         if (!list) return;
-        const top5 = this.state.approvedPlayers.slice(0, 5);
-        if (top5.length === 0) {
-            list.innerHTML = '<div class="empty-state">Chua co player nao duoc xep hang.</div>';
-            return;
-        }
-        list.innerHTML = top5.map((p, i) => {
-            const rankCls = i === 0 ? 'r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : '';
-            const avatarUrl = p.avatar_url || `https://mc-heads.net/avatar/${p.name}/64`;
-            const bestTier = this.getBestTier(p.tiers);
-            const tierCls = TIER_CLASS_MAP[bestTier] || 'tier-other';
-            const fillPct = Math.min(100, (p.points || 0) / 10);
-            const fillCls = fillPct > 70 ? 'fill-1' : fillPct > 40 ? 'fill-2' : 'fill-3';
-            return `<div class="player-item">
-                <div class="player-row">
-                    <div class="player-info">
-                        <div class="rank-mark ${rankCls}">${i + 1}</div>
-                        <img class="avatar" src="${avatarUrl}" alt="${p.name}" onerror="this.src='https://mc-heads.net/avatar/MHF_Steve/64'">
-                        <div><div class="p-name">${this.esc(p.name)}</div><div class="p-points">${p.points || 0} pts</div></div>
-                    </div>
-                    <span class="tier-chip ${tierCls}">${bestTier || '?'}</span>
-                </div>
-                <div class="heat-bar in-view"><div class="heat-fill ${fillCls}" style="--fill:${fillPct}%"></div></div>
-            </div>`;
+        const top = this.state.players.slice(0, 5);
+        if (!top.length) { list.innerHTML = '<div class="empty-state">Chua co player nao duoc xep hang.</div>'; return; }
+        list.innerHTML = top.map((p, i) => {
+            const rc = i===0?'r1':i===1?'r2':i===2?'r3':'';
+            const best = this.getBestTier(p.tiers);
+            const tc = TIER_CLASS[best] || 'tier-other';
+            const fp = Math.min(100, (p.points || 0) / 10);
+            const fc = fp > 70 ? 'fill-1' : fp > 40 ? 'fill-2' : 'fill-3';
+            return `<div class="player-item"><div class="player-row"><div class="player-info">
+                <div class="rank-mark ${rc}">${i+1}</div>
+                <img class="avatar" src="${this.esc(p.avatar)}" alt="" onerror="this.src='https://mc-heads.net/avatar/MHF_Steve/64'">
+                <div><div class="p-name">${this.esc(p.name)}</div><div class="p-points">${p.points||0} pts</div></div>
+            </div><span class="tier-chip ${tc}">${best||'?'}</span></div>
+            <div class="heat-bar in-view"><div class="heat-fill ${fc}" style="--fill:${fp}%"></div></div></div>`;
         }).join('');
     },
 
@@ -922,608 +711,152 @@ const App = {
         const grid = document.getElementById('modesGrid');
         if (!grid) return;
         grid.innerHTML = this.state.modes.map((m, i) => {
-            const iconUrl = m.icon_url || `https://mc-heads.net/avatar/MHF_Steve/48`;
-            return `<div class="mode-card" onclick="App.showView('ranking','${m.id}')" style="transition-delay:${i * 0.08}s">
-                <div class="icon-orb md">
-                    <div class="icon-ring"></div>
-                    <div class="icon-frame"><img src="${iconUrl}" alt="${m.name}" onerror="this.parentElement.classList.add('broken');this.parentElement.dataset.fallback='${m.name.substring(0,2).toUpperCase()}'"></div>
-                </div>
-                <div class="mode-name">${this.esc(m.name)}</div>
-            </div>`;
+            const icon = MODE_ICONS[m] || 'MHF_Steve';
+            return `<div class="mode-card" onclick="App.showView('ranking','${m}')" style="transition-delay:${i*.08}s">
+                <div class="icon-orb md"><div class="icon-ring"></div>
+                <div class="icon-frame"><img src="https://mc-heads.net/avatar/${icon}/48" alt="${m}" onerror="this.parentElement.classList.add('broken');this.parentElement.dataset.fallback='${m.substring(0,2).toUpperCase()}'"></div>
+                </div><div class="mode-name">${this.esc(m)}</div></div>`;
         }).join('');
-        // Animate entrance
-        setTimeout(() => {
-            grid.querySelectorAll('.mode-card').forEach((c, i) => {
-                setTimeout(() => c.classList.add('entered'), i * 100);
-            });
-        }, 400);
+        setTimeout(() => grid.querySelectorAll('.mode-card').forEach((c,i) => setTimeout(() => c.classList.add('entered'), i*100)), 400);
     },
 
     renderFlameLadder() {
         const ladder = document.getElementById('flameLadder');
         const badge = document.getElementById('tierTotalBadge');
         if (!ladder) return;
-        const counts = {};
-        TIERS.forEach(t => counts[t] = 0);
-        this.state.approvedPlayers.forEach(p => {
-            (p.tiers || []).forEach(t => { if (counts[t] !== undefined) counts[t]++; });
-        });
+        const counts = {}; TIERS.forEach(t => counts[t] = 0);
+        this.state.players.forEach(p => { for (const t of Object.values(p.tiers || {})) { if (counts[t] !== undefined) counts[t]++; } });
         const max = Math.max(1, ...Object.values(counts));
-        const total = this.state.approvedPlayers.length;
-        if (badge) badge.textContent = total + ' player';
-
+        if (badge) badge.textContent = this.state.players.length + ' player';
         ladder.innerHTML = TIERS.map(t => {
             const h = Math.max(8, (counts[t] / max) * 150);
-            const isHi = counts[t] > 0;
-            return `<div class="flame-col ${isHi ? 'hi' : ''}">
-                <div class="flame-bar ${TIER_FLAME_MAP[t] || ''}" style="height:${h}px"></div>
-                <div class="flame-label">${t}</div>
-            </div>`;
+            return `<div class="flame-col ${counts[t] > 0 ? 'hi' : ''}"><div class="flame-bar ${TIER_FLAME[t]||''}" style="height:${h}px"></div><div class="flame-label">${t}</div></div>`;
         }).join('');
     },
 
     renderStats() {
         const grid = document.getElementById('statsGrid');
         if (!grid) return;
-        const p = this.state.approvedPlayers;
-        const totalPts = p.reduce((s, x) => s + (x.points || 0), 0);
-        const htCount = p.filter(x => (x.tiers || []).some(t => t.startsWith('HT'))).length;
+        const p = this.state.players;
+        const totalPts = p.reduce((s,x) => s + (x.points||0), 0);
+        const htCount = p.filter(x => Object.values(x.tiers||{}).some(t => t.startsWith('HT'))).length;
         const stats = [
-            { icon: 'fa-solid fa-users', num: p.length, label: 'Player da duyet' },
-            { icon: 'fa-solid fa-fire', num: totalPts, label: 'Tong diem' },
-            { icon: 'fa-solid fa-crown', num: htCount, label: 'High Tier' }
+            {icon:'fa-solid fa-users', num:p.length, label:'Player da duyet'},
+            {icon:'fa-solid fa-fire', num:totalPts, label:'Tong diem'},
+            {icon:'fa-solid fa-crown', num:htCount, label:'High Tier'}
         ];
-        grid.innerHTML = stats.map(s => `
-            <div class="stat-card">
-                <div class="stat-icon-wrap"><i class="${s.icon} stat-icon"></i></div>
-                <div class="stat-number" data-target="${s.num}">0</div>
-                <div class="stat-label">${s.label}</div>
-                <div class="stat-progress"><div class="stat-progress-fill"></div></div>
-            </div>
-        `).join('');
+        grid.innerHTML = stats.map(s => `<div class="stat-card"><div class="stat-icon-wrap"><i class="${s.icon} stat-icon"></i></div><div class="stat-number" data-target="${s.num}">0</div><div class="stat-label">${s.label}</div><div class="stat-progress"><div class="stat-progress-fill"></div></div></div>`).join('');
     },
 
     triggerStats() {
-        const section = document.getElementById('statsSection');
-        if (!section) return;
-        section.classList.add('ignited');
-        section.querySelectorAll('.stat-card').forEach((card, i) => {
+        const s = document.getElementById('statsSection');
+        if (!s) return;
+        s.classList.add('ignited');
+        s.querySelectorAll('.stat-card').forEach((c,i) => {
             setTimeout(() => {
-                card.classList.add('struck');
-                const numEl = card.querySelector('.stat-number');
-                const target = parseInt(numEl.dataset.target) || 0;
-                this.animateNumber(numEl, 0, target, 1200);
+                c.classList.add('struck');
+                const n = c.querySelector('.stat-number');
+                this.animNum(n, 0, parseInt(n.dataset.target)||0, 1200);
             }, i * 200);
         });
     },
 
-    animateNumber(el, from, to, dur) {
+    animNum(el, from, to, dur) {
         const start = performance.now();
-        const tick = (now) => {
-            const p = Math.min(1, (now - start) / dur);
-            const ease = 1 - Math.pow(1 - p, 3);
-            el.textContent = Math.round(from + (to - from) * ease);
+        const tick = now => {
+            const p = Math.min(1, (now-start)/dur);
+            el.textContent = Math.round(from + (to-from) * (1 - Math.pow(1-p, 3)));
             if (p < 1) requestAnimationFrame(tick);
         };
         requestAnimationFrame(tick);
     },
 
     renderRegisterModes() {
-        const wrap = document.getElementById('regModes');
-        if (!wrap) return;
+        const w = document.getElementById('regModes');
+        if (!w) return;
         this.state.registerModes = [];
-        wrap.innerHTML = this.state.modes.map(m =>
-            `<button class="register-mode-btn" data-mode-id="${m.id}" onclick="App.toggleRegMode(this,'${m.id}')">${this.esc(m.name)}</button>`
-        ).join('');
+        w.innerHTML = this.state.modes.map(m => `<button class="register-mode-btn" onclick="App.toggleRegMode(this,'${m}')">${this.esc(m)}</button>`).join('');
     },
 
-    toggleRegMode(btn, modeId) {
+    toggleRegMode(btn, mode) {
         btn.classList.toggle('selected');
-        const idx = this.state.registerModes.indexOf(modeId);
-        if (idx > -1) this.state.registerModes.splice(idx, 1);
-        else this.state.registerModes.push(modeId);
+        const i = this.state.registerModes.indexOf(mode);
+        if (i > -1) this.state.registerModes.splice(i, 1); else this.state.registerModes.push(mode);
     },
 
-    // ---- Ranking View ----
-    async renderRanking(modeId) {
-        this.state.rankingMode = modeId || 'all';
-        const tabsEl = document.getElementById('rkTabs');
+    /* ── Views ───────────────────────────────────── */
+    async showView(view, param) {
+        this.state.currentView = view;
+        document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+        const el = document.getElementById('view-' + view);
+        if (el) el.classList.add('active');
+        document.querySelectorAll('#navLinks a').forEach(a => a.classList.toggle('active', a.dataset.nav === view));
+        window.scrollTo({top: 0, behavior: 'smooth'});
+
+        if (view === 'ranking') await this.renderRanking(param);
+        if (view === 'reviews') await this.renderReviews();
+        if (view === 'admin') await this.renderAdmin();
+    },
+
+    /* ── Ranking ─────────────────────────────────── */
+    async renderRanking(mode) {
+        this.state.rankingMode = mode || null;
+        const tabs = document.getElementById('rkTabs');
         const tbody = document.getElementById('rkTableBody');
-        const emptyEl = document.getElementById('rkEmpty');
+        const empty = document.getElementById('rkEmpty');
+        tabs.innerHTML = `<button class="rk-tab ${!mode?'active':''}" onclick="App.renderRanking(null)"><i class="fa-solid fa-list"></i> Tat ca</button>` +
+            this.state.modes.map(m => `<button class="rk-tab ${mode===m?'active':''}" onclick="App.renderRanking('${m}')"><i class="fa-solid fa-fire"></i> ${this.esc(m)}</button>`).join('');
 
-        // Render tabs
-        tabsEl.innerHTML = `<button class="rk-tab ${!modeId ? 'active' : ''}" onclick="App.renderRanking(null)"><i class="fa-solid fa-list"></i> Tat ca</button>` +
-            this.state.modes.map(m => {
-                const active = modeId === m.id ? 'active' : '';
-                return `<button class="rk-tab ${active}" onclick="App.renderRanking('${m.id}')"><i class="fa-solid fa-fire"></i> ${this.esc(m.name)}</button>`;
+        let players = [...this.state.players];
+        if (mode) players = players.filter(p => Object.keys(p.tiers||{}).includes(mode));
+        players.sort((a,b) => (b.points||0) - (a.points||0));
+
+        if (!players.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+        empty.style.display = 'none';
+
+        tbody.innerHTML = players.map((p,i) => {
+            const rc = i===0?'medal':'';
+            const tiersHtml = Object.entries(p.tiers||{}).map(([m,t]) => {
+                const match = !mode || m === mode;
+                return `<span class="mode-tier-chip ${match?'match':''}">${this.esc(m)}: ${this.esc(t)}</span>`;
             }).join('');
-
-        // Filter players
-        let players = [...this.state.approvedPlayers];
-        if (modeId) {
-            const mode = this.state.modes.find(m => m.id === modeId);
-            if (mode) {
-                players = players.filter(p => (p.tiers || []).some(t => t.modeName === mode.name));
-            }
-        }
-        players.sort((a, b) => (b.points || 0) - (a.points || 0));
-
-        if (players.length === 0) {
-            tbody.innerHTML = '';
-            emptyEl.style.display = 'block';
-            document.getElementById('rkTable').style.display = 'none';
-            return;
-        }
-        emptyEl.style.display = 'none';
-        document.getElementById('rkTable').style.display = '';
-
-        tbody.innerHTML = players.map((p, i) => {
-            const rankCls = i === 0 ? 'medal' : '';
-            const avatarUrl = p.avatar_url || `https://mc-heads.net/avatar/${p.name}/64`;
-            const tiersHtml = (p.tiers || []).map(t => {
-                const isMatch = !modeId || t.modeName === (this.state.modes.find(m => m.id === modeId)?.name || '');
-                return `<span class="mode-tier-chip ${isMatch ? 'match' : ''}">${this.esc(t.modeName)}: ${this.esc(t.tier)}</span>`;
-            }).join('');
-            return `<tr style="animation-delay:${i * 0.05}s">
-                <td><span class="rank-chip ${rankCls}">${i + 1}</span></td>
-                <td><div class="lb-left"><img class="avatar" src="${avatarUrl}" alt="${p.name}" onerror="this.src='https://mc-heads.net/avatar/MHF_Steve/64'"><span class="lb-name">${this.esc(p.name)}</span></div></td>
-                <td><span class="lb-points">${p.points || 0}</span></td>
-                <td><div class="tiers-wrap">${tiersHtml || '<span style="color:var(--text-faint);font-size:0.8rem;">Chua co tier</span>'}</div></td>
+            return `<tr style="animation-delay:${i*.05}s">
+                <td><span class="rank-chip ${rc}" style="${i===0?'color:var(--ember-hot);animation:medalPulse 2s ease-in-out infinite':''}">${i+1}</span></td>
+                <td><div style="display:flex;align-items:center;gap:14px"><img class="avatar" src="${this.esc(p.avatar)}" onerror="this.src='https://mc-heads.net/avatar/MHF_Steve/64'"><span style="font-weight:700;color:#fff">${this.esc(p.name)}</span></div></td>
+                <td><span style="font-size:.8rem;color:var(--ember-hot);font-weight:700;font-family:'JetBrains Mono',monospace">${p.points||0}</span></td>
+                <td><div class="tiers-wrap">${tiersHtml||'<span style="color:var(--text-faint);font-size:.8rem">Chua co tier</span>'}</div></td>
             </tr>`;
         }).join('');
     },
 
-    // ---- Reviews View ----
+    /* ── Reviews (Public) ────────────────────────── */
     filterReviews(filter) {
         this.state.reviewFilter = filter;
-        // Update filter buttons
-        document.querySelectorAll('.review-filter-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.filter === filter);
-        });
+        document.querySelectorAll('.review-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
         this.renderReviewList();
     },
 
-    renderReviewList() {
-        const listEl = document.getElementById('reviewList');
-        const emptyEl = document.getElementById('reviewEmpty');
+    async renderReviews() {
         const search = (document.getElementById('reviewSearch')?.value || '').toLowerCase().trim();
-
-        // Dung admin client de lay tat ca player
-        // (Neu chua dang nhap admin, chi lay approved)
-        const allPlayers = this.state.adminAuth ? this.state.players : this.state.approvedPlayers;
         const filter = this.state.reviewFilter;
-
-        let filtered = allPlayers;
-        if (filter !== 'all') filtered = filtered.filter(p => p.status === filter);
-        if (search) filtered = filtered.filter(p => p.name.toLowerCase().includes(search));
-
-        if (filtered.length === 0) {
-            listEl.innerHTML = '';
-            emptyEl.style.display = 'block';
-            return;
-        }
-        emptyEl.style.display = 'none';
-
-        listEl.innerHTML = filtered.map(p => {
-            const avatarUrl = p.avatar_url || `https://mc-heads.net/avatar/${p.name}/64`;
-            const statusCls = p.status === 'approved' ? 'status-approved' : p.status === 'rejected' ? 'status-rejected' : 'status-pending';
-            const statusText = p.status === 'approved' ? 'Da Duyet' : p.status === 'rejected' ? 'Tu Choi' : 'Cho Duyet';
-            const tiersHtml = (p.tiers || []).map(t =>
-                `<span class="mode-tier-chip">${this.esc(t.modeName)}: ${this.esc(t.tier)}</span>`
-            ).join('') || '<span style="color:var(--text-faint);font-size:0.8rem;">Chua duoc gan tier</span>';
-            return `<div class="review-card">
-                <div class="review-card-header">
-                    <img class="admin-avatar-preview" src="${avatarUrl}" alt="${p.name}" onerror="this.src='https://mc-heads.net/avatar/MHF_Steve/64'">
-                    <div style="flex:1;">
-                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                            <span style="font-weight:800;font-size:1rem;color:#fff;">${this.esc(p.name)}</span>
-                            <span class="status-badge ${statusCls}">${statusText}</span>
+        try {
+            let players = await this.api(`/api/reviews?status=${filter}&name=${encodeURIComponent(search)}`);
+            const list = document.getElementById('reviewList');
+            const empty = document.getElementById('reviewEmpty');
+            if (!players.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
+            list.innerHTML = players.map(p => {
+                const sc = p.status==='approved'?'status-approved':p.status==='rejected'?'status-rejected':'status-pending';
+                const st = p.status==='approved'?'Da Duyet':p.status==='rejected'?'Tu Choi':'Cho Duyet';
+                const tiersHtml = Object.entries(p.tiers||{}).map(([m,t]) => `<span class="mode-tier-chip">${this.esc(m)}: ${this.esc(t)}</span>`).join('') || '<span style="color:var(--text-faint);font-size:.8rem">Chua co tier</span>';
+                return `<div class="review-card">
+                    <div class="review-card-header">
+                        <img class="admin-avatar-preview" src="${this.esc(p.avatar)}" onerror="this.src='https://mc-heads.net/avatar/MHF_Steve/64'">
+                        <div style="flex:1">
+                            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-weight:800;font-size:1rem;color:#fff">${this.esc(p.name)}</span><span class="status-badge ${sc}">${st}</span></div>
+                            <div class="review-info" style="margin-top:6px">Diem: <strong>${p.points||0}</strong> | Discord: <strong>${p.discord_id||'Chua cung cap'}</strong></div>
                         </div>
-                        <div class="review-info" style="margin-top:6px;">Diem: <strong>${p.points || 0}</strong> | Discord: <strong>${p.discord_id || 'Chua cung cap'}</strong></div>
                     </div>
-                </div>
-                <div class="review-card-body">
-                    <div>
-                        <div style="font-size:0.72rem;color:var(--text-faint);margin-bottom:6px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;">Tiers</div>
-                        <div class="tiers-wrap">${tiersHtml}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.72rem;color:var(--text-faint);margin-bottom:6px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;">Ghi chu</div>
-                        <div class="review-info">${this.esc(p.review_note || p.note || 'Khong co ghi chu')}</div>
-                    </div>
-                </div>
-                <div class="review-card-footer">
-                    <div class="review-info">Dang ky luc: <strong>${new Date(p.created_at).toLocaleDateString('vi-VN')}</strong></div>
-                </div>
-            </div>`;
-        }).join('');
-    },
-
-    // ---- Register ----
-    async submitRegister() {
-        const name = document.getElementById('regName').value.trim();
-        const avatar = document.getElementById('regAvatar').value.trim();
-        const discord = document.getElementById('regDiscord').value.trim();
-        const note = document.getElementById('regNote').value.trim();
-        const modes = this.state.registerModes;
-
-        if (!name) { this.toast('Vui long nhap ten Minecraft', 'error'); return; }
-        if (modes.length === 0) { this.toast('Vui long chon it nhat 1 mode', 'error'); return; }
-
-        this.showLoading(true);
-        const tiers = modes.map(modeId => {
-            const mode = this.state.modes.find(m => m.id === modeId);
-            return { modeName: mode ? mode.name : 'Unknown', modeId: modeId, tier: 'Chua xep' };
-        });
-
-        const { data, error } = await sbPublic
-            .from('players')
-            .insert({
-                name: name,
-                avatar_url: avatar || `https://mc-heads.net/avatar/${name}/64`,
-                discord_id: discord,
-                points: 0,
-                tiers: tiers,
-                status: 'pending',
-                review_note: note
-            })
-            .select()
-            .single();
-
-        this.showLoading(false);
-
-        if (error) {
-            if (error.message.includes('duplicate') || error.code === '23505') {
-                this.toast('Ten nay da duoc dang ky roi!', 'error');
-            } else {
-                this.toast('Loi gui don: ' + error.message, 'error');
-            }
-            return;
-        }
-
-        this.toast('Gui don dang ky thanh cong! Vui long cho admin xet duyet.', 'success');
-        // Reset form
-        document.getElementById('regName').value = '';
-        document.getElementById('regAvatar').value = '';
-        document.getElementById('regDiscord').value = '';
-        document.getElementById('regNote').value = '';
-        this.state.registerModes = [];
-        document.querySelectorAll('.register-mode-btn').forEach(b => b.classList.remove('selected'));
-        // Chuyen sang trang xet duyet
-        setTimeout(() => this.showView('reviews', 'pending'), 800);
-    },
-
-    // ---- Admin ----
-    async openAdminLogin() {
-        if (this.state.adminAuth) {
-            this.showView('admin');
-            return;
-        }
-        this.openModal(`
-            <div class="modal-icon"><i class="fa-solid fa-shield-halved"></i></div>
-            <div class="modal-step-label">Xac thuc admin</div>
-            <div class="modal-text">Nhap mat khau admin de truy cap bang dieu khien</div>
-            <input type="password" class="admin-input" id="adminPassInput" placeholder="Mat khau..." onkeydown="if(event.key==='Enter')App.doAdminLogin()">
-            <div class="admin-error" id="adminLoginError"></div>
-            <div class="admin-modal-actions">
-                <button class="btn-modal-cancel" onclick="App.closeModal()">Huy</button>
-                <button class="btn-modal-close" onclick="App.doAdminLogin()">Dang nhap</button>
-            </div>
-        `);
-        setTimeout(() => document.getElementById('adminPassInput')?.focus(), 100);
-    },
-
-    async doAdminLogin() {
-        const pass = document.getElementById('adminPassInput').value;
-        const errEl = document.getElementById('adminLoginError');
-        if (!pass) { errEl.textContent = 'Vui long nhap mat khau'; return; }
-
-        // Lay mat khau tu Supabase
-        const { data, error } = await sbAdmin
-            .from('app_settings')
-            .select('setting_value')
-            .eq('setting_key', 'admin_password')
-            .single();
-
-        if (error || !data) {
-            errEl.textContent = 'Loi ket noi database';
-            return;
-        }
-
-        if (pass !== data.setting_value) {
-            errEl.textContent = 'Sai mat khau!';
-            document.getElementById('adminPassInput').parentElement.classList.add('shake-anim');
-            setTimeout(() => document.getElementById('adminPassInput').parentElement.classList.remove('shake-anim'), 500);
-            return;
-        }
-
-        this.state.adminAuth = true;
-        this.closeModal();
-        this.toast('Dang nhap admin thanh cong!', 'success');
-        await this.loadAllPlayers();
-        this.showView('admin');
-    },
-
-    renderAdminPlayers() {
-        const listEl = document.getElementById('adminPlayersList');
-        const emptyEl = document.getElementById('adminEmpty');
-        const statsEl = document.getElementById('adminStats');
-        const search = (document.getElementById('adminSearch')?.value || '').toLowerCase().trim();
-
-        // Stats
-        const all = this.state.players;
-        const pending = all.filter(p => p.status === 'pending').length;
-        const approved = all.filter(p => p.status === 'approved').length;
-        const rejected = all.filter(p => p.status === 'rejected').length;
-        statsEl.innerHTML = `
-            <div class="stat-card struck" style="opacity:1;transform:none;padding:16px;text-align:center;">
-                <div class="stat-number" style="font-size:1.5rem;">${all.length}</div>
-                <div class="stat-label">Tong</div>
-            </div>
-            <div class="stat-card struck" style="opacity:1;transform:none;padding:16px;text-align:center;border-color:rgba(255,207,92,0.3);">
-                <div class="stat-number" style="font-size:1.5rem;color:var(--ember-hot);">${pending}</div>
-                <div class="stat-label">Cho duyet</div>
-            </div>
-            <div class="stat-card struck" style="opacity:1;transform:none;padding:16px;text-align:center;border-color:rgba(62,207,110,0.3);">
-                <div class="stat-number" style="font-size:1.5rem;color:#3ecf6e;">${approved}</div>
-                <div class="stat-label">Da duyet</div>
-            </div>
-            <div class="stat-card struck" style="opacity:1;transform:none;padding:16px;text-align:center;border-color:rgba(193,39,45,0.3);">
-                <div class="stat-number" style="font-size:1.5rem;color:#ff8080;">${rejected}</div>
-                <div class="stat-label">Tu choi</div>
-            </div>
-        `;
-
-        let filtered = all;
-        if (search) filtered = filtered.filter(p => p.name.toLowerCase().includes(search));
-
-        if (filtered.length === 0) {
-            listEl.innerHTML = '';
-            emptyEl.style.display = 'block';
-            return;
-        }
-        emptyEl.style.display = 'none';
-
-        listEl.innerHTML = filtered.map(p => this.renderAdminPlayerCard(p)).join('');
-    },
-
-    renderAdminPlayerCard(p) {
-        const avatarUrl = p.avatar_url || `https://mc-heads.net/avatar/${p.name}/64`;
-        const statusCls = p.status === 'approved' ? 'status-approved' : p.status === 'rejected' ? 'status-rejected' : 'status-pending';
-        const statusText = p.status === 'approved' ? 'Da Duyet' : p.status === 'rejected' ? 'Tu Choi' : 'Cho Duyet';
-
-        const tiersChips = (p.tiers || []).map((t, i) => {
-            const cls = TIER_CLASS_MAP[t.tier] || '';
-            return `<div class="admin-tier-chip">
-                <span class="tier-chip ${cls}" style="font-size:0.6rem;">${this.esc(t.modeName)}: ${this.esc(t.tier)}</span>
-                <button onclick="App.removeTier('${p.id}',${i})" title="Xoa tier nay"><i class="fa-solid fa-xmark"></i></button>
-            </div>`;
-        }).join('');
-
-        const modeOptions = this.state.modes.map(m =>
-            `<option value="${m.id}">${m.name}</option>`
-        ).join('');
-        const tierOptions = TIERS.map(t =>
-            `<option value="${t}">${t}</option>`
-        ).join('');
-
-        return `<div class="admin-player-card" id="pcard-${p.id}">
-            <div class="admin-player-top">
-                <img class="admin-avatar-preview" src="${avatarUrl}" alt="${p.name}" onerror="this.src='https://mc-heads.net/avatar/MHF_Steve/64'">
-                <div class="admin-field">
-                    <label>Ten Player</label>
-                    <input type="text" value="${this.esc(p.name)}" onchange="App.updateField('${p.id}','name',this.value)">
-                </div>
-                <div class="admin-field" style="max-width:220px;">
-                    <label>Avatar URL</label>
-                    <input type="text" value="${this.esc(p.avatar_url || '')}" onchange="App.updateField('${p.id}','avatar_url',this.value)">
-                </div>
-                <div class="admin-field" style="max-width:120px;">
-                    <label>Diem</label>
-                    <input type="number" value="${p.points || 0}" onchange="App.updateField('${p.id}','points',parseInt(this.value)||0)">
-                </div>
-                <div class="admin-field" style="max-width:120px;">
-                    <label>Trang thai</label>
-                    <select onchange="App.updateField('${p.id}','status',this.value);App.onStatusChange('${p.id}',this.value)">
-                        <option value="pending" ${p.status==='pending'?'selected':''}>Cho duyet</option>
-                        <option value="approved" ${p.status==='approved'?'selected':''}>Da duyet</option>
-                        <option value="rejected" ${p.status==='rejected'?'selected':''}>Tu choi</option>
-                    </select>
-                </div>
-            </div>
-            <div class="admin-field" style="margin-bottom:12px;">
-                <label>Discord ID</label>
-                <input type="text" value="${this.esc(p.discord_id || '')}" onchange="App.updateField('${p.id}','discord_id',this.value)">
-            </div>
-            <span class="admin-tiers-label">Tiers</span>
-            <div class="admin-tiers-wrap" id="tiers-${p.id}">${tiersChips}</div>
-            <div class="admin-add-tier">
-                <select id="addMode-${p.id}">${modeOptions}</select>
-                <select id="addTier-${p.id}">${tierOptions}</select>
-                <button class="btn-admin secondary" style="padding:8px 14px;font-size:0.78rem;" onclick="App.addTier('${p.id}')"><i class="fa-solid fa-plus"></i> Them</button>
-            </div>
-            <div class="admin-field" style="margin-top:12px;">
-                <label>Ghi chu / Ly do tu choi</label>
-                <textarea onchange="App.updateField('${p.id}','review_note',this.value)">${this.esc(p.review_note || '')}</textarea>
-            </div>
-            <div class="admin-player-actions">
-                <button class="btn-admin success" onclick="App.updateField('${p.id}','status','approved');App.onStatusChange('${p.id}','approved')"><i class="fa-solid fa-check"></i> Duyet</button>
-                <button class="btn-admin danger" onclick="App.updateField('${p.id}','status','rejected');App.onStatusChange('${p.id}','rejected')"><i class="fa-solid fa-ban"></i> Tu choi</button>
-                <button class="btn-admin danger" onclick="App.deletePlayer('${p.id}')"><i class="fa-solid fa-trash"></i> Xoa</button>
-            </div>
-        </div>`;
-    },
-
-    // ---- Admin CRUD Operations ----
-    async updateField(playerId, field, value) {
-        const updateData = { [field]: value, updated_at: new Date().toISOString() };
-
-        // Tinh diem tu tiers neu thay doi
-        if (field === 'status') {
-            // Cap nhat diem tu tiers
-            const player = this.state.players.find(p => p.id === playerId);
-            if (player && value === 'approved') {
-                const pts = this.calcPoints(player.tiers);
-                updateData.points = pts;
-            }
-        }
-
-        const { error } = await sbAdmin
-            .from('players')
-            .update(updateData)
-            .eq('id', playerId);
-
-        if (error) {
-            this.toast('Loi cap nhat: ' + error.message, 'error');
-            return;
-        }
-
-        // Cap nhat local state
-        const idx = this.state.players.findIndex(p => p.id === playerId);
-        if (idx > -1) {
-            Object.assign(this.state.players[idx], updateData);
-        }
-
-        if (field === 'status') {
-            this.renderAdminPlayers();
-            // Cap nhat approved list cho public view
-            await this.loadApprovedPlayers();
-            this.renderHeroPlayers();
-            this.renderFlameLadder();
-            this.renderStats();
-            this.triggerStats();
-            const statusText = value === 'approved' ? 'da duyet' : value === 'rejected' ? 'bi tu choi' : 'da chuyen ve cho duyet';
-            this.toast(`Player ${statusText} thanh cong!`, 'success');
-        }
-    },
-
-    async onStatusChange(playerId, newStatus) {
-        // Da xu ly trong updateField
-    },
-
-    async addTier(playerId) {
-        const modeId = document.getElementById(`addMode-${playerId}`)?.value;
-        const tier = document.getElementById(`addTier-${playerId}`)?.value;
-        if (!modeId || !tier) return;
-
-        const mode = this.state.modes.find(m => m.id === modeId);
-        const player = this.state.players.find(p => p.id === playerId);
-        if (!player) return;
-
-        const tiers = [...(player.tiers || [])];
-        // Kiem tra da co mode nay chua, neu co thi cap nhat tier
-        const existIdx = tiers.findIndex(t => t.modeId === modeId);
-        if (existIdx > -1) {
-            tiers[existIdx].tier = tier;
-        } else {
-            tiers.push({ modeName: mode ? mode.name : 'Unknown', modeId: modeId, tier: tier });
-        }
-
-        const pts = this.calcPoints(tiers);
-        const { error } = await sbAdmin
-            .from('players')
-            .update({ tiers: tiers, points: pts, updated_at: new Date().toISOString() })
-            .eq('id', playerId);
-
-        if (error) { this.toast('Loi them tier: ' + error.message, 'error'); return; }
-
-        player.tiers = tiers;
-        player.points = pts;
-        this.renderAdminPlayers();
-        this.toast('Da them/cap nhat tier!', 'success');
-    },
-
-    async removeTier(playerId, tierIndex) {
-        const player = this.state.players.find(p => p.id === playerId);
-        if (!player) return;
-        const tiers = [...(player.tiers || [])];
-        tiers.splice(tierIndex, 1);
-        const pts = this.calcPoints(tiers);
-
-        const { error } = await sbAdmin
-            .from('players')
-            .update({ tiers: tiers, points: pts, updated_at: new Date().toISOString() })
-            .eq('id', playerId);
-
-        if (error) { this.toast('Loi xoa tier: ' + error.message, 'error'); return; }
-
-        player.tiers = tiers;
-        player.points = pts;
-        this.renderAdminPlayers();
-    },
-
-    async deletePlayer(playerId) {
-        this.openModal(`
-            <div class="modal-icon" style="color:#ff8080;"><i class="fa-solid fa-triangle-exclamation"></i></div>
-            <div class="modal-step-label">Xac nhan xoa</div>
-            <div class="modal-text">Ban co chac chan muon xoa player nay? Hanh dong nay khong the hoan tac!</div>
-            <div class="admin-modal-actions">
-                <button class="btn-modal-cancel" onclick="App.closeModal()">Huy</button>
-                <button class="btn-modal-close" style="background:linear-gradient(135deg,#ff8080,#c1272d);color:#fff;" onclick="App.confirmDelete('${playerId}')">Xoa vinh vien</button>
-            </div>
-        `);
-    },
-
-    async confirmDelete(playerId) {
-        this.closeModal();
-        this.showLoading(true);
-        const { error } = await sbAdmin.from('players').delete().eq('id', playerId);
-        this.showLoading(false);
-        if (error) { this.toast('Loi xoa: ' + error.message, 'error'); return; }
-        this.state.players = this.state.players.filter(p => p.id !== playerId);
-        this.renderAdminPlayers();
-        await this.loadApprovedPlayers();
-        this.renderHeroPlayers();
-        this.renderFlameLadder();
-        this.renderStats();
-        this.toast('Da xoa player!', 'success');
-    },
-
-    openAddPlayerModal() {
-        const modeOptions = this.state.modes.map(m =>
-            `<option value="${m.id}">${m.name}</option>`
-        ).join('');
-        const tierOptions = TIERS.map(t =>
-            `<option value="${t}">${t}</option>`
-        ).join('');
-
-        this.openModal(`
-            <div class="modal-icon"><i class="fa-solid fa-user-plus"></i></div>
-            <div class="modal-step-label">Them player moi</div>
-            <div class="modal-text" style="margin-bottom:20px;">Tao player moi va them vao he thong</div>
-            <div class="admin-field" style="text-align:left;margin-bottom:12px;">
-                <label>Ten Minecraft</label>
-                <input type="text" id="newPlayerName" placeholder="Notch">
-            </div>
-            <div class="admin-field" style="text-align:left;margin-bottom:12px;">
-                <label>Avatar URL (de trong de tu dong)</label>
-                <input type="text" id="newPlayerAvatar" placeholder="https://mc-heads.net/avatar/Ten/64">
-            </div>
-            <div class="admin-field" style="text-align:left;margin-bottom:12px;">
-                <label>Discord ID</label>
-                <input type="text" id="newPlayerDiscord" placeholder="">
-            </div>
-            <div style="text-align:left;margin-bottom:12px;">
-                <span class="admin-tiers-label">Them Tier ngay</span>
-                <div id="newPlayerTiers"></div>
-                <div class="admin-add-tier" style="margin-top:8px;">
-                    <select id="newTierMode">${modeOptions}</select>
-                    <select id="newTierTier">${tierOptions}</select>
-                    <button class="btn-admin secondary" style="padding:8px 12px;font-size:0.75rem;" onclick="App.addNewPlayerTier()"><i class="fa-solid fa-plus"></i></button>
-                </div>
-            </div>
-            <div class="admin-field" style="text-align:left;margin-bottom:12px;">
-                <label>Trang thai</label>
-                <select id="newPlayerStatus">
-                    <option value="pending">Cho duyet</option>
-                    <option value="approved">Da duyet</option>
-                </select>
-            </div>
-            <div class="admin-modal-actions">
-                <button class="btn-modal-cancel" onclick="App.closeModal()">Huy</button>
-                <button class="btn-modal-close" onclick="App.doAddPlayer()">Them Player</button>
-            </div>
-        `);
-    },
-
-    _newPlayerTiers: [],
+                    <div class="review-card-body">
+                        <div><div style="font-size:.72rem;color:var(--text-faint);margin-bottom:6px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase">Tiers</div><div class="tiers-wrap">${tiersHtml}</div></div>
+                        <div><div style="font-size:.72rem;color:var(--text-faint);margin-bottom:6px;font-family:'JetBrains Mono',monospace;letter-spacing:1px
