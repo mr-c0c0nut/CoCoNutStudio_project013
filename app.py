@@ -1,11 +1,10 @@
 import json
 import os
-import secrets
+from datetime import datetime
 from flask import (
     Flask,
     jsonify,
     render_template,
-    render_template_string,
     request,
     session,
 )
@@ -13,151 +12,263 @@ import requests
 from supabase import create_client, Client
 
 app = Flask(__name__)
-# Secret key định danh phiên đăng nhập Flask
 app.secret_key = os.environ.get(
     "ANGELTIER_SECRET_KEY", "ANGELTIER_SUPER_SECRET_KEY_2026"
 )
 
-# 🔐 Cấu hình bảng điều khiển nhân viên kỹ thuật (2 lớp mật khẩu)
+# ── Cấu hình bảo mật ──────────────────────────────────
 ADMIN_PASSWORD_1 = "33298"
-ADMIN_WEBHOOK_URL = "https://discord.com/api/webhooks/1533666984867270696/g6UmiB6KgOZU3jgpjGuUcN-iR32G26RJfEkeNEAE-ssF-HSUzdg8gQ4qtlUkMntYhSks"
+ADMIN_WEBHOOK_URL = (
+    "https://discord.com/api/webhooks/1533666984867270696/"
+    "g6UmiB6KgOZU3jgpjGuUcN-iR32G26RJfEkeNEAE-ssF-"
+    "HSUzdg8gQ4qtlUkMntYhSks"
+)
 
-# ⚡ KẾT NỐI DATABASE SUPABASE (Gán trực tiếp chuỗi theo yêu cầu)
+# ── Kết nối Supabase ──────────────────────────────────
 SUPABASE_URL = "https://zkkkfasdwuvqrytdgqxbl.supabase.co/"
 SUPABASE_KEY = "sb_publishable_ejd9s6yhQimvU8sy8YR_ww_44db-pwP"
 
 try:
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    print("✅ Đã kết nối Supabase thành công")
 except Exception as e:
     supabase = None
     print(f"⚠️ Chưa khởi tạo được Supabase Client: {e}")
 
-# 📊 Bảng quy đổi điểm số Tier
+TABLE = "Angel bot - website"
+
+# ── Bảng quy đổi điểm ────────────────────────────────
 TIER_POINTS = {
-    "LT5": 10,
-    "HT5": 15,
-    "LT4": 20,
-    "HT4": 25,
-    "LT3": 30,
-    "HT3": 40,
-    "LT2": 50,
-    "HT2": 60,
-    "LT1": 70,
-    "HT1": 80,
+    "LT5": 10, "HT5": 15, "LT4": 20, "HT4": 25,
+    "LT3": 30, "HT3": 40, "LT2": 50, "HT2": 60,
+    "LT1": 70, "HT1": 80,
 }
+
+# ── Danh sách mode PvP ───────────────────────────────
+PVP_MODES = [
+    "NoDebuff", "Debuff", "Combo", "Sword",
+    "Bow", "Fist", "Axe", "Gapple",
+]
 
 
 def calculate_points(tiers):
-    """Hàm tính tổng điểm từ các Tier của người chơi"""
+    """Tính tổng điểm từ dict tier {mode: tier_name}"""
     if not tiers or not isinstance(tiers, dict):
         return 0
     total = 0
     for mode, tier in tiers.items():
-        clean_tier = str(tier).strip().upper()
-        total += TIER_POINTS.get(clean_tier, 0)
+        clean = str(tier).strip().upper()
+        total += TIER_POINTS.get(clean, 0)
     return total
 
 
-def load_real_players():
-    """Hàm đọc dữ liệu từ database Supabase (Bảng 'Angel bot - website')"""
+def normalize_tiers(raw):
+    """Chuẩn hóa dữ liệu tier về dạng dict {mode: tier}"""
+    if not raw:
+        return {}
+    if isinstance(raw, dict):
+        return {str(k).strip(): str(v).strip().upper() for k, v in raw.items() if str(k).strip() and str(v).strip()}
+    if isinstance(raw, str):
+        clean = raw.strip().upper()
+        if clean in TIER_POINTS:
+            return {"Tier": clean}
+    if isinstance(raw, list):
+        result = {}
+        for item in raw:
+            if isinstance(item, dict):
+                for k, v in item.items():
+                    if str(k).strip() and str(v).strip():
+                        result[str(k).strip()] = str(v).strip().upper()
+        return result
+    return {}
+
+
+def load_all_players():
+    """Đọc TẤT CẢ player từ database"""
     if not supabase:
-        return None
+        return []
     try:
-        # 🔴 ĐÃ SỬA: Đọc dữ liệu từ bảng "Angel bot - website"
-        response = supabase.table("Angel bot - website").select("*").execute()
-        data = response.data
-
-        formatted_players = []
-        for row in data:
-            ign = row.get("ign") or "Unknown"
-            raw_tier = row.get("tier")
-            
-            # Đọc dữ liệu tier từ bot gửi lên (Xử lý cả dạng chuỗi lẫn dict)
-            if isinstance(raw_tier, dict):
-                tiers_dict = raw_tier
-            elif raw_tier:
-                tiers_dict = {"Tier": str(raw_tier)}
-            else:
-                tiers_dict = {}
-
-            formatted_players.append(
-                {
-                    "id": row.get("id"),
-                    "name": ign,
-                    "avatar": f"https://mc-heads.net/avatar/{ign}/100.png",
-                    "tiers": tiers_dict,
-                    "points_override": None,
-                }
-            )
-        return formatted_players if formatted_players else None
+        resp = supabase.table(TABLE).select("*").order("points", desc=True).execute()
+        return resp.data or []
     except Exception as e:
-        print(f"Lỗi đọc dữ liệu từ Supabase: {e}")
-        return None
+        print(f"Lỗi đọc dữ liệu: {e}")
+        return []
+
+
+def load_approved_players():
+    """Chỉ đọc player đã được duyệt"""
+    if not supabase:
+        return []
+    try:
+        resp = (
+            supabase.table(TABLE)
+            .select("*")
+            .eq("status", "approved")
+            .order("points", desc=True)
+            .execute()
+        )
+        return resp.data or []
+    except Exception as e:
+        print(f"Lỗi đọc dữ liệu approved: {e}")
+        return []
+
+
+def format_player(row):
+    """Định dạng 1 row database thành dict chuẩn cho frontend"""
+    tiers = normalize_tiers(row.get("tier"))
+    ign = row.get("ign") or "Unknown"
+    avatar = (
+        row.get("avatar_url")
+        or f"https://mc-heads.net/avatar/{ign}/100.png"
+    )
+    return {
+        "id": row.get("id"),
+        "name": ign,
+        "avatar": avatar,
+        "tiers": tiers,
+        "points": row.get("points") or calculate_points(tiers),
+        "status": row.get("status", "approved"),
+        "review_note": row.get("review_note", ""),
+        "discord_id": row.get("discord_id", ""),
+        "created_at": row.get("created_at", ""),
+        "updated_at": row.get("updated_at", ""),
+    }
 
 
 def notify_discord(message):
-    """Gửi thông báo về Discord qua webhook cấu hình sẵn ở server (không lộ ra client)."""
+    """Gửi thông báo Discord qua webhook (server-side, không lộ ra client)"""
     try:
         requests.post(ADMIN_WEBHOOK_URL, json={"content": message}, timeout=5)
     except Exception as e:
-        print(f"Không gửi được thông báo Discord: {e}")
+        print(f"Không gửi được Discord: {e}")
 
 
 def require_admin():
+    """Kiểm tra admin đã đăng nhập chưa"""
     return bool(session.get("admin_authed"))
 
 
-# Dữ liệu mẫu dự phòng khi database rỗng hoặc lỗi kết nối
+# Dữ liệu mẫu dự phòng
 DEFAULT_PLAYERS = [
-    {
-        "name": "thekidpika",
-        "avatar": "https://mc-heads.net/avatar/thekidpika/100.png",
-        "tiers": {"Tier": "HT1"},
-    },
-    {
-        "name": "AGL_Mipp",
-        "avatar": "https://mc-heads.net/avatar/AGL_Mipp/100.png",
-        "tiers": {"Tier": "HT2"},
-    },
+    {"name": "thekidpika", "tiers": {"Tier": "HT1"}},
+    {"name": "AGL_Mipp", "tiers": {"Tier": "HT2"}},
 ]
 
 
+# ═══════════════════════════════════════════════════════
+#  PUBLIC API — Không cần xác thực
+# ═══════════════════════════════════════════════════════
+
 @app.route("/api/leaderboard", methods=["GET"])
 def get_leaderboard():
-    raw_players = load_real_players()
-    if raw_players is None:
-        raw_players = DEFAULT_PLAYERS
+    """API public: Lấy bảng xếp hạng (chỉ player đã duyệt)"""
+    rows = load_approved_players()
+    if not rows:
+        players = DEFAULT_PLAYERS
+        leaderboard = []
+        for p in players:
+            tiers = p.get("tiers", {})
+            leaderboard.append({
+                "id": "", "name": p.get("name", "Unknown"),
+                "avatar": p.get("avatar", f"https://mc-heads.net/avatar/{p.get('name','Steve')}/100.png"),
+                "points": calculate_points(tiers), "tiers": tiers,
+                "status": "approved", "review_note": "", "discord_id": "",
+                "created_at": "", "updated_at": "",
+            })
+        return jsonify(leaderboard)
 
-    leaderboard = []
-    for p in raw_players:
-        tiers = p.get("tiers", {})
-        pts = p.get("points_override")
-        if not isinstance(pts, (int, float)):
-            pts = calculate_points(tiers)
-        tier_display = [f"{m}: {t}" for m, t in tiers.items()]
-        leaderboard.append(
-            {
-                "id": p.get("id", ""),
-                "name": p.get("name", "Unknown"),
-                "avatar": p.get(
-                    "avatar",
-                    f"https://mc-heads.net/avatar/{p.get('name', 'Steve')}/100.png",
-                ),
-                "points": pts,
-                "tiers": tiers,
-                "tier_display": tier_display,
-            }
+    return jsonify([format_player(r) for r in rows])
+
+
+@app.route("/api/modes", methods=["GET"])
+def get_modes():
+    """API public: Danh sách mode PvP"""
+    return jsonify(PVP_MODES)
+
+
+@app.route("/api/tier-points", methods=["GET"])
+def get_tier_points():
+    """API public: Bảng quy đổi điểm tier"""
+    return jsonify(TIER_POINTS)
+
+
+@app.route("/api/register", methods=["POST"])
+def register_player():
+    """API public: Player đăng ký xét duyệt"""
+    data = request.get_json(silent=True) or {}
+    name = str(data.get("name", "")).strip()
+    if not name:
+        return jsonify({"ok": False, "error": "Thiếu tên Minecraft"}), 400
+
+    # Kiểm tra tên đã tồn tại chưa
+    if supabase:
+        existing = (
+            supabase.table(TABLE)
+            .select("id")
+            .eq("ign", name)
+            .execute()
         )
+        if existing.data and len(existing.data) > 0:
+            return jsonify({"ok": False, "error": "Tên này đã được đăng ký"}), 409
 
-    # 🏆 SẮP XẾP GIẢM DẦN THEO POINT
-    leaderboard.sort(key=lambda x: x["points"], reverse=True)
-    return jsonify(leaderboard)
+    discord_id = str(data.get("discord_id", "")).strip()
+    note = str(data.get("note", "")).strip()
+    avatar_url = str(data.get("avatar_url", "")).strip() or f"https://mc-heads.net/avatar/{name}/100.png"
+    selected_modes = data.get("modes", [])
+    tiers = {}
+    if isinstance(selected_modes, list):
+        for mode_name in selected_modes:
+            tiers[str(mode_name).strip()] = "Chưa xếp"
+
+    record = {
+        "ign": name,
+        "tier": tiers if tiers else {"Tier": "Chưa xếp"},
+        "status": "pending",
+        "review_note": note,
+        "discord_id": discord_id,
+        "avatar_url": avatar_url,
+        "points": 0,
+        "created_at": datetime.utcnow().isoformat(),
+        "updated_at": datetime.utcnow().isoformat(),
+    }
+
+    if supabase:
+        try:
+            resp = supabase.table(TABLE).insert(record).execute()
+            player = resp.data[0] if resp.data else None
+        except Exception as e:
+            return jsonify({"ok": False, "error": f"Lỗi database: {e}"}), 500
+    else:
+        player = record
+        player["id"] = "local"
+
+    notify_discord(
+        f"📝 **AngelTier** — Player **{name}** vừa đăng ký xét duyệt."
+    )
+
+    return jsonify({"ok": True, "player": format_player(player) if player else None})
 
 
-# ============================================================
-# 🛠️ BẢNG ĐIỀU KHIỂN NHÂN VIÊN KỸ THUẬT — xác thực 2 lớp
-# ============================================================
+@app.route("/api/reviews", methods=["GET"])
+def get_reviews():
+    """API public: Xem trạng thái xét duyệt (ai cũng xem được)"""
+    name_filter = request.args.get("name", "").strip().lower()
+    status_filter = request.args.get("status", "all").strip()
 
+    rows = load_all_players()
+    players = [format_player(r) for r in rows]
+
+    if name_filter:
+        players = [p for p in players if name_filter in p["name"].lower()]
+    if status_filter != "all":
+        players = [p for p in players if p["status"] == status_filter]
+
+    return jsonify(players)
+
+
+# ═══════════════════════════════════════════════════════
+#  ADMIN API — Cần xác thực 2 lớp
+# ═══════════════════════════════════════════════════════
 
 @app.route("/api/admin/step1", methods=["POST"])
 def admin_step1():
@@ -173,12 +284,7 @@ def admin_step1():
 @app.route("/api/admin/step2", methods=["POST"])
 def admin_step2():
     if not session.get("admin_step1_ok"):
-        return (
-            jsonify(
-                {"ok": False, "error": "Chưa hoàn thành lớp mật khẩu 1"}
-            ),
-            401,
-        )
+        return jsonify({"ok": False, "error": "Chưa hoàn thành lớp mật khẩu 1"}), 401
 
     data = request.get_json(silent=True) or {}
     webhook = str(data.get("webhook", "")).strip()
@@ -187,16 +293,14 @@ def admin_step2():
         session["admin_authed"] = True
         session["admin_step1_ok"] = False
         notify_discord(
-            "✅ **AngelTier** — Một nhân viên kỹ thuật vừa đăng nhập thành"
-            " công vào bảng điều khiển."
+            "✅ **AngelTier** — Nhân viên kỹ thuật đăng nhập thành công."
         )
         return jsonify({"ok": True})
     else:
         session["admin_authed"] = False
         session["admin_step1_ok"] = False
         notify_discord(
-            "🚨 **AngelTier** — CẢNH BÁO: có người nhập sai mật khẩu lớp 2 khi"
-            " cố truy cập bảng điều khiển (khả năng đột nhập)."
+            "🚨 **AngelTier** — CẢNH BÁO: Nhập sai mật khẩu lớp 2!"
         )
         return jsonify({"ok": False}), 401
 
@@ -210,16 +314,16 @@ def admin_logout():
 
 @app.route("/api/admin/players", methods=["GET"])
 def admin_get_players():
+    """Admin: Lấy TẤT CẢ player"""
     if not require_admin():
         return jsonify({"ok": False, "error": "Chưa xác thực"}), 403
-    raw_players = load_real_players()
-    if raw_players is None:
-        raw_players = DEFAULT_PLAYERS
-    return jsonify({"ok": True, "players": raw_players})
+    rows = load_all_players()
+    return jsonify({"ok": True, "players": [format_player(r) for r in rows]})
 
 
 @app.route("/api/admin/players", methods=["POST"])
 def admin_save_players():
+    """Admin: Lưu toàn bộ danh sách (bulk upsert)"""
     if not require_admin():
         return jsonify({"ok": False, "error": "Chưa xác thực"}), 403
 
@@ -228,75 +332,241 @@ def admin_save_players():
     if not isinstance(players, list):
         return jsonify({"ok": False, "error": "Dữ liệu không hợp lệ"}), 400
 
-    cleaned = []
     db_records = []
-
     for p in players:
         if not isinstance(p, dict):
             continue
         name = str(p.get("name", "")).strip()
         if not name:
             continue
-        avatar = (
-            str(p.get("avatar", "")).strip()
-            or f"https://mc-heads.net/avatar/{name}/100.png"
-        )
-        tiers_in = p.get("tiers", {}) or {}
-        tiers = {}
-        if isinstance(tiers_in, dict):
-            for mode, tier in tiers_in.items():
-                mode = str(mode).strip()
-                tier = str(tier).strip().upper()
-                if mode and tier:
-                    tiers[mode] = tier
+        tiers = normalize_tiers(p.get("tiers", {}))
+        pts = p.get("points")
+        if not isinstance(pts, (int, float)):
+            pts = calculate_points(tiers)
 
-        entry = {"name": name, "avatar": avatar, "tiers": tiers}
-        po = p.get("points_override")
-        if isinstance(po, (int, float)):
-            entry["points_override"] = po
-        cleaned.append(entry)
+        rec = {
+            "ign": name,
+            "tier": tiers if tiers else None,
+            "avatar_url": p.get("avatar", ""),
+            "discord_id": p.get("discord_id", ""),
+            "points": pts,
+            "status": p.get("status", "approved"),
+            "review_note": p.get("review_note", ""),
+            "updated_at": datetime.utcnow().isoformat(),
+        }
+        # Nếu có id (UUID) thì giữ lại để upsert chính xác
+        if p.get("id") and isinstance(p["id"], str) and len(p["id"]) > 10:
+            rec["id"] = p["id"]
+        db_records.append(rec)
 
-        # Lấy giá trị tier để lưu xuống DB (nếu có 1 mode thì lưu string, nếu nhiều mode thì lưu dict/string)
-        tier_val = list(tiers.values())[0] if len(tiers) == 1 else (tiers if tiers else None)
-
-        # Tạo bản ghi cập nhật Supabase chuẩn định dạng cột ign và tier
-        db_records.append(
-            {
-                "ign": name,
-                "tier": tier_val
-            }
-        )
-
-    # 🔴 ĐÃ SỬA: Cập nhật dữ liệu vào bảng "Angel bot - website"
-    if supabase:
+    if supabase and db_records:
         try:
-            supabase.table("Angel bot - website").upsert(
+            supabase.table(TABLE).upsert(
                 db_records, on_conflict="ign"
             ).execute()
         except Exception as e:
-            return (
-                jsonify(
-                    {"ok": False, "error": f"Không thể lưu lên Supabase: {e}"}
-                ),
-                500,
-            )
+            return jsonify({"ok": False, "error": f"Lỗi lưu: {e}"}), 500
 
     notify_discord(
-        f"🛠️ **AngelTier** — Nhân viên kỹ thuật vừa cập nhật bảng xếp hạng"
-        f" ({len(cleaned)} người chơi)."
+        f"🛠️ **AngelTier** — Cập nhật {len(db_records)} người chơi."
     )
-    return jsonify({"ok": True, "players": cleaned})
+    return jsonify({"ok": True, "count": len(db_records)})
 
 
-# 🟢 TRANG CHỦ (Yêu cầu có file templates/index.html trong project)
+@app.route("/api/admin/players/<player_id>", methods=["PUT"])
+def admin_update_player(player_id):
+    """Admin: Cập nhật 1 player theo ID"""
+    if not require_admin():
+        return jsonify({"ok": False, "error": "Chưa xác thực"}), 403
+
+    data = request.get_json(silent=True) or {}
+    update_data = {"updated_at": datetime.utcnow().isoformat()}
+
+    # Cho phép cập nhật các trường này
+    allowed = ["ign", "tier", "avatar_url", "discord_id", "points", "status", "review_note"]
+    for field in allowed:
+        if field in data:
+            update_data[field] = data[field]
+
+    # Nếu đổi tên, tính lại điểm nếu chưa có points
+    if "tier" in data and "points" not in data:
+        tiers = normalize_tiers(data["tier"])
+        update_data["points"] = calculate_points(tiers)
+
+    # Nếu duyệt, tự động tính điểm
+    if data.get("status") == "approved" and "points" not in data:
+        tiers = normalize_tiers(data.get("tier", {}))
+        if not tiers:
+            # Lấy tier hiện tại từ DB
+            current = supabase.table(TABLE).select("tier").eq("id", player_id).execute()
+            if current.data:
+                tiers = normalize_tiers(current.data[0].get("tier"))
+        update_data["points"] = calculate_points(tiers)
+
+    if not supabase:
+        return jsonify({"ok": False, "error": "Không có kết nối DB"}), 500
+
+    try:
+        resp = (
+            supabase.table(TABLE)
+            .update(update_data)
+            .eq("id", player_id)
+            .execute()
+        )
+        if not resp.data:
+            return jsonify({"ok": False, "error": "Không tìm thấy player"}), 404
+        return jsonify({"ok": True, "player": format_player(resp.data[0])})
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"Lỗi cập nhật: {e}"}), 500
+
+
+@app.route("/api/admin/players/<player_id>", methods=["DELETE"])
+def admin_delete_player(player_id):
+    """Admin: Xóa 1 player"""
+    if not require_admin():
+        return jsonify({"ok": False, "error": "Chưa xác thực"}), 403
+
+    if not supabase:
+        return jsonify({"ok": False, "error": "Không có kết nối DB"}), 500
+
+    try:
+        # Lấy tên trước khi xóa để thông báo
+        name_resp = supabase.table(TABLE).select("ign").eq("id", player_id).execute()
+        player_name = name_resp.data[0]["ign"] if name_resp.data else "Unknown"
+
+        resp = supabase.table(TABLE).delete().eq("id", player_id).execute()
+        if not resp.data:
+            return jsonify({"ok": False, "error": "Không tìm thấy player"}), 404
+
+        notify_discord(
+            f"🗑️ **AngelTier** — Đã xóa player **{player_name}** khỏi hệ thống."
+        )
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"Lỗi xóa: {e}"}), 500
+
+
+@app.route("/api/admin/players/<player_id>/tier", methods=["POST"])
+def admin_add_tier(player_id):
+    """Admin: Thêm/cập nhật tier cho 1 mode"""
+    if not require_admin():
+        return jsonify({"ok": False, "error": "Chưa xác thực"}), 403
+
+    data = request.get_json(silent=True) or {}
+    mode_name = str(data.get("mode", "")).strip()
+    tier_name = str(data.get("tier", "")).strip().upper()
+    if not mode_name or not tier_name:
+        return jsonify({"ok": False, "error": "Thiếu mode hoặc tier"}), 400
+
+    if not supabase:
+        return jsonify({"ok": False, "error": "Không có kết nối DB"}), 500
+
+    try:
+        # Lấy tier hiện tại
+        resp = supabase.table(TABLE).select("tier, ign").eq("id", player_id).execute()
+        if not resp.data:
+            return jsonify({"ok": False, "error": "Không tìm thấy player"}), 404
+
+        current_tiers = normalize_tiers(resp.data[0].get("tier"))
+        current_tiers[mode_name] = tier_name
+        pts = calculate_points(current_tiers)
+
+        update_resp = (
+            supabase.table(TABLE)
+            .update({
+                "tier": current_tiers,
+                "points": pts,
+                "updated_at": datetime.utcnow().isoformat(),
+            })
+            .eq("id", player_id)
+            .execute()
+        )
+
+        return jsonify({"ok": True, "player": format_player(update_resp.data[0])})
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"Lỗi: {e}"}), 500
+
+
+@app.route("/api/admin/players/<player_id>/tier", methods=["DELETE"])
+def admin_remove_tier(player_id):
+    """Admin: Xóa tier của 1 mode"""
+    if not require_admin():
+        return jsonify({"ok": False, "error": "Chưa xác thực"}), 403
+
+    data = request.get_json(silent=True) or {}
+    mode_name = str(data.get("mode", "")).strip()
+    if not mode_name:
+        return jsonify({"ok": False, "error": "Thiếu mode"}), 400
+
+    if not supabase:
+        return jsonify({"ok": False, "error": "Không có kết nối DB"}), 500
+
+    try:
+        resp = supabase.table(TABLE).select("tier").eq("id", player_id).execute()
+        if not resp.data:
+            return jsonify({"ok": False, "error": "Không tìm thấy player"}), 404
+
+        current_tiers = normalize_tiers(resp.data[0].get("tier"))
+        current_tiers.pop(mode_name, None)
+        pts = calculate_points(current_tiers)
+
+        update_resp = (
+            supabase.table(TABLE)
+            .update({
+                "tier": current_tiers if current_tiers else None,
+                "points": pts,
+                "updated_at": datetime.utcnow().isoformat(),
+            })
+            .eq("id", player_id)
+            .execute()
+        )
+
+        return jsonify({"ok": True, "player": format_player(update_resp.data[0])})
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"Lỗi: {e}"}), 500
+
+
+@app.route("/api/admin/stats", methods=["GET"])
+def admin_stats():
+    """Admin: Thống kê tổng quan"""
+    if not require_admin():
+        return jsonify({"ok": False, "error": "Chưa xác thực"}), 403
+
+    rows = load_all_players()
+    total = len(rows)
+    pending = sum(1 for r in rows if r.get("status") == "pending")
+    approved = sum(1 for r in rows if r.get("status") == "approved")
+    rejected = sum(1 for r in rows if r.get("status") == "rejected")
+    total_points = sum(r.get("points", 0) or 0 for r in rows)
+
+    # Phân bố tier
+    tier_dist = {}
+    for r in rows:
+        tiers = normalize_tiers(r.get("tier"))
+        for mode, t in tiers.items():
+            if t in TIER_POINTS:
+                tier_dist[t] = tier_dist.get(t, 0) + 1
+
+    return jsonify({
+        "ok": True,
+        "stats": {
+            "total": total, "pending": pending,
+            "approved": approved, "rejected": rejected,
+            "total_points": total_points,
+            "tier_distribution": tier_dist,
+        }
+    })
+
+
+# ═══════════════════════════════════════════════════════
+#  TRANG CHỦ
+# ═══════════════════════════════════════════════════════
+
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
 if __name__ == "__main__":
-    print(
-        "🔥 Server AngelTier (kết nối Supabase) đang chạy tại"
-        " http://localhost:5000"
-    )
-    app.run(host="0.0.0.0", port=5000)
+    print("🔥 Server AngelTier đang chạy tại http://localhost:5000")
+    app.run(host="0.0.0.0", port=5000, debug=True)
